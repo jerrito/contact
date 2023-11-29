@@ -1,0 +1,80 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+import 'package:house_rental/src/authentication/data/models/user_model.dart';
+
+class Firebase {
+  final FirebaseAuth firebaseAuth;
+  final FirebaseFirestore firebaseFirestore;
+
+  Firebase({required this.firebaseFirestore, required this.firebaseAuth});
+  final usersRef = FirebaseFirestore.instance
+      .collection('houseRentalAccount')
+      .withConverter<UserModel>(
+        fromFirestore: (snapshot, _) => UserModel.fromJson(snapshot.data()!),
+        toFirestore: (user, _) => user.toMap(),
+      );
+
+  Future<UserModel?> getUser({required String phoneNumber}) async {
+    UserModel? result;
+    String idGet = "";
+    return await usersRef
+        .where("phone_number", isEqualTo: phoneNumber)
+        .get()
+        .then((snapshot) {
+      var userSnapShot = snapshot.docs;
+
+      UserModel? data;
+      if (userSnapShot.isNotEmpty) {
+        data = userSnapShot.first.data();
+        idGet = data.id!;
+        idGet = userSnapShot.first.id;
+        //data.id=
+        // print(data.id);
+      }
+
+      // var status = QueryStatus.successful;
+
+      result = data;
+      return result;
+    }).catchError((error) {
+      if (kDebugMode) {
+        print("Failed to get user: $error");
+      }
+
+      var errorMsg = error;
+      result = errorMsg;
+
+      return result;
+    });
+  }
+
+  Future<UserModel?> saveUser({required UserModel user}) async {
+    UserModel? result;
+
+    //
+    var results = await usersRef.add(user);
+    
+  }
+
+  Future<void> phoneSignIn(Map<String, dynamic> params) async {
+    await firebaseAuth.verifyPhoneNumber(
+      timeout: const Duration(seconds: 120),
+      phoneNumber: params["phoneNumber"],
+      verificationCompleted: _onVerificationCompleted,
+      verificationFailed: _onVerificationFailed,
+      codeSent: _onCodeSent,
+      codeAutoRetrievalTimeout: _onCodeTimeout,
+    );
+  }
+
+  _onVerificationCompleted(PhoneAuthCredential authCredential) async {}
+
+  _onVerificationFailed(FirebaseAuthException exception) {}
+
+  _onCodeSent(String verificationId, int? forceResendingToken) {}
+
+  _onCodeTimeout(String timeout) {
+    return null;
+  }
+}
