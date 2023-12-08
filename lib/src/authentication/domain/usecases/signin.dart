@@ -9,6 +9,6 @@ class Signin extends UseCases {
   @override
   Future<Either<String, dynamic>> call(params) async{
    
-   return await authenticationRepository.signIn(params);
+   return await authenticationRepository.signIn(users:params);
   }
 }

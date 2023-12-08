@@ -3,21 +3,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:house_rental/src/authentication/data/models/user_model.dart';
 
-class Firebase {
+class FirebaseService {
   final FirebaseAuth firebaseAuth;
   final FirebaseFirestore firebaseFirestore;
 
-  Firebase({required this.firebaseFirestore, required this.firebaseAuth});
+  FirebaseService({required this.firebaseFirestore, required this.firebaseAuth});
   final usersRef = FirebaseFirestore.instance
       .collection('houseRentalAccount')
       .withConverter<UserModel>(
         fromFirestore: (snapshot, _) => UserModel.fromJson(snapshot.data()!),
         toFirestore: (user, _) => user.toMap(),
       );
-
+   String idGet="" ;
   Future<UserModel?> getUser({required String phoneNumber}) async {
     UserModel? result;
-    String idGet = "";
+    
     return await usersRef
         .where("phone_number", isEqualTo: phoneNumber)
         .get()
@@ -49,11 +49,11 @@ class Firebase {
     });
   }
 
-  Future<UserModel?> saveUser({required UserModel user}) async {
+  Future<DocumentReference<UserModel>?> saveUser({required UserModel user}) async {
     UserModel? result;
 
     //
-    var results = await usersRef.add(user);
+    return await usersRef.add(user);
     
   }
 

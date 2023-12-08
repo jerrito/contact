@@ -8,6 +8,6 @@ class Signup extends UseCases {
   Signup({required this.authenticationRepository});
   @override
   Future<Either<String, dynamic>> call(params) async{
-    return await authenticationRepository.signUp(params);
+    return await authenticationRepository.signUp(users:params);
   }
 }
