@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:house_rental/src/authentication/presentation/pages/signup_page.dart';
 
 class ConnectionPage extends StatefulWidget {
   const ConnectionPage({super.key});
@@ -11,11 +11,50 @@ class ConnectionPage extends StatefulWidget {
 class _ConnectionPageState extends State<ConnectionPage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
+        body: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Center(child: Text("Connection Page")),
+        Center(
+          child: TextButton(
+            onPressed: () {
+             Navigator.push(context, PageRouteBuilder(
+                  pageBuilder: (context, animation, secondary) =>
+                      const SignupPage(),
+                  transitionsBuilder: (context, animation, secondary, child) {
+                    var begin = const Offset(0.0, 0.1);
+                    var end = Offset.zero;
+                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeOutCirc));
+                    var offSetPosition = animation.drive(tween);
 
-      body:Center(
-        child:Text("Connection Page")
-      )
+                    return SlideTransition(
+                      position: offSetPosition,
+                      child: child,
+                    );
+                  }));
+           
+            },
+            child: const Text(
+              "Next",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        )
+      ],
+    ));
+  }
+}
+
+class SecondPage extends StatelessWidget {
+  const SecondPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return  Scaffold(
+      appBar: AppBar(backgroundColor:Colors.blue,),
+      body:const Center(child: Text("Second Page")),
     );
   }
 }
+

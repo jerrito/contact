@@ -8,5 +8,8 @@ void main() async {
   initDependencies();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MaterialApp(home: ConnectionPage()));
+  runApp( MaterialApp(home:const ConnectionPage(),
+  theme: ThemeData(
+    useMaterial3: true
+  )));
 }

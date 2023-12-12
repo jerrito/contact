@@ -50,7 +50,7 @@ class FirebaseService {
   }
 
   Future<DocumentReference<UserModel>?> saveUser({required UserModel user}) async {
-    UserModel? result;
+   // UserModel? result;
 
     //
     return await usersRef.add(user);

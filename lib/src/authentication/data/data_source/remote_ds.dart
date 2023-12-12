@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:house_rental/core/firebase/firebase.dart';
 import 'package:house_rental/src/authentication/data/models/user_model.dart';
 
@@ -28,7 +27,7 @@ class RemoteDatasourceImpl implements RemoteDatasource {
       {required UserModel users}) async {
     final user = firebaseService.getUser(phoneNumber: "");
     if (await user == null) {
-      print("User already known");
+     // print("User already known");
       return null;
     } else {
       return await usersRef.add(users);

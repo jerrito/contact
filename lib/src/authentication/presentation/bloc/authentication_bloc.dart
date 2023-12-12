@@ -1,7 +1,10 @@
+import 'package:go_router/go_router.dart';
+
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
 import 'package:house_rental/src/authentication/data/models/user_model.dart';
 import 'package:house_rental/src/authentication/domain/usecases/signup.dart';
 
@@ -19,33 +22,45 @@ class AuthenticationBloc
 
       await firebaseAuth.verifyPhoneNumber(
         timeout: const Duration(seconds: 120),
-        phoneNumber:"+233240845898",
+        phoneNumber: event.users.phoneNumber.toString(),
         verificationCompleted: (PhoneAuthCredential authCredential) async {
           emit(SignupLoading());
+
+          // print("verification completed ${authCredential.smsCode}");
+          // print(" ${authCredential.verificationId}");
+          User? user = FirebaseAuth.instance.currentUser;
+
+          if (authCredential.smsCode != null) {
+            try {
+              UserCredential credential =
+                  await user!.linkWithCredential(authCredential);
+            } on FirebaseAuthException catch (e) {
+              if (e.code == 'provider-already-linked') {
+                await firebaseAuth.signInWithCredential(authCredential);
+              }
+            }
+          }
         },
         verificationFailed: (FirebaseAuthException exception) {
           emit(GenericError(errorMessage: exception.code));
         },
-        codeSent: (String verificationId, int? forceResendingToken) async{
+        codeSent: (String verificationId, int? forceResendingToken) async {
+           
 
-
-
-
+          
           final response = await signup.call(event.users);
 
-      emit(response.fold((error) => GenericError(errorMessage: error),
-          (response) => SignupLoaded(reference: response)));
+          
+
+          emit(response.fold((error) => GenericError(errorMessage: error),
+              (response) => SignupLoaded(reference: response)));
         },
         codeAutoRetrievalTimeout: (String timeout) {
           // return null;
         },
       );
-
-
-
-      
     });
   }
 
-
+ 
 }
