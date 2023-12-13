@@ -41,13 +41,13 @@ void initDependencies() {
   );
   //remoteds
 
-  locator.registerLazySingleton(
+  locator.registerLazySingleton<NetworkInfo>(
     () => NetworkInfoImpl(
       dataConnectionChecker: locator(),
     ),
   );
 
-  locator.registerLazySingleton(
+  locator.registerLazySingleton<RemoteDatasource>(
     () => RemoteDatasourceImpl(
       firebaseService: locator(),
     ),

@@ -19,15 +19,14 @@ class AuthenticationBloc
       : super(AuthenticationInitial()) {
     on<SignupEvent>((event, emit) async {
       emit(SignupLoading());
+      print(event.users.phoneNumber);
 
       await firebaseAuth.verifyPhoneNumber(
         timeout: const Duration(seconds: 120),
-        phoneNumber: event.users.phoneNumber.toString(),
+        phoneNumber: event.users.phoneNumber,
         verificationCompleted: (PhoneAuthCredential authCredential) async {
-          emit(SignupLoading());
-
-          // print("verification completed ${authCredential.smsCode}");
-          // print(" ${authCredential.verificationId}");
+          print("verification completed ${authCredential.smsCode}");
+          print(" ${authCredential.verificationId}");
           User? user = FirebaseAuth.instance.currentUser;
 
           if (authCredential.smsCode != null) {
@@ -40,20 +39,29 @@ class AuthenticationBloc
               }
             }
           }
+          emit(const HomePageGet());
         },
         verificationFailed: (FirebaseAuthException exception) {
-          emit(GenericError(errorMessage: exception.code));
+          if (exception.code == 'invalid-phone-number') {
+            emit(const GenericError(errorMessage: 'invalid-phone-number'));
+          }
+          // emit(GenericError(errorMessage: exception.code));
+          print(exception.code);
         },
         codeSent: (String verificationId, int? forceResendingToken) async {
-           
-
-          
           final response = await signup.call(event.users);
-
-          
-
-          emit(response.fold((error) => GenericError(errorMessage: error),
-              (response) => SignupLoaded(reference: response)));
+          if (emit.isDone) {
+            emit(
+              response.fold(
+                (error) => GenericError(errorMessage: error),
+                (response) => SignupLoaded(
+                  reference: response,
+                  verificationId: verificationId,
+                  forceResendingToken: forceResendingToken!,
+                ),
+              ),
+            );
+          }
         },
         codeAutoRetrievalTimeout: (String timeout) {
           // return null;
@@ -61,6 +69,4 @@ class AuthenticationBloc
       );
     });
   }
-
- 
 }

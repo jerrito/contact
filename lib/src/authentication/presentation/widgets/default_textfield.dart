@@ -7,7 +7,14 @@ class DefaultTextfield extends StatelessWidget {
   final TextEditingController controller;
   final String? hintText;
   final String? label;
-  const DefaultTextfield({super.key, this.onChanged, required this.controller, this.hintText, required this.label});
+  final TextInputType? textInputType;
+  const DefaultTextfield(
+      {super.key,
+      this.onChanged,
+      required this.controller,
+      this.hintText,
+      this.textInputType,
+      required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -17,33 +24,34 @@ class DefaultTextfield extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           Text(label!),
+          Text(label!),
+          Space().height(context, 0.004),
           SizedBox(
             height: Sizes().height(context, 0.06),
             child: TextFormField(
+              keyboardType: textInputType,
               controller: controller,
               onChanged: onChanged,
               decoration: InputDecoration(
                 hintText: hintText,
+                hintStyle: const TextStyle(color:Colors.grey),
                 //label: Text(label!),
-                border: OutlineInputBorder(
-                  
+                border:  OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(Sizes().height(context,0.04)),
                   borderSide:const BorderSide(color: Colors.black26),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  
-                  borderSide:const BorderSide(color: Colors.black26),
+                   borderRadius: BorderRadius.circular(Sizes().height(context,0.04)),
+                  borderSide: BorderSide(color: Colors.black26),
                 ),
                 errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                    Sizes().height(context, 0.001),
-                  ),
-                  borderSide:const BorderSide(color: Colors.red),
+                   borderRadius: BorderRadius.circular(Sizes().height(context,0.04)),
+                  borderSide: const BorderSide(color: Colors.red),
                 ),
               ),
             ),
           ),
-          Space().height(context, 0.02)
+          Space().height(context, 0.03)
         ],
       ),
     );

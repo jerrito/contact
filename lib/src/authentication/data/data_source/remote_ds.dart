@@ -25,9 +25,9 @@ class RemoteDatasourceImpl implements RemoteDatasource {
   @override
   Future<DocumentReference<UserModel>?> signup(
       {required UserModel users}) async {
-    final user = firebaseService.getUser(phoneNumber: "");
-    if (await user == null) {
-     // print("User already known");
+    final user =await firebaseService.getUser(phoneNumber: "");
+    if ( user != null) {
+     print("User already known");
       return null;
     } else {
       return await usersRef.add(users);

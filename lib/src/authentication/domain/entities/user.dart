@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 
 class User extends Equatable {
-  final String? firstName, lastName, email,id;
-  final num? phoneNumber;
+  final String? firstName, lastName, email,id,phoneNumber;
+ 
   
 
  const User({
