@@ -1,16 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:house_rental/core/firebase/firebase.dart';
 import 'package:house_rental/src/authentication/data/models/user_model.dart';
 
 abstract class RemoteDatasource {
   Future<UserModel> signin({required UserModel users});
-  Future<DocumentReference<UserModel>?> signup({required UserModel users});
+  Future<DocumentReference<UserModel>?> signup(Map<String, dynamic> params);
 }
 
 class RemoteDatasourceImpl implements RemoteDatasource {
-  final FirebaseService firebaseService;
-
-  RemoteDatasourceImpl({required this.firebaseService});
+  RemoteDatasourceImpl();
   final usersRef = FirebaseFirestore.instance
       .collection('houseRentalAccount')
       .withConverter<UserModel>(
@@ -24,13 +21,9 @@ class RemoteDatasourceImpl implements RemoteDatasource {
 
   @override
   Future<DocumentReference<UserModel>?> signup(
-      {required UserModel users}) async {
-    final user =await firebaseService.getUser(phoneNumber: "");
-    if ( user != null) {
-     print("User already known");
-      return null;
-    } else {
-      return await usersRef.add(users);
-    }
+      Map<String, dynamic> params) async {
+   
+
+    return usersRef.add(UserModel.fromJson(params));
   }
 }

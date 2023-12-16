@@ -10,9 +10,10 @@ abstract class AuthenticationState extends Equatable {
 class AuthenticationInitial extends AuthenticationState {}
 
 class SignupLoading extends AuthenticationState {}
+class VerifyPhoneNumberLoading extends AuthenticationState {}
 
 class SignupLoaded extends AuthenticationState {
-  final DocumentReference<UserModel>? reference;
+  final UserModel? reference;
   final String verificationId;
   final int forceResendingToken;
 
@@ -30,4 +31,20 @@ class GenericError extends AuthenticationState {
 
 class HomePageGet extends AuthenticationState {
   const HomePageGet();
+}
+
+class SignupComplete extends AuthenticationState {
+  const SignupComplete();
+}
+
+class CodeSent extends AuthenticationState {
+  final String verifyId;
+  final int? token;
+  const CodeSent({required this.verifyId, required this.token});
+}
+
+class CodeCompleted extends AuthenticationState {
+  
+  final PhoneAuthCredential authCredential;
+  const CodeCompleted({required this.authCredential});
 }

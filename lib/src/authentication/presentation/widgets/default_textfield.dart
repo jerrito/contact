@@ -20,7 +20,7 @@ class DefaultTextfield extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      //height: Sizes().height(context, 0.06),
+      //height: Sizes().height(context, 0.08),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -33,6 +33,7 @@ class DefaultTextfield extends StatelessWidget {
               controller: controller,
               onChanged: onChanged,
               decoration: InputDecoration(
+                contentPadding: const EdgeInsets.all(10),
                 hintText: hintText,
                 hintStyle: const TextStyle(color:Colors.grey),
                 //label: Text(label!),
