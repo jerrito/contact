@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:house_rental/src/authentication/presentation/pages/otp_page.dart';
 import 'package:house_rental/src/authentication/presentation/pages/phone_number_page.dart';
 import 'package:house_rental/src/authentication/presentation/pages/signup_page.dart';
 
@@ -22,7 +23,12 @@ class _ConnectionPageState extends State<ConnectionPage> {
             onPressed: () {
              Navigator.push(context, PageRouteBuilder(
                   pageBuilder: (context, animation, secondary) =>
-                      const PhoneNumberPage(),
+                       OTPPage(
+                        name:"",
+                        verifyId: "",
+                        forceResendingToken: 3,
+                        phoneNumber: "+233432",
+                       ),
                   transitionsBuilder: (context, animation, secondary, child) {
                     var begin = const Offset(0.0, 0.1);
                     var end = Offset.zero;
@@ -47,15 +53,5 @@ class _ConnectionPageState extends State<ConnectionPage> {
   }
 }
 
-class SecondPage extends StatelessWidget {
-  const SecondPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return  Scaffold(
-      appBar: AppBar(backgroundColor:Colors.blue,),
-      body:const Center(child: Text("Second Page")),
-    );
-  }
-}
 
