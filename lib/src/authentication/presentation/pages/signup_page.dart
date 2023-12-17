@@ -1,19 +1,12 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:house_rental/core/size/sizes.dart';
 import 'package:house_rental/core/spacing/whitspacing.dart';
 import 'package:house_rental/core/widgets/bottom_sheet.dart';
 import 'package:house_rental/locator.dart';
-import 'package:house_rental/src/authentication/data/models/user_model.dart';
-import 'package:house_rental/src/authentication/domain/entities/user.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
-import 'package:house_rental/src/authentication/presentation/pages/otp_page.dart';
-import 'package:house_rental/src/authentication/presentation/widgets/default_button.dart';
 import 'package:house_rental/src/authentication/presentation/widgets/default_textfield.dart';
 import 'package:house_rental/src/home/presentation/pages/home_page.dart';
-import 'package:oktoast/oktoast.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});

@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:house_rental/core/spacing/whitspacing.dart';
+import 'package:house_rental/core/widgets/bottom_sheet.dart';
 import 'package:house_rental/locator.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:house_rental/src/authentication/presentation/pages/otp_page.dart';
-import 'package:house_rental/src/authentication/presentation/widgets/default_button.dart';
 import 'package:house_rental/src/authentication/presentation/widgets/default_textfield.dart';
 
 class PhoneNumberPage extends StatefulWidget {
@@ -22,25 +22,7 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: const Text("Verify Number")),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(children: [
-        
-            Space().height(context, 0.030),
-        
-            const Text("Enter number to get a verification message"),
-           
-           Space().height(context, 0.030),
-
-        
-            DefaultTextfield(
-              controller: phoneNumberController,
-              label: "Enter Phone Number",
-            ),
-        
-             Space().height(context, 0.030),
-        
-            BlocConsumer(
+        bottomSheet: BlocConsumer(
               bloc: authBloc,
               listener: (context, state) async {
                 if (state is CodeSent) {
@@ -83,7 +65,8 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
                   return const Center(child: CircularProgressIndicator());
                 }
         
-                return DefaultButton(
+                return bottomSheetButton(
+                  context:context,
                   label: "Validate",
                   onPressed: () {
                     authBloc.add(PhoneNumberEvent(
@@ -91,7 +74,28 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
                   },
                 );
               },
-            )
+            ),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+        
+            Space().height(context, 0.030),
+        
+            const Text("Enter number to get a verification message",textAlign: TextAlign.start,),
+           
+           Space().height(context, 0.090),
+
+        
+            DefaultTextfield(
+              controller: phoneNumberController,
+              label: "Enter Phone Number",
+            ),
+        
+             Space().height(context, 0.030),
+        
+           
           ]),
         ));
   }

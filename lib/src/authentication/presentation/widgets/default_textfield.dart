@@ -43,7 +43,7 @@ class DefaultTextfield extends StatelessWidget {
                 ),
                 enabledBorder: OutlineInputBorder(
                    borderRadius: BorderRadius.circular(Sizes().height(context,0.04)),
-                  borderSide: BorderSide(color: Colors.black26),
+                  borderSide: const BorderSide(color: Colors.black26),
                 ),
                 errorBorder: OutlineInputBorder(
                    borderRadius: BorderRadius.circular(Sizes().height(context,0.04)),

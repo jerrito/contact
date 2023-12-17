@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:house_rental/connection_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:house_rental/core/firebase/firebase_app_check.dart';
 import 'package:oktoast/oktoast.dart';
 import './firebase_options.dart';
 import './locator.dart';

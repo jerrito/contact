@@ -1,5 +1,4 @@
 import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:flutter/foundation.dart';
 class FirebaseAppCheckHelper {
   FirebaseAppCheckHelper._();
 

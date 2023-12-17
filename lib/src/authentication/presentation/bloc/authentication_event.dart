@@ -8,7 +8,7 @@ abstract class AuthenticationEvent extends Equatable {
 }
 
 final class SignupEvent extends AuthenticationEvent {
-  final Map<String,dynamic> users;
+  final Map<String, dynamic> users;
 
   const SignupEvent({required this.users});
 }
@@ -26,19 +26,28 @@ final class SignupErrorEvent extends AuthenticationEvent {
   const SignupErrorEvent({required this.error});
 }
 
+final class PhoneNumberErrorEvent extends AuthenticationEvent {
+  final String error;
+  const PhoneNumberErrorEvent({required this.error});
+}
+
 final class PhoneNumberEvent extends AuthenticationEvent {
   final String phoneNumber;
 
- const PhoneNumberEvent({required this.phoneNumber});
+  const PhoneNumberEvent({required this.phoneNumber});
 }
 
 final class CodeSentEvent extends AuthenticationEvent {
   final String verificationId;
   final int forceResendingToken;
-  final UserModel users;
 
-  const CodeSentEvent(
-      {required this.forceResendingToken,
-      required this.verificationId,
-      required this.users});
+  const CodeSentEvent({
+    required this.forceResendingToken,
+    required this.verificationId,
+  });
+}
+
+final class VerificationCompleteEvent extends AuthenticationEvent {
+  final auth.PhoneAuthCredential phoneAuthCredential;
+  const VerificationCompleteEvent({required this.phoneAuthCredential});
 }

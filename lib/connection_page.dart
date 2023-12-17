@@ -22,7 +22,7 @@ class _ConnectionPageState extends State<ConnectionPage> {
             onPressed: () {
              Navigator.push(context, PageRouteBuilder(
                   pageBuilder: (context, animation, secondary) =>
-                      const SignupPage(),
+                      const PhoneNumberPage(),
                   transitionsBuilder: (context, animation, secondary, child) {
                     var begin = const Offset(0.0, 0.1);
                     var end = Offset.zero;

@@ -1,10 +1,7 @@
-import 'package:go_router/go_router.dart';
-
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
-import 'package:flutter/widgets.dart';
 import 'package:house_rental/src/authentication/data/models/user_model.dart';
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
 import 'package:house_rental/src/authentication/domain/usecases/signup.dart';
@@ -38,11 +35,38 @@ class AuthenticationBloc
       emit(SignupLoading());
 
       final response = await signup.call(event.users);
-      emit(response.fold(
-          (error) => GenericError(errorMessage: error),
-          (response) => SignupLoaded(
-              
-              reference: response)));
+      emit(response.fold((error) => GenericError(errorMessage: error),
+          (response) => SignupLoaded(reference: response)));
+    });
+    on<PhoneNumberEvent>((event, emit) async {
+      
+      emit(VerifyPhoneNumberLoading());
+
+      final response = await verifyNumber.verifyPhoneNumber(
+        event.phoneNumber,
+        (verificationId, resendToken) => add(
+          CodeSentEvent(
+            forceResendingToken: resendToken!,
+            verificationId: verificationId,
+          ),
+        ),
+        (phoneAuthCredential) => add(
+          VerificationCompleteEvent(phoneAuthCredential: phoneAuthCredential),
+        ),
+        (p0) => add(
+          PhoneNumberErrorEvent(error: p0.message!),
+        ),
+      );
+    });
+    on<CodeSentEvent>((event, emit) async {
+      emit(CodeSent(
+          verifyId: event.verificationId, token: event.forceResendingToken));
+    });
+
+    on<VerificationCompleteEvent>((event, emit) {
+      emit(
+        CodeCompleted(authCredential: event.phoneAuthCredential),
+      );
     });
     // @override
     // Stream<AuthenticationState> mapEventToState(

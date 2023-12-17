@@ -70,11 +70,11 @@ class FirebaseService {
 
   _onVerificationCompleted(PhoneAuthCredential authCredential) async {}
 
-  _onVerificationFailed(FirebaseAuthException exception) {}
+  _onVerificationFailed(FirebaseAuthException exception) async{}
 
-  _onCodeSent(String verificationId, int? forceResendingToken) {}
+  _onCodeSent(String verificationId, int? forceResendingToken) async{}
 
-  _onCodeTimeout(String timeout) {
+  _onCodeTimeout(String timeout) async{
     return null;
   }
 }
