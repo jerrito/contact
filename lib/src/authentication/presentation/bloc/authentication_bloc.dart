@@ -20,16 +20,16 @@ class AuthenticationBloc
       required this.firebaseAuth,
       required this.verifyNumber})
       : super(AuthenticationInitial()) {
-    on<PhoneNumberEvent>((event, emit) async {
-      emit(VerifyPhoneNumberLoading());
-      await verifyNumber.verifyPhoneNumber(
-          event.phoneNumber,
-          (verificationId, resendToken) async =>
-              emit(CodeSent(verifyId: verificationId, token: resendToken)),
-          (auth.PhoneAuthCredential phoneAuthCredential) async =>
-              emit(CodeCompleted(authCredential: phoneAuthCredential)),
-          (p0) => emit(GenericError(errorMessage: p0.message!)));
-    });
+    // on<PhoneNumberEvent>((event, emit) async {
+    //   emit(VerifyPhoneNumberLoading());
+    //   await verifyNumber.verifyPhoneNumber(
+    //       event.phoneNumber,
+    //       (verificationId, resendToken) async =>
+    //           emit(CodeSent(verifyId: verificationId, token: resendToken)),
+    //       (auth.PhoneAuthCredential phoneAuthCredential) async =>
+    //           emit(CodeCompleted(authCredential: phoneAuthCredential)),
+    //       (p0) => emit(GenericError(errorMessage: p0.message!)));
+    // });
 
     on<SignupEvent>((event, emit) async {
       emit(SignupLoading());
@@ -39,7 +39,6 @@ class AuthenticationBloc
           (response) => SignupLoaded(reference: response)));
     });
     on<PhoneNumberEvent>((event, emit) async {
-      
       emit(VerifyPhoneNumberLoading());
 
       final response = await verifyNumber.verifyPhoneNumber(
@@ -66,6 +65,11 @@ class AuthenticationBloc
     on<VerificationCompleteEvent>((event, emit) {
       emit(
         CodeCompleted(authCredential: event.phoneAuthCredential),
+      );
+    });
+    on<PhoneNumberErrorEvent>((event, emit) {
+      emit(
+        GenericError(errorMessage: event.error),
       );
     });
     // @override
