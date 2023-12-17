@@ -1,17 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:house_rental/core/firebase/firebase.dart';
 import 'package:house_rental/core/network_info.dart/network_info.dart';
 import 'package:house_rental/src/authentication/data/data_source/remote_ds.dart';
 import 'package:house_rental/src/authentication/data/models/user_model.dart';
+import 'package:house_rental/src/authentication/domain/entities/user.dart';
 import 'package:house_rental/src/authentication/domain/repositories/authentication_repository.dart';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
   final RemoteDatasource remoteDatasource;
   final NetworkInfo networkInfo;
   final FirebaseService firebaseService;
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final auth.FirebaseAuth _firebaseAuth = auth.FirebaseAuth.instance;
 
   AuthenticationRepositoryImpl({
     required this.firebaseService,
@@ -35,7 +36,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   @override
-  Future<Either<String, DocumentReference<UserModel>?>> signUp(
+  Future<Either<String, DocumentReference<User>?>> signUp(
       Map<String,dynamic> params) async {
     if (await networkInfo.isConnected) {
       final user =
@@ -61,16 +62,16 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   Future<Either<String, void>> verifyPhoneNumber(
       String phoneNumber,
       Function(String verificationId, int? resendToken) onCodeSent,
-      Function(PhoneAuthCredential phoneAuthCredential) onCompleted,
-      Function(FirebaseAuthException) onFailed) async {
+      Function(auth.PhoneAuthCredential phoneAuthCredential) onCompleted,
+      Function(auth.FirebaseAuthException) onFailed) async {
     try {
       return Right(await _firebaseAuth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         timeout: const Duration(seconds: 60),
-        verificationCompleted: (PhoneAuthCredential credential) async{
+        verificationCompleted: (auth.PhoneAuthCredential credential) async{
         await  onCompleted(credential);
         },
-        verificationFailed: (FirebaseAuthException e) async{
+        verificationFailed: (auth.FirebaseAuthException e) async{
         await  onFailed(e);
           // return Left(e.message);
         },
@@ -89,7 +90,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
         },
       ));
     } catch (e) {
-      onFailed(FirebaseAuthException(message: e.toString(), code: 'UNKNOWN'));
+      onFailed(auth.FirebaseAuthException(message: e.toString(), code: 'UNKNOWN'));
       return Left(e.toString());
     }
   }

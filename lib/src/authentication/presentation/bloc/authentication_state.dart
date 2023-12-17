@@ -13,13 +13,9 @@ class SignupLoading extends AuthenticationState {}
 class VerifyPhoneNumberLoading extends AuthenticationState {}
 
 class SignupLoaded extends AuthenticationState {
-  final UserModel? reference;
-  final String verificationId;
-  final int forceResendingToken;
+  final DocumentReference<User>? reference;
 
   const SignupLoaded({
-    required this.verificationId,
-    required this.forceResendingToken,
     required this.reference,
   });
 }
@@ -45,6 +41,6 @@ class CodeSent extends AuthenticationState {
 
 class CodeCompleted extends AuthenticationState {
   
-  final PhoneAuthCredential authCredential;
+  final auth.PhoneAuthCredential authCredential;
   const CodeCompleted({required this.authCredential});
 }

@@ -8,7 +8,7 @@ abstract class AuthenticationEvent extends Equatable {
 }
 
 final class SignupEvent extends AuthenticationEvent {
-  final UserModel users;
+  final Map<String,dynamic> users;
 
   const SignupEvent({required this.users});
 }

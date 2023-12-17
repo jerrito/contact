@@ -38,12 +38,13 @@ class _SignupPageState extends State<SignupPage> {
           context: context,
           label: "Signup",
           onPressed: () {
-            final users = UserModel(
-                firstName: firstNameController.text,
-                lastName: lastNameController.text,
-                email: emailController.text,
-                phoneNumber: "+233${phoneNumberController.text}",
-                id: "11");
+            final users = {
+              "first_name": firstNameController.text,
+              "last_name": lastNameController.text,
+              "email": emailController.text,
+              "phone_number": "+233${phoneNumberController.text}",
+              "id": "11"
+            };
             authBloc.add(SignupEvent(users: users));
           },
         ),
@@ -64,10 +65,7 @@ class _SignupPageState extends State<SignupPage> {
                 //GoRouter.of(context).go(location)
                 Navigator.push(context, PageRouteBuilder(
                     pageBuilder: (context, animation, secondaryAnimation) {
-                  return OTPPage(
-                      name: "",
-                      forceResendingToken: state.forceResendingToken,
-                      verifyId: state.verificationId);
+                  return const HomePage();
                 }));
               }
             },
