@@ -9,6 +9,7 @@ import 'package:house_rental/src/authentication/data/repositories/authentication
 import 'package:house_rental/src/authentication/domain/repositories/authentication_repository.dart';
 import 'package:house_rental/src/authentication/domain/usecases/signup.dart';
 import 'package:house_rental/src/authentication/domain/usecases/verify_number.dart';
+import 'package:house_rental/src/authentication/domain/usecases/verify_otp.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
 
 final locator = GetIt.instance;
@@ -18,10 +19,10 @@ void initDependencies() {
 
   locator.registerFactory(
     () => AuthenticationBloc(
-      firebaseAuth: locator(),
-      signup: locator(),
-      verifyNumber: locator(),
-    ),
+        firebaseAuth: locator(),
+        signup: locator(),
+        verifyNumber: locator(),
+        verifyOTP: locator()),
   );
 
   //usecases
@@ -36,6 +37,12 @@ void initDependencies() {
 
   locator.registerLazySingleton(
     () => VerifyPhoneNumber(
+      repository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton(
+    () => VerifyOTP(
       repository: locator(),
     ),
   );
@@ -56,8 +63,10 @@ void initDependencies() {
     ),
   );
 
-  locator.registerLazySingleton<RemoteDatasource>(
-    () => RemoteDatasourceImpl(),
+  locator.registerLazySingleton<AuthenticationRemoteDatasource>(
+    () => AuthenticationRemoteDatasourceImpl(
+      firebaseAuth: locator()
+    ),
   );
 
   locator.registerLazySingleton(

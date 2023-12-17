@@ -6,6 +6,7 @@ import 'package:house_rental/src/authentication/data/models/user_model.dart';
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
 import 'package:house_rental/src/authentication/domain/usecases/signup.dart';
 import 'package:house_rental/src/authentication/domain/usecases/verify_number.dart';
+import 'package:house_rental/src/authentication/domain/usecases/verify_otp.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -15,10 +16,12 @@ class AuthenticationBloc
   final auth.FirebaseAuth firebaseAuth;
   final Signup signup;
   final VerifyPhoneNumber verifyNumber;
+  final VerifyOTP verifyOTP;
   AuthenticationBloc(
       {required this.signup,
       required this.firebaseAuth,
-      required this.verifyNumber})
+      required this.verifyNumber,
+      required this.verifyOTP})
       : super(AuthenticationInitial()) {
     // on<PhoneNumberEvent>((event, emit) async {
     //   emit(VerifyPhoneNumberLoading());
@@ -41,7 +44,7 @@ class AuthenticationBloc
     on<PhoneNumberEvent>((event, emit) async {
       emit(VerifyPhoneNumberLoading());
 
-      final response = await verifyNumber.verifyPhoneNumber(
+      await verifyNumber.verifyPhoneNumber(
         event.phoneNumber,
         (verificationId, resendToken) => add(
           CodeSentEvent(
@@ -72,6 +75,17 @@ class AuthenticationBloc
         GenericError(errorMessage: event.error),
       );
     });
+
+    on<VerifyOTPEvent>(
+      (event, emit) async {
+        emit(VerifyOTPLoading());
+        final response = await verifyOTP.call(event.params);
+        
+
+        emit(response.fold((error) => VerifyOTPFailed(errorMessage: error),
+         (response) => VerifyOTPLoaded(credential: response)));
+      },
+    );
     // @override
     // Stream<AuthenticationState> mapEventToState(
     //   AuthenticationEvent event,

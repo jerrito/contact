@@ -10,6 +10,7 @@ abstract class AuthenticationState extends Equatable {
 class AuthenticationInitial extends AuthenticationState {}
 
 class SignupLoading extends AuthenticationState {}
+
 class VerifyPhoneNumberLoading extends AuthenticationState {}
 
 class SignupLoaded extends AuthenticationState {
@@ -40,7 +41,18 @@ class CodeSent extends AuthenticationState {
 }
 
 class CodeCompleted extends AuthenticationState {
-  
   final auth.PhoneAuthCredential authCredential;
   const CodeCompleted({required this.authCredential});
+}
+
+class VerifyOTPLoading extends AuthenticationState {}
+
+class VerifyOTPLoaded extends AuthenticationState {
+  final auth.UserCredential credential;
+ const VerifyOTPLoaded({required this.credential});
+}
+
+class VerifyOTPFailed extends AuthenticationState {
+  final String errorMessage;
+  const VerifyOTPFailed({required this.errorMessage});
 }

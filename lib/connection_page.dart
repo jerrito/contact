@@ -23,12 +23,7 @@ class _ConnectionPageState extends State<ConnectionPage> {
             onPressed: () {
              Navigator.push(context, PageRouteBuilder(
                   pageBuilder: (context, animation, secondary) =>
-                       OTPPage(
-                        name:"",
-                        verifyId: "",
-                        forceResendingToken: 3,
-                        phoneNumber: "+233432",
-                       ),
+                      const PhoneNumberPage(),
                   transitionsBuilder: (context, animation, secondary, child) {
                     var begin = const Offset(0.0, 0.1);
                     var end = Offset.zero;

@@ -5,12 +5,14 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
 
 abstract class AuthenticationRepository {
-  Future<Either<String, DocumentReference<User>?>> signIn(Map<String, dynamic> params);
-  Future<Either<String, DocumentReference<User>?>> signUp(Map<String,dynamic> params);
-   Future<Either<String, void>> verifyPhoneNumber(  String phoneNumber,
+  Future<Either<String, DocumentReference<User>?>> signIn(
+      Map<String, dynamic> params);
+  Future<Either<String, DocumentReference<User>?>> signUp(
+      Map<String, dynamic> params);
+  Future<Either<String, void>> verifyPhoneNumber(
+      String phoneNumber,
       Function(String verificationId, int? resendToken) onCodeSent,
       Function(auth.PhoneAuthCredential phoneAuthCredential) onCompleted,
       Function(auth.FirebaseAuthException) onFailed);
+  Future<Either<String, auth.UserCredential>> verifyOTP(auth.AuthCredential credential);
 }
-
-

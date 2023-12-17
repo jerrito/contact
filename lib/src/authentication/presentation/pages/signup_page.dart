@@ -86,12 +86,7 @@ class _SignupPageState extends State<SignupPage> {
                           label: "Last Name",
                           hintText: "Enter your last name"),
 
-                      //phone Number
-                      DefaultTextfield(
-                          textInputType: TextInputType.number,
-                          controller: phoneNumberController,
-                          label: "Phone Number",
-                          hintText: "Enter your phone number"),
+                      
 
                       //email
                       DefaultTextfield(

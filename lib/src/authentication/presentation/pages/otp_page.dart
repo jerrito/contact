@@ -2,25 +2,39 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:house_rental/core/size/sizes.dart';
+import 'package:house_rental/core/snackbar/snackbar.dart';
 import 'package:house_rental/core/spacing/whitspacing.dart';
 import 'package:house_rental/core/widgets/bottom_sheet.dart';
+import 'package:house_rental/locator.dart';
+import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:house_rental/src/authentication/presentation/widgets/default_button.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:telephony/telephony.dart';
+import 'package:oktoast/oktoast.dart';
 
-class OTPPage extends StatefulWidget {
-  String? verifyId, phoneNumber, name;
+class OTPRequest {
+  String? verifyId, phoneNumber, see, name;
   int? forceResendingToken;
   void Function()? onSuccessCallback;
-  OTPPage({
-    Key? key,
+
+  OTPRequest({
     this.verifyId,
+    this.name,
+    this.see,
     this.phoneNumber,
-    required this.name,
     this.forceResendingToken,
     this.onSuccessCallback,
+  });
+}
+
+class OTPPage extends StatefulWidget {
+  final OTPRequest otpRequest;
+  const OTPPage({
+    Key? key,
+    required this.otpRequest,
   }) : super(key: key);
 
   @override
@@ -31,6 +45,7 @@ class _OTPPageState extends State<OTPPage> {
   Telephony telephony = Telephony.instance;
 
   final _auth = FirebaseAuth.instance;
+  final authBloc = locator<AuthenticationBloc>();
   String _otpString = "";
   OtpFieldController otpBox = OtpFieldController();
   String? verificationId;
@@ -41,9 +56,6 @@ class _OTPPageState extends State<OTPPage> {
   bool resend = false;
   String? see;
 
-  // var verify;
-
-  // FocusNode? pin7_get;
   timerCheck() {
     Future.delayed(const Duration(seconds: 90), () {
       setState(() {
@@ -76,7 +88,7 @@ class _OTPPageState extends State<OTPPage> {
 
         if (message.address == "Google" ||
             message.address == "CloudOTP" ||
-            message.address == "house_rental") {
+            message.address == "InfoSMS") {
           //verify SMS is sent for OTP with sender number
           String otpcode = sms.replaceAll(RegExp(r'[^0-9]'), '');
           //prase code from the OTP sms
@@ -108,49 +120,77 @@ class _OTPPageState extends State<OTPPage> {
           context: context,
           label: "Confirm",
           onPressed: () {
-            _verifyOtpCode();
+            PhoneAuthCredential params = PhoneAuthProvider.credential(
+                verificationId: widget.otpRequest.verifyId.toString(),
+                smsCode: _otpString);
+            authBloc.add(VerifyOTPEvent(params: params));
           }),
       body: Padding(
-        padding: EdgeInsets.all(Sizes().height(context, 0.004)),
+        padding: EdgeInsets.all(Sizes().height(context, 0.006)),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "We've sent a code to the number ${widget.phoneNumber}",
+                "We've sent a code to the number ${widget.otpRequest.phoneNumber}",
               ),
               Space().height(context, 0.04),
-              OTPTextField(
-                length: 6,
-                onChanged: onKeyPressed,
-                keyboardType: TextInputType.number,
-                controller: otpBox,
-                otpFieldStyle: OtpFieldStyle(
-                    borderColor: Colors.black,
-                    enabledBorderColor: Colors.black),
-                width: MediaQuery.of(context).size.width,
-                fieldWidth: 50,
-                fieldStyle: FieldStyle.box,
-                style: const TextStyle(
-                  fontSize: 17,
-                ),
-                textFieldAlignment: MainAxisAlignment.spaceAround,
-                //fieldStyle: F,
-                onCompleted: (val) async {
-                  // print(val);
-                  Future.delayed(const Duration(seconds: 1), () {
-                    _verifyOtpCode();
-                  });
-                },
-              ),
+              BlocConsumer(
+                  listener: (conteext, state) async {
+                    if (state is VerifyOTPFailed) {
+                      debugPrint(state.errorMessage);
+                      OKToast(child: Text(state.errorMessage));
+                      // PrimarySnackBar(context)
+                      //     .displaySnackBar(message: state.errorMessage);
+                      if (state is VerifyOTPLoaded) {
+                        print("calling call back function");
+                        widget.otpRequest.onSuccessCallback?.call();
+                      }
+                    }
+                  },
+                  bloc: authBloc,
+                  builder: (context, state) {
+                    if (state is VerifyOTPLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    return OTPTextField(
+                      length: 6,
+                      onChanged: onKeyPressed,
+                      keyboardType: TextInputType.number,
+                      controller: otpBox,
+                      otpFieldStyle: OtpFieldStyle(
+                          borderColor: Colors.black,
+                          enabledBorderColor: Colors.black),
+                      width: MediaQuery.of(context).size.width,
+                      fieldWidth: 50,
+                      fieldStyle: FieldStyle.box,
+                      style: const TextStyle(
+                        fontSize: 17,
+                      ),
+                      textFieldAlignment: MainAxisAlignment.spaceAround,
+                      //fieldStyle: F,
+                      onCompleted: (val) async {
+                        // print(val);
+                        Future.delayed(const Duration(seconds: 1), () {
+                          PhoneAuthCredential params =
+                              PhoneAuthProvider.credential(
+                                  verificationId:
+                                      widget.otpRequest.verifyId.toString(),
+                                  smsCode: _otpString);
+                          authBloc.add(VerifyOTPEvent(params: params));
+                          print("Done");
+                        });
+                      },
+                    );
+                  }),
               Space().height(context, 0.04),
               timer(),
               Space().height(context, 0.04),
               Row(
                 children: [
                   Visibility(
-                    visible: resend,
+                    visible: !isResend,
                     child: const Text("Didn't receive OTP?",
                         style: TextStyle(
                           color: Colors.grey,
@@ -165,7 +205,7 @@ class _OTPPageState extends State<OTPPage> {
                         //phoneSignIn(widget.otpRequest.phoneNumber.toString());  //phoneSignIn(phoneNumber: userNumber.text);
                       },
                       child: Visibility(
-                        visible: resend,
+                        visible: !isResend,
                         child: const Text("Resend",
                             style: TextStyle(
                               fontSize: 15,
@@ -195,8 +235,8 @@ class _OTPPageState extends State<OTPPage> {
               isResend = false;
               setState(() {});
             },
-            tween: Tween(begin: 90.0, end: 0),
-            duration: const Duration(seconds: 90),
+            tween: Tween(begin: 120.0, end: 0),
+            duration: const Duration(seconds: 120),
             builder: (BuildContext context, value, Widget? child) => Text(
               "This code will expire in 00:${(value).toInt()}",
               style: const TextStyle(color: Colors.blue, fontSize: 16),
@@ -214,39 +254,39 @@ class _OTPPageState extends State<OTPPage> {
     });
   }
 
-  _verifyOtpCode() async {
-    setState(() {
-      isLoading = true;
-      _wrongOtp = false;
-    });
-    PhoneAuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: widget.verifyId.toString(), smsCode: _otpString);
+  // _verifyOtpCode() async {
+  //   setState(() {
+  //     isLoading = true;
+  //     _wrongOtp = false;
+  //   });
+  //   PhoneAuthCredential credential = PhoneAuthProvider.credential(
+  //       verificationId: widget.verifyId.toString(), smsCode: _otpString);
 
-    try {
-      var result = await _auth.signInWithCredential(credential);
+  //   try {
+  //     var result = await _auth.signInWithCredential(credential);
 
-      if (result.user != null) {
-        widget.onSuccessCallback?.call();
-      }
-    } on FirebaseAuthException catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+  //     if (result.user != null) {
+  //       widget.onSuccessCallback?.call();
+  //     }
+  //   } on FirebaseAuthException catch (e) {
+  //     if (kDebugMode) {
+  //       print(e);
+  //     }
 
-      if (e.code == "invalid-verification-code") {
-        setState(() {
-          _wrongOtp = true;
-        });
-      }
+  //     if (e.code == "invalid-verification-code") {
+  //       setState(() {
+  //         _wrongOtp = true;
+  //       });
+  //     }
 
-      // PrimarySnackBar(context).displaySnackBar(
-      //   message: "Wrong OTP code provided",
-      //   backgroundColor: AppColors.errorRed,
-      // );
-    }
+  //     // PrimarySnackBar(context).displaySnackBar(
+  //     //   message: "Wrong OTP code provided",
+  //     //   backgroundColor: AppColors.errorRed,
+  //     // );
+  //   }
 
-    setState(() {
-      isLoading = false;
-    });
-  }
+  //   setState(() {
+  //     isLoading = false;
+  //   });
+  // }
 }
