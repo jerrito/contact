@@ -49,20 +49,19 @@ class _OTPPageState extends State<OTPPage> {
   String _otpString = "";
   OtpFieldController otpBox = OtpFieldController();
   String? verificationId;
-  bool _wrongOtp = false;
   bool isLoading = false;
   bool isResend = true;
   String? sms;
   bool resend = false;
   String? see;
 
-  timerCheck() {
-    Future.delayed(const Duration(seconds: 90), () {
-      setState(() {
-        resend = true;
-      });
-    });
-  }
+  // timerCheck() {
+  //   Future.delayed(const Duration(seconds: 90), () {
+  //     setState(() {
+  //       resend = true;
+  //     });
+  //   });
+  // }
 
   @override
   void dispose() {
@@ -144,7 +143,7 @@ class _OTPPageState extends State<OTPPage> {
                       // PrimarySnackBar(context)
                       //     .displaySnackBar(message: state.errorMessage);
                       if (state is VerifyOTPLoaded) {
-                        print("calling call back function");
+                        debugPrint("calling call back function");
                         widget.otpRequest.onSuccessCallback?.call();
                       }
                     }
@@ -172,14 +171,14 @@ class _OTPPageState extends State<OTPPage> {
                       //fieldStyle: F,
                       onCompleted: (val) async {
                         // print(val);
-                        Future.delayed(const Duration(seconds: 1), () {
+                        Future.delayed(const Duration(seconds: 2), () {
                           PhoneAuthCredential params =
                               PhoneAuthProvider.credential(
                                   verificationId:
                                       widget.otpRequest.verifyId.toString(),
                                   smsCode: _otpString);
                           authBloc.add(VerifyOTPEvent(params: params));
-                          print("Done");
+                          debugPrint("Done");
                         });
                       },
                     );
@@ -198,10 +197,7 @@ class _OTPPageState extends State<OTPPage> {
                   ),
                   TextButton(
                       onPressed: () {
-                        setState(() {
-                          isLoading;
-                          isResend = false;
-                        });
+                        authBloc.add(PhoneNumberEvent(phoneNumber: widget.otpRequest.phoneNumber!));
                         //phoneSignIn(widget.otpRequest.phoneNumber.toString());  //phoneSignIn(phoneNumber: userNumber.text);
                       },
                       child: Visibility(
@@ -235,7 +231,7 @@ class _OTPPageState extends State<OTPPage> {
               isResend = false;
               setState(() {});
             },
-            tween: Tween(begin: 120.0, end: 0),
+            tween: Tween(begin: 90.0, end: 0),
             duration: const Duration(seconds: 120),
             builder: (BuildContext context, value, Widget? child) => Text(
               "This code will expire in 00:${(value).toInt()}",

@@ -32,10 +32,11 @@ class AuthenticationRemoteDatasourceImpl
   @override
   Future<UserCredential> verifyOTP(AuthCredential credential) async {
     final response = await firebaseAuth.signInWithCredential(credential);
-    if (response.user == null) {
-      throw Exception("Verification failed");
+    if (response.user != null) {
+        return response;
     } else {
-      return response;
+    
+      throw Exception("Verification failed");
     }
   }
 }

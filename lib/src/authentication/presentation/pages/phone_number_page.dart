@@ -29,7 +29,7 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
             if (state is CodeSent) {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return OTPPage(
-                  otpRequest: OTPRequest( phoneNumber: "",
+                  otpRequest: OTPRequest( phoneNumber: "+233${phoneNumberController.text}",
                   forceResendingToken: state.token,
                   verifyId: state.verifyId,
                   onSuccessCallback: () {
