@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:house_rental/src/authentication/data/models/user_model.dart';
 
 abstract class AuthenticationRemoteDatasource {
@@ -32,10 +33,15 @@ class AuthenticationRemoteDatasourceImpl
   @override
   Future<UserCredential> verifyOTP(AuthCredential credential) async {
     final response = await firebaseAuth.signInWithCredential(credential);
+
+  
+
+    if (kDebugMode) {
+      print(response.user);
+    }
     if (response.user != null) {
-        return response;
+      return response;
     } else {
-    
       throw Exception("Verification failed");
     }
   }

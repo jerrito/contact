@@ -7,6 +7,7 @@ import 'package:house_rental/src/authentication/domain/entities/user.dart';
 import 'package:house_rental/src/authentication/domain/usecases/signup.dart';
 import 'package:house_rental/src/authentication/domain/usecases/verify_number.dart';
 import 'package:house_rental/src/authentication/domain/usecases/verify_otp.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -79,11 +80,14 @@ class AuthenticationBloc
     on<VerifyOTPEvent>(
       (event, emit) async {
         emit(VerifyOTPLoading());
+
         final response = await verifyOTP.call(event.params);
-        
 
         emit(response.fold((error) => VerifyOTPFailed(errorMessage: error),
-         (response) => VerifyOTPLoaded(credential: response)));
+            (response) => VerifyOTPLoaded(credential: response)));
+
+        transformer:
+        restartable();
       },
     );
     // @override
