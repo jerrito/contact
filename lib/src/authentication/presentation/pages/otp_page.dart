@@ -24,7 +24,7 @@ class OTPRequest {
     this.see,
     this.phoneNumber,
     this.forceResendingToken,
-  //  this.onSuccessCallback,
+    //  this.onSuccessCallback,
   });
 }
 
@@ -112,15 +112,7 @@ class _OTPPageState extends State<OTPPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      bottomSheet: bottomSheetButton(
-          context: context,
-          label: "Confirm",
-          onPressed: () {
-            PhoneAuthCredential params = PhoneAuthProvider.credential(
-                verificationId: widget.otpRequest.verifyId.toString(),
-                smsCode: _otpString);
-            authBloc.add(VerifyOTPEvent(params: params));
-          }),
+     
       body: BlocConsumer(
           listener: (conteext, state) async {
             if (state is VerifyOTPFailed) {
@@ -128,17 +120,18 @@ class _OTPPageState extends State<OTPPage> {
               OKToast(child: Text(state.errorMessage));
               // PrimarySnackBar(context)
               //     .displaySnackBar(message: state.errorMessage);
-              if (state is VerifyOTPLoaded) {
+             
+            }
+             if (state is VerifyOTPLoaded) {
                 debugPrint("calling call back function");
                 //widget.otpRequest.onSuccessCallback?.call();
-                
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return const SignupPage();
-                    }));
-                  
+                //print(state.user);
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return  SignupPage(
+                    phoneNumber: state.user.phoneNumber!,
+                  );
+                }));
               }
-            }
           },
           bloc: authBloc,
           builder: (context, state) {

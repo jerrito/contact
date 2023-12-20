@@ -53,7 +53,7 @@ final class VerificationCompleteEvent extends AuthenticationEvent {
 }
 
 final class VerifyOTPEvent extends AuthenticationEvent{
- final auth.AuthCredential params;
+ final auth.PhoneAuthCredential params;
 
  const VerifyOTPEvent({required this.params});
  

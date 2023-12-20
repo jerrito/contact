@@ -14,5 +14,5 @@ abstract class AuthenticationRepository {
       Function(String verificationId, int? resendToken) onCodeSent,
       Function(auth.PhoneAuthCredential phoneAuthCredential) onCompleted,
       Function(auth.FirebaseAuthException) onFailed);
-  Future<Either<String, auth.UserCredential>> verifyOTP(auth.AuthCredential credential);
+  Future<Either<String, auth.User>> verifyOTP(auth.PhoneAuthCredential credential);
 }

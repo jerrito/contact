@@ -83,14 +83,14 @@ class AuthenticationBloc
         emit(VerifyOTPLoading());
 
         final response = await verifyOTP.call(event.params);
+        print(response);
 
         emit(response.fold((error) => VerifyOTPFailed(errorMessage: error),
-            (response) => VerifyOTPLoaded(credential: response)));
+            (response) => VerifyOTPLoaded(user: response)));
 
         // ignore: unused_label
-        transformer:restartable();
+         transformer:restartable();
       },
     );
-   
   }
 }

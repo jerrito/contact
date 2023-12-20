@@ -1,5 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:house_rental/core/size/sizes.dart';
 import 'package:house_rental/core/spacing/whitspacing.dart';
 import 'package:house_rental/core/widgets/bottom_sheet.dart';
@@ -9,7 +11,11 @@ import 'package:house_rental/src/authentication/presentation/widgets/default_tex
 import 'package:house_rental/src/home/presentation/pages/home_page.dart';
 
 class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
+  final String phoneNumber;
+  const SignupPage({
+    Key? key,
+    required this.phoneNumber,
+  }) : super(key: key);
 
   @override
   State<SignupPage> createState() => _SignupPageState();
@@ -35,8 +41,8 @@ class _SignupPageState extends State<SignupPage> {
               "first_name": firstNameController.text,
               "last_name": lastNameController.text,
               "email": emailController.text,
-              "phone_number": "+233${phoneNumberController.text}",
-              "id": "11"
+              "phone_number": widget.phoneNumber,
+              "id": ""
             };
             authBloc.add(SignupEvent(users: users));
           },
@@ -85,8 +91,6 @@ class _SignupPageState extends State<SignupPage> {
                           controller: lastNameController,
                           label: "Last Name",
                           hintText: "Enter your last name"),
-
-                      
 
                       //email
                       DefaultTextfield(

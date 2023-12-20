@@ -48,8 +48,8 @@ class CodeCompleted extends AuthenticationState {
 class VerifyOTPLoading extends AuthenticationState {}
 
 class VerifyOTPLoaded extends AuthenticationState {
-  final auth.UserCredential credential;
- const VerifyOTPLoaded({required this.credential});
+  final auth.User user;
+  const VerifyOTPLoaded({required this.user});
 }
 
 class VerifyOTPFailed extends AuthenticationState {

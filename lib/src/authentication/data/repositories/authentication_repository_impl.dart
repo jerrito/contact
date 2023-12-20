@@ -43,7 +43,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
           await firebaseService.getUser(phoneNumber: params["phone_number"]);
       if (user != null) {
         // print("User already known");
-        return const Left("User already registered");
+        return const Left("Number already registered");
       } else {
         try {
           final response = await remoteDatasource.signup(params);
@@ -68,12 +68,8 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
     
     if (await networkInfo.isConnected) {
-       final user = await firebaseService.getUser(phoneNumber: phoneNumber);
-       print(user?.phoneNumber);
-      if (user?.phoneNumber != null) {
-        // print("User already known");
-        return const Left("User already registered");
-      } else {
+       
+     
         try {
           return Right(await firebaseAuth.verifyPhoneNumber(
             phoneNumber: phoneNumber,
@@ -104,7 +100,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
               message: e.toString(), code: 'UNKNOWN'));
           return Left(e.toString());
         }
-      }}
+      }
       else{
         return Left(networkInfo.noNetowrkMessage);
       }
@@ -112,8 +108,8 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   @override
-  Future<Either<String, auth.UserCredential>> verifyOTP(
-      auth.AuthCredential credential) async {
+  Future<Either<String, auth.User>> verifyOTP(
+      auth.PhoneAuthCredential credential) async {
     if (await networkInfo.isConnected) {
       final response = await remoteDatasource.verifyOTP(credential);
       return Right(response);

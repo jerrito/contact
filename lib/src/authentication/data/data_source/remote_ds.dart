@@ -6,7 +6,7 @@ import 'package:house_rental/src/authentication/data/models/user_model.dart';
 abstract class AuthenticationRemoteDatasource {
   Future<UserModel> signin({required UserModel users});
   Future<DocumentReference<UserModel>?> signup(Map<String, dynamic> params);
-  Future<UserCredential> verifyOTP(AuthCredential credential);
+  Future<User> verifyOTP(PhoneAuthCredential credential);
 }
 
 class AuthenticationRemoteDatasourceImpl
@@ -27,11 +27,12 @@ class AuthenticationRemoteDatasourceImpl
   @override
   Future<DocumentReference<UserModel>?> signup(
       Map<String, dynamic> params) async {
+        
     return usersRef.add(UserModel.fromJson(params));
   }
 
   @override
-  Future<UserCredential> verifyOTP(AuthCredential credential) async {
+  Future<User> verifyOTP(PhoneAuthCredential credential) async {
     final response = await firebaseAuth.signInWithCredential(credential);
 
   
@@ -39,10 +40,9 @@ class AuthenticationRemoteDatasourceImpl
     if (kDebugMode) {
       print(response.user);
     }
-    if (response.user != null) {
-      return response;
-    } else {
-      throw Exception("Verification failed");
-    }
+    
+      return response.user!;
+
+    
   }
 }
