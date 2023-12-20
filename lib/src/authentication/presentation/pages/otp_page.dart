@@ -1,15 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:house_rental/core/size/sizes.dart';
-import 'package:house_rental/core/snackbar/snackbar.dart';
 import 'package:house_rental/core/spacing/whitspacing.dart';
 import 'package:house_rental/core/widgets/bottom_sheet.dart';
 import 'package:house_rental/locator.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
-import 'package:house_rental/src/authentication/presentation/widgets/default_button.dart';
+import 'package:house_rental/src/authentication/presentation/pages/signup_page.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:telephony/telephony.dart';
@@ -18,7 +16,7 @@ import 'package:oktoast/oktoast.dart';
 class OTPRequest {
   String? verifyId, phoneNumber, see, name;
   int? forceResendingToken;
-  void Function()? onSuccessCallback;
+  //void Function()? onSuccessCallback;
 
   OTPRequest({
     this.verifyId,
@@ -26,7 +24,7 @@ class OTPRequest {
     this.see,
     this.phoneNumber,
     this.forceResendingToken,
-    this.onSuccessCallback,
+  //  this.onSuccessCallback,
   });
 }
 
@@ -44,7 +42,6 @@ class OTPPage extends StatefulWidget {
 class _OTPPageState extends State<OTPPage> {
   Telephony telephony = Telephony.instance;
 
-  final _auth = FirebaseAuth.instance;
   final authBloc = locator<AuthenticationBloc>();
   String _otpString = "";
   OtpFieldController otpBox = OtpFieldController();
@@ -133,7 +130,13 @@ class _OTPPageState extends State<OTPPage> {
               //     .displaySnackBar(message: state.errorMessage);
               if (state is VerifyOTPLoaded) {
                 debugPrint("calling call back function");
-                widget.otpRequest.onSuccessCallback?.call();
+                //widget.otpRequest.onSuccessCallback?.call();
+                
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return const SignupPage();
+                    }));
+                  
               }
             }
           },

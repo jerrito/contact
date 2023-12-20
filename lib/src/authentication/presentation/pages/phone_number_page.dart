@@ -32,12 +32,7 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
                   otpRequest: OTPRequest( phoneNumber: "+233${phoneNumberController.text}",
                   forceResendingToken: state.token,
                   verifyId: state.verifyId,
-                  onSuccessCallback: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return const SignupPage();
-                    }));
-                  },
+                  
                 )
                 );
               }));

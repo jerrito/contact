@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
-import 'package:flutter/foundation.dart';
 import 'package:house_rental/core/firebase/firebase.dart';
 import 'package:house_rental/core/network_info.dart/network_info.dart';
 import 'package:house_rental/src/authentication/data/data_source/remote_ds.dart';
@@ -65,10 +64,12 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       Function(String verificationId, int? resendToken) onCodeSent,
       Function(auth.PhoneAuthCredential phoneAuthCredential) onCompleted,
       Function(auth.FirebaseAuthException) onFailed) async {
-    final user = await firebaseService.getUser(phoneNumber: phoneNumber);
+   
 
-    print(user?.phoneNumber);
+    
     if (await networkInfo.isConnected) {
+       final user = await firebaseService.getUser(phoneNumber: phoneNumber);
+       print(user?.phoneNumber);
       if (user?.phoneNumber != null) {
         // print("User already known");
         return const Left("User already registered");

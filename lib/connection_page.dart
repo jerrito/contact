@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:house_rental/src/authentication/presentation/pages/otp_page.dart';
 import 'package:house_rental/src/authentication/presentation/pages/phone_number_page.dart';
-import 'package:house_rental/src/authentication/presentation/pages/signup_page.dart';
 
 class ConnectionPage extends StatefulWidget {
   const ConnectionPage({super.key});
