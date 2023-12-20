@@ -124,36 +124,36 @@ class _OTPPageState extends State<OTPPage> {
                 smsCode: _otpString);
             authBloc.add(VerifyOTPEvent(params: params));
           }),
-      body: Padding(
-        padding: EdgeInsets.all(Sizes().height(context, 0.006)),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "We've sent a code to the number ${widget.otpRequest.phoneNumber}",
-              ),
-              Space().height(context, 0.04),
-              BlocConsumer(
-                  listener: (conteext, state) async {
-                    if (state is VerifyOTPFailed) {
-                      debugPrint(state.errorMessage);
-                      OKToast(child: Text(state.errorMessage));
-                      // PrimarySnackBar(context)
-                      //     .displaySnackBar(message: state.errorMessage);
-                      if (state is VerifyOTPLoaded) {
-                        debugPrint("calling call back function");
-                        widget.otpRequest.onSuccessCallback?.call();
-                      }
-                    }
-                  },
-                  bloc: authBloc,
-                  builder: (context, state) {
-                    if (state is VerifyOTPLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    return OTPTextField(
+      body: BlocConsumer(
+          listener: (conteext, state) async {
+            if (state is VerifyOTPFailed) {
+              debugPrint(state.errorMessage);
+              OKToast(child: Text(state.errorMessage));
+              // PrimarySnackBar(context)
+              //     .displaySnackBar(message: state.errorMessage);
+              if (state is VerifyOTPLoaded) {
+                debugPrint("calling call back function");
+                widget.otpRequest.onSuccessCallback?.call();
+              }
+            }
+          },
+          bloc: authBloc,
+          builder: (context, state) {
+            if (state is VerifyOTPLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return Padding(
+              padding: EdgeInsets.all(Sizes().height(context, 0.006)),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "We've sent a code to the number ${widget.otpRequest.phoneNumber}",
+                    ),
+                    Space().height(context, 0.04),
+                    OTPTextField(
                       length: 6,
                       onChanged: onKeyPressed,
                       keyboardType: TextInputType.number,
@@ -181,38 +181,39 @@ class _OTPPageState extends State<OTPPage> {
                           debugPrint("Done");
                         });
                       },
-                    );
-                  }),
-              Space().height(context, 0.04),
-              timer(),
-              Space().height(context, 0.04),
-              Row(
-                children: [
-                  Visibility(
-                    visible: !isResend,
-                    child: const Text("Didn't receive OTP?",
-                        style: TextStyle(
-                          color: Colors.grey,
-                        )),
-                  ),
-                  TextButton(
-                      onPressed: () {
-                        authBloc.add(PhoneNumberEvent(phoneNumber: widget.otpRequest.phoneNumber!));
-                        //phoneSignIn(widget.otpRequest.phoneNumber.toString());  //phoneSignIn(phoneNumber: userNumber.text);
-                      },
-                      child: Visibility(
-                        visible: !isResend,
-                        child: const Text("Resend",
-                            style: TextStyle(
-                              fontSize: 15,
-                            )),
-                      ))
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
+                    ),
+                    Space().height(context, 0.04),
+                    timer(),
+                    Space().height(context, 0.04),
+                    Row(
+                      children: [
+                        Visibility(
+                          visible: !isResend,
+                          child: const Text("Didn't receive OTP?",
+                              style: TextStyle(
+                                color: Colors.grey,
+                              )),
+                        ),
+                        TextButton(
+                            onPressed: () {
+                              authBloc.add(PhoneNumberEvent(
+                                  phoneNumber: widget.otpRequest.phoneNumber!));
+                              //phoneSignIn(widget.otpRequest.phoneNumber.toString());  //phoneSignIn(phoneNumber: userNumber.text);
+                            },
+                            child: Visibility(
+                              visible: !isResend,
+                              child: const Text("Resend",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                  )),
+                            ))
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            );
+          }),
     );
   }
 
