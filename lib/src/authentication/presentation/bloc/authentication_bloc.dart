@@ -2,7 +2,11 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:house_rental/core/usecase/usecase.dart';
+import 'package:house_rental/src/authentication/data/models/user_model.dart';
+import 'package:house_rental/src/authentication/data/models/user_model.dart';
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
+import 'package:house_rental/src/authentication/domain/usecases/get_cache_data.dart';
 import 'package:house_rental/src/authentication/domain/usecases/signup.dart';
 import 'package:house_rental/src/authentication/domain/usecases/verify_number.dart';
 import 'package:house_rental/src/authentication/domain/usecases/verify_otp.dart';
@@ -17,23 +21,14 @@ class AuthenticationBloc
   final Signup signup;
   final VerifyPhoneNumber verifyNumber;
   final VerifyOTP verifyOTP;
+  final GetCacheData getCacheData;
   AuthenticationBloc(
       {required this.signup,
       required this.firebaseAuth,
       required this.verifyNumber,
-      required this.verifyOTP})
+      required this.verifyOTP,
+      required this.getCacheData})
       : super(AuthenticationInitial()) {
-    // on<PhoneNumberEvent>((event, emit) async {
-    //   emit(VerifyPhoneNumberLoading());
-    //   await verifyNumber.verifyPhoneNumber(
-    //       event.phoneNumber,
-    //       (verificationId, resendToken) async =>
-    //           emit(CodeSent(verifyId: verificationId, token: resendToken)),
-    //       (auth.PhoneAuthCredential phoneAuthCredential) async =>
-    //           emit(CodeCompleted(authCredential: phoneAuthCredential)),
-    //       (p0) => emit(GenericError(errorMessage: p0.message!)));
-    // });
-
     on<SignupEvent>((event, emit) async {
       emit(SignupLoading());
 
@@ -83,14 +78,21 @@ class AuthenticationBloc
         emit(VerifyOTPLoading());
 
         final response = await verifyOTP.call(event.params);
-        print(response);
 
         emit(response.fold((error) => VerifyOTPFailed(errorMessage: error),
             (response) => VerifyOTPLoaded(user: response)));
 
         // ignore: unused_label
-         transformer:restartable();
+        transformer:
+        restartable();
       },
     );
+
+    on<GetCacheDataEvent>((event, emit) async {
+      final response = await getCacheData.call(NoParams());
+
+      emit(response.fold((error) => GetCacheDataError(errorMessage: error),
+          (response) => GetCacheDataLoaded(user: response)));
+    });
   }
 }

@@ -56,3 +56,15 @@ class VerifyOTPFailed extends AuthenticationState {
   final String errorMessage;
   const VerifyOTPFailed({required this.errorMessage});
 }
+
+class GetCacheDataLoaded extends AuthenticationState {
+  final User user;
+
+  const GetCacheDataLoaded({required this.user});
+
+}
+
+class GetCacheDataError extends AuthenticationState {
+  final String errorMessage;
+  const GetCacheDataError({required this.errorMessage});
+}

@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:house_rental/src/authentication/data/data_source/local_ds.dart';
 import 'package:house_rental/src/authentication/data/models/user_model.dart';
 
 abstract class AuthenticationRemoteDatasource {
-  Future<UserModel> signin({required UserModel users});
+  Future<QuerySnapshot<UserModel>> signin(Map<String, dynamic> params);
   Future<DocumentReference<UserModel>?> signup(Map<String, dynamic> params);
   Future<User> verifyOTP(PhoneAuthCredential credential);
 }
@@ -12,7 +13,9 @@ abstract class AuthenticationRemoteDatasource {
 class AuthenticationRemoteDatasourceImpl
     implements AuthenticationRemoteDatasource {
   final FirebaseAuth firebaseAuth;
-  AuthenticationRemoteDatasourceImpl({required this.firebaseAuth});
+  final AuthenticationLocalDatasource localDatasource;
+  AuthenticationRemoteDatasourceImpl(
+      {required this.localDatasource, required this.firebaseAuth});
   final usersRef = FirebaseFirestore.instance
       .collection('houseRentalAccount')
       .withConverter<UserModel>(
@@ -20,29 +23,32 @@ class AuthenticationRemoteDatasourceImpl
         toFirestore: (user, _) => user.toMap(),
       );
   @override
-  Future<UserModel> signin({required UserModel users}) async {
-    throw UnimplementedError();
+  Future<QuerySnapshot<UserModel>> signin(Map<String, dynamic> params) async {
+    //if (numberSignin == false) {
+    final response = usersRef
+        .where("email", isEqualTo: params["email"])
+        .where("password", isEqualTo: params["password"])
+        .snapshots()
+        .first;
+    return response;
   }
 
   @override
   Future<DocumentReference<UserModel>?> signup(
       Map<String, dynamic> params) async {
-        
-    return usersRef.add(UserModel.fromJson(params));
+    final response = usersRef.add(UserModel.fromJson(params));
+    localDatasource.cacheUserData(UserModel.fromJson(params));
+    return response;
   }
 
   @override
   Future<User> verifyOTP(PhoneAuthCredential credential) async {
     final response = await firebaseAuth.signInWithCredential(credential);
 
-  
-
     if (kDebugMode) {
       print(response.user);
     }
-    
-      return response.user!;
 
-    
+    return response.user!;
   }
 }
