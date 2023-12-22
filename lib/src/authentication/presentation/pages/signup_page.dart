@@ -9,6 +9,7 @@ import 'package:house_rental/locator.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:house_rental/src/authentication/presentation/widgets/default_textfield.dart';
 import 'package:house_rental/src/home/presentation/pages/home_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignupPage extends StatefulWidget {
   final String phoneNumber;
@@ -23,6 +24,7 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   final authBloc = locator<AuthenticationBloc>();
+  final auth = FirebaseAuth.instance;
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
@@ -37,14 +39,18 @@ class _SignupPageState extends State<SignupPage> {
           context: context,
           label: "Signup",
           onPressed: () {
+           
             final users = {
               "first_name": firstNameController.text,
               "last_name": lastNameController.text,
               "email": emailController.text,
               "phone_number": widget.phoneNumber,
-              "id": ""
+              "id": "",
+              "token": auth.currentUser?.refreshToken ?? "",
             };
-            authBloc.add(SignupEvent(users: users));
+            authBloc.add(
+              SignupEvent(users: users),
+            );
           },
         ),
         body: BlocConsumer<AuthenticationBloc, AuthenticationState>(
@@ -88,15 +94,17 @@ class _SignupPageState extends State<SignupPage> {
 
                       //last Name
                       DefaultTextfield(
-                          controller: lastNameController,
-                          label: "Last Name",
-                          hintText: "Enter your last name"),
+                        controller: lastNameController,
+                        label: "Last Name",
+                        hintText: "Enter your last name",
+                      ),
 
                       //email
                       DefaultTextfield(
-                          controller: emailController,
-                          label: "Email",
-                          hintText: "Enter your email"),
+                        controller: emailController,
+                        label: "Email",
+                        hintText: "Enter your email",
+                      ),
 
                       Space().height(context, 0.02),
                     ],

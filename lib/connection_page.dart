@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:house_rental/src/authentication/presentation/pages/phone_number_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:house_rental/locator.dart';
+import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
 
 class ConnectionPage extends StatefulWidget {
   const ConnectionPage({super.key});
@@ -9,42 +12,35 @@ class ConnectionPage extends StatefulWidget {
 }
 
 class _ConnectionPageState extends State<ConnectionPage> {
+  final authBloc = locator<AuthenticationBloc>();
   @override
   Widget build(BuildContext context) {
+    authBloc.add(const GetCacheDataEvent());
     return Scaffold(
-        body: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Center(child: Text("Connection Page")),
-        Center(
-          child: TextButton(
-            onPressed: () {
-             Navigator.push(context, PageRouteBuilder(
-                  pageBuilder: (context, animation, secondary) =>
-                      const PhoneNumberPage(),
-                  transitionsBuilder: (context, animation, secondary, child) {
-                    var begin = const Offset(0.0, 0.1);
-                    var end = Offset.zero;
-                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeOutCirc));
-                    var offSetPosition = animation.drive(tween);
+        body: BlocConsumer(
+      bloc: authBloc,
+      listener: (context, state) {
+        if (state is GetCacheDataLoaded) {
+          if (state.user.phoneNumber != null) {
+            debugPrint("hei");
+            context.goNamed("homePage");
+          }
+          if (state.user.token == null) {
+            context.goNamed("signin");
+          } else {
+            context.goNamed("signup");
+          }
+        }
+        if (state is GetCacheDataError) {
+          
+          debugPrint(state.errorMessage);
 
-                    return SlideTransition(
-                      position: offSetPosition,
-                      child: child,
-                    );
-                  }));
-           
-            },
-            child: const Text(
-              "Next",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-        )
-      ],
+          context.goNamed("phoneNumber");
+        }
+      },
+      builder: (context, state) {
+        return const SizedBox();
+      },
     ));
   }
 }
-
-
-
