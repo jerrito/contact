@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:house_rental/locator.dart';
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
+import 'package:house_rental/src/home/presentation/widgets/home_drawer.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -25,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const HomeDrawer(),
         appBar: AppBar(title: const Text("Home Page")),
         body: BlocConsumer(
           bloc: authBloc,

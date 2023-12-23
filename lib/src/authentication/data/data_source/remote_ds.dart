@@ -5,7 +5,7 @@ import 'package:house_rental/src/authentication/data/data_source/local_ds.dart';
 import 'package:house_rental/src/authentication/data/models/user_model.dart';
 
 abstract class AuthenticationRemoteDatasource {
-  Future<QuerySnapshot<UserModel>> signin(Map<String, dynamic> params);
+  Future<QueryDocumentSnapshot<UserModel>> signin(Map<String, dynamic> params);
   Future<DocumentReference<UserModel>?> signup(Map<String, dynamic> params);
   Future<User> verifyOTP(PhoneAuthCredential credential);
 }
@@ -23,14 +23,15 @@ class AuthenticationRemoteDatasourceImpl
         toFirestore: (user, _) => user.toMap(),
       );
   @override
-  Future<QuerySnapshot<UserModel>> signin(Map<String, dynamic> params) async {
+  Future<QueryDocumentSnapshot<UserModel>> signin(Map<String, dynamic> params) async {
     //if (numberSignin == false) {
-    final response = usersRef
-        .where("email", isEqualTo: params["email"])
-        .where("password", isEqualTo: params["password"])
+    final response = await usersRef
+        .where("phone_number", isEqualTo: params["phone_number"])
+        //.get()
         .snapshots()
         .first;
-    return response;
+        // response.docs.first.data()
+    return response.docs.first;
   }
 
   @override
@@ -46,7 +47,7 @@ class AuthenticationRemoteDatasourceImpl
     final response = await firebaseAuth.signInWithCredential(credential);
 
     if (kDebugMode) {
-      print(response.user?.refreshToken);
+      print(response.user?.uid);
     }
 
     return response.user!;

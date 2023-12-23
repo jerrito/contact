@@ -16,7 +16,8 @@ GoRouter goRouter(){
     routes: [
 
       GoRoute(path: "signup",name: "signup",
-      builder: (context,state)=>SignupPage(phoneNumber: state.uri.queryParameters["phone_number"].toString(),),),
+      builder: (context,state)=>SignupPage(phoneNumber: state.uri.queryParameters["phone_number"].toString(),
+      uid: state.uri.queryParameters["uid"].toString(),),),
 
       GoRoute(path: "signin",name:"signin",
       builder:(context, state) => const SigninPage(),),

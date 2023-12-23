@@ -2,11 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 // data/repository/authentication_repository.dart
 import 'package:firebase_auth/firebase_auth.dart' as auth;
-import 'package:house_rental/src/authentication/data/models/user_model.dart';
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
 
 abstract class AuthenticationRepository {
-  Future<Either<String, QuerySnapshot<User>>> signIn(
+  Future<Either<String, QueryDocumentSnapshot<User>>> signIn(
       Map<String, dynamic> params);
 
   Future<Either<String, DocumentReference<User>?>> signUp(

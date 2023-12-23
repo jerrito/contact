@@ -11,14 +11,14 @@ import 'package:house_rental/core/widgets/bottom_sheet.dart';
 import 'package:house_rental/locator.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:house_rental/src/authentication/presentation/widgets/default_textfield.dart';
-import 'package:house_rental/src/home/presentation/pages/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class SignupPage extends StatefulWidget {
-  final String phoneNumber;
+  final String phoneNumber,uid;
   const SignupPage({
     Key? key,
     required this.phoneNumber,
+    required this.uid,
   }) : super(key: key);
 
   @override
@@ -52,7 +52,7 @@ class _SignupPageState extends State<SignupPage> {
               "phone_number": widget.phoneNumber,
               "id": "",
               "password":password.toString(),
-              "token": auth.currentUser?.uid ?? "",
+              "token": widget.uid ,
             };
             debugPrint(auth.currentUser?.refreshToken);
             authBloc.add(

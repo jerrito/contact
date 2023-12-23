@@ -2,16 +2,14 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:house_rental/core/firebase/firebase.dart';
 import 'package:house_rental/core/usecase/usecase.dart';
-import 'package:house_rental/src/authentication/data/models/user_model.dart';
-import 'package:house_rental/src/authentication/data/models/user_model.dart';
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
 import 'package:house_rental/src/authentication/domain/usecases/get_cache_data.dart';
 import 'package:house_rental/src/authentication/domain/usecases/signin.dart';
 import 'package:house_rental/src/authentication/domain/usecases/signup.dart';
 import 'package:house_rental/src/authentication/domain/usecases/verify_number.dart';
 import 'package:house_rental/src/authentication/domain/usecases/verify_otp.dart';
-import 'package:bloc_concurrency/bloc_concurrency.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -24,14 +22,16 @@ class AuthenticationBloc
   final VerifyOTP verifyOTP;
   final GetCacheData getCacheData;
   final Signin signin;
-  AuthenticationBloc({
-    required this.signup,
-    required this.firebaseAuth,
-    required this.verifyNumber,
-    required this.verifyOTP,
-    required this.getCacheData,
-    required this.signin,
-  }) : super(AuthenticationInitial()) {
+  final FirebaseService firebaseService;
+  AuthenticationBloc(
+      {required this.signup,
+      required this.firebaseAuth,
+      required this.verifyNumber,
+      required this.verifyOTP,
+      required this.getCacheData,
+      required this.signin,
+      required this.firebaseService})
+      : super(AuthenticationInitial()) {
     on<SignupEvent>((event, emit) async {
       emit(SignupLoading());
 
@@ -124,8 +124,13 @@ class AuthenticationBloc
       final response = await signin.call(event.users);
 
       emit(
-        response.fold((error) => SigninError(errorMessage: error),
-            (response) => SigninLoaded(documentReference: response),),
+        response.fold(
+          (error) => SigninError(errorMessage: error),
+          (response) {
+           firebaseService.updateUser(user:response.data());
+            return SigninLoaded(user: response.data());
+          },
+        ),
       );
     });
   }

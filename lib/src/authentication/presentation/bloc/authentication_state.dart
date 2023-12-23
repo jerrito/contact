@@ -37,8 +37,8 @@ class SignupComplete extends AuthenticationState {
 class SigninLoading extends AuthenticationState {}
 
 class SigninLoaded extends AuthenticationState {
-  final QuerySnapshot<User> documentReference;
-  const SigninLoaded({required this.documentReference});
+  final User user;
+  const SigninLoaded({required this.user});
 }
 
 class SigninError extends AuthenticationState {

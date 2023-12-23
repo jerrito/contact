@@ -5,7 +5,6 @@ import 'package:house_rental/core/firebase/firebase.dart';
 import 'package:house_rental/core/network_info.dart/network_info.dart';
 import 'package:house_rental/src/authentication/data/data_source/local_ds.dart';
 import 'package:house_rental/src/authentication/data/data_source/remote_ds.dart';
-import 'package:house_rental/src/authentication/data/models/user_model.dart';
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
 import 'package:house_rental/src/authentication/domain/repositories/authentication_repository.dart';
 
@@ -23,7 +22,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     required this.localDatasource,
   });
   @override
-  Future<Either<String, QuerySnapshot<User>>> signIn(
+  Future<Either<String, QueryDocumentSnapshot<User>>> signIn(
       Map<String, dynamic> params) async {
     if (await networkInfo.isConnected) {
       try {

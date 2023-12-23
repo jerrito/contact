@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:house_rental/locator.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
+import 'package:house_rental/src/authentication/presentation/pages/phone_number_page.dart';
 
 class ConnectionPage extends StatefulWidget {
   const ConnectionPage({super.key});
@@ -25,17 +26,27 @@ class _ConnectionPageState extends State<ConnectionPage> {
             debugPrint("hei");
             context.goNamed("homePage");
           }
-          if (state.user.token == null) {
-            context.goNamed("signin");
+          if (state.user.uid == null) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return const PhoneNumberPage(
+              isLogin:true,
+            );
+          }));
+           // context.goNamed("signin");
           } else {
             context.goNamed("signup");
           }
         }
         if (state is GetCacheDataError) {
-          
           debugPrint(state.errorMessage);
 
-          context.goNamed("phoneNumber");
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return const PhoneNumberPage(
+              isLogin:false,
+            );
+          }));
+
+         // context.goNamed("phoneNumber", );
         }
       },
       builder: (context, state) {
