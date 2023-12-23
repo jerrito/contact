@@ -9,6 +9,7 @@ import 'package:house_rental/src/authentication/data/data_source/remote_ds.dart'
 import 'package:house_rental/src/authentication/data/repositories/authentication_repository_impl.dart';
 import 'package:house_rental/src/authentication/domain/repositories/authentication_repository.dart';
 import 'package:house_rental/src/authentication/domain/usecases/get_cache_data.dart';
+import 'package:house_rental/src/authentication/domain/usecases/signin.dart';
 import 'package:house_rental/src/authentication/domain/usecases/signup.dart';
 import 'package:house_rental/src/authentication/domain/usecases/verify_number.dart';
 import 'package:house_rental/src/authentication/domain/usecases/verify_otp.dart';
@@ -27,6 +28,7 @@ Future<void> initDependencies() async {
       verifyNumber: locator(),
       verifyOTP: locator(),
       getCacheData: locator(),
+      signin: locator()
     ),
   );
 
@@ -34,6 +36,12 @@ Future<void> initDependencies() async {
 
   locator.registerLazySingleton(
     () => Signup(
+      repository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton(
+    () => Signin(
       repository: locator(),
     ),
   );

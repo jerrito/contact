@@ -1,7 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:crypto/crypto.dart';
+import 'package:go_router/go_router.dart';
 import 'package:house_rental/core/size/sizes.dart';
 import 'package:house_rental/core/spacing/whitspacing.dart';
 import 'package:house_rental/core/widgets/bottom_sheet.dart';
@@ -29,6 +32,7 @@ class _SignupPageState extends State<SignupPage> {
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
   final phoneNumberController = TextEditingController();
+  final passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,15 +43,18 @@ class _SignupPageState extends State<SignupPage> {
           context: context,
           label: "Signup",
           onPressed: () {
-           
+            var bites=utf8.encode(passwordController.text);
+            var password=sha512.convert(bites);
             final users = {
               "first_name": firstNameController.text,
               "last_name": lastNameController.text,
               "email": emailController.text,
               "phone_number": widget.phoneNumber,
               "id": "",
-              "token": auth.currentUser?.refreshToken ?? "",
+              "password":password.toString(),
+              "token": auth.currentUser?.uid ?? "",
             };
+            debugPrint(auth.currentUser?.refreshToken);
             authBloc.add(
               SignupEvent(users: users),
             );
@@ -60,18 +67,11 @@ class _SignupPageState extends State<SignupPage> {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(state.errorMessage)));
               }
-              if (state is HomePageGet) {
-                Navigator.push(context, PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) {
-                  return const HomePage();
-                }));
-              }
+              
               if (state is SignupLoaded) {
                 //GoRouter.of(context).go(location)
-                Navigator.push(context, PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) {
-                  return const HomePage();
-                }));
+                GoRouter.of(context).pushReplacementNamed("homePage");
+              
               }
             },
             builder: (context, state) {
@@ -105,6 +105,14 @@ class _SignupPageState extends State<SignupPage> {
                         label: "Email",
                         hintText: "Enter your email",
                       ),
+
+                      //email
+                      DefaultTextfield(
+                        controller: passwordController,
+                        label: "Password",
+                        hintText: "Enter your password",
+                      ),
+
 
                       Space().height(context, 0.02),
                     ],

@@ -34,6 +34,18 @@ class SignupComplete extends AuthenticationState {
   const SignupComplete();
 }
 
+class SigninLoading extends AuthenticationState {}
+
+class SigninLoaded extends AuthenticationState {
+  final QuerySnapshot<User> documentReference;
+  const SigninLoaded({required this.documentReference});
+}
+
+class SigninError extends AuthenticationState {
+  final String errorMessage;
+  const SigninError({required this.errorMessage});
+}
+
 class CodeSent extends AuthenticationState {
   final String verifyId;
   final int? token;
@@ -61,7 +73,6 @@ class GetCacheDataLoaded extends AuthenticationState {
   final User user;
 
   const GetCacheDataLoaded({required this.user});
-
 }
 
 class GetCacheDataError extends AuthenticationState {

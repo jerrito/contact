@@ -46,7 +46,7 @@ class AuthenticationRemoteDatasourceImpl
     final response = await firebaseAuth.signInWithCredential(credential);
 
     if (kDebugMode) {
-      print(response.user);
+      print(response.user?.refreshToken);
     }
 
     return response.user!;
