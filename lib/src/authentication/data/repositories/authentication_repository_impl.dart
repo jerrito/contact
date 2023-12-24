@@ -5,6 +5,7 @@ import 'package:house_rental/core/firebase/firebase_service.dart';
 import 'package:house_rental/core/network_info.dart/network_info.dart';
 import 'package:house_rental/src/authentication/data/data_source/local_ds.dart';
 import 'package:house_rental/src/authentication/data/data_source/remote_ds.dart';
+import 'package:house_rental/src/authentication/data/models/user_model.dart';
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
 import 'package:house_rental/src/authentication/domain/repositories/authentication_repository.dart';
 
@@ -132,6 +133,16 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   Future<Either<String, void>> updateUser(Map<String, dynamic> params) async {
     if (await networkInfo.isConnected) {
       final response = await remoteDatasource.updateUser(params);
+      return Right(response);
+    } else {
+      return Left(networkInfo.noNetowrkMessage);
+    }
+  }
+
+  @override
+  Future<Either<String, QuerySnapshot<UserModel>>> addId(Map<String, dynamic> params) async{
+   if (await networkInfo.isConnected) {
+      final response = await remoteDatasource.addId(params);
       return Right(response);
     } else {
       return Left(networkInfo.noNetowrkMessage);

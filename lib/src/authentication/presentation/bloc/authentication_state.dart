@@ -88,3 +88,10 @@ class UpdateUserError extends AuthenticationState {
   final String errorMessage;
   const UpdateUserError({required this.errorMessage});
 }
+
+class AddIdLoaded extends AuthenticationState {}
+
+class AddIdError extends AuthenticationState {
+  final String errorMessage;
+  const AddIdError({required this.errorMessage});
+}

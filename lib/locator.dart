@@ -8,6 +8,7 @@ import 'package:house_rental/src/authentication/data/data_source/local_ds.dart';
 import 'package:house_rental/src/authentication/data/data_source/remote_ds.dart';
 import 'package:house_rental/src/authentication/data/repositories/authentication_repository_impl.dart';
 import 'package:house_rental/src/authentication/domain/repositories/authentication_repository.dart';
+import 'package:house_rental/src/authentication/domain/usecases/add_id.dart';
 import 'package:house_rental/src/authentication/domain/usecases/get_cache_data.dart';
 import 'package:house_rental/src/authentication/domain/usecases/signin.dart';
 import 'package:house_rental/src/authentication/domain/usecases/signup.dart';
@@ -32,6 +33,7 @@ Future<void> initDependencies() async {
       signin: locator(),
       firebaseService: locator(),
       updateUser: locator(),
+      addId: locator()
     ),
   );
 
@@ -39,6 +41,12 @@ Future<void> initDependencies() async {
 
   locator.registerLazySingleton(
     () => Signup(
+      repository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton(
+    () => AddId(
       repository: locator(),
     ),
   );

@@ -10,6 +10,7 @@ abstract class AuthenticationRemoteDatasource {
   Future<DocumentReference<UserModel>?> signup(Map<String, dynamic> params);
   Future<auth.User> verifyOTP(auth.PhoneAuthCredential credential);
   Future<void> updateUser(Map<String, dynamic> params);
+  Future<QuerySnapshot<UserModel>> addId(Map<String, dynamic> params);
 }
 
 class AuthenticationRemoteDatasourceImpl
@@ -64,6 +65,7 @@ class AuthenticationRemoteDatasourceImpl
     return await usersRef.doc(params["id"].id).update(params);
   }
 
+  @override
   Future<QuerySnapshot<UserModel>> addId(Map<String, dynamic> params) async {
     return await usersRef
         .where("phone_number", isEqualTo: params["phone_number"])
@@ -75,8 +77,6 @@ class AuthenticationRemoteDatasourceImpl
       if (userData.isNotEmpty) {
         data = userData.first.data();
         data.id = userData.first.id;
-
-        
 
         debugPrint(data.id);
       }

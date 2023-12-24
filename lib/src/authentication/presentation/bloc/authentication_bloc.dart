@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:house_rental/core/firebase/firebase_service.dart';
 import 'package:house_rental/core/usecase/usecase.dart';
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
+import 'package:house_rental/src/authentication/domain/usecases/add_id.dart';
 import 'package:house_rental/src/authentication/domain/usecases/get_cache_data.dart';
 import 'package:house_rental/src/authentication/domain/usecases/signin.dart';
 import 'package:house_rental/src/authentication/domain/usecases/signup.dart';
@@ -25,6 +26,7 @@ class AuthenticationBloc
   final Signin signin;
   final UpdateUser updateUser;
   final FirebaseService firebaseService;
+  final AddId addId;
   AuthenticationBloc(
       {required this.signup,
       required this.firebaseAuth,
@@ -33,7 +35,8 @@ class AuthenticationBloc
       required this.getCacheData,
       required this.signin,
       required this.firebaseService,
-      required this.updateUser})
+      required this.updateUser,
+      required this.addId})
       : super(AuthenticationInitial()) {
     on<SignupEvent>((event, emit) async {
       emit(SignupLoading());
@@ -146,6 +149,17 @@ class AuthenticationBloc
         response.fold(
           (error) => UpdateUserError(errorMessage: error),
           (response) => UpdateUserLoaded(),
+        ),
+      );
+    });
+
+    on<AddIdEvent>((event, emit) async {
+      final response = await addId.call(event.params);
+
+      emit(
+        response.fold(
+          (error) => AddIdError(errorMessage: error),
+          (response) => AddIdLoaded(),
         ),
       );
     });

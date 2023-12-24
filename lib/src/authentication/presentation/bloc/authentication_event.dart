@@ -85,3 +85,8 @@ final class UpdateUserEvent extends AuthenticationEvent {
   final Map<String, dynamic> params;
   const UpdateUserEvent({required this.params});
 }
+
+final class AddIdEvent extends AuthenticationEvent {
+  final Map<String, dynamic> params;
+  const AddIdEvent({required this.params});
+}
