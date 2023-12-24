@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
-import 'package:house_rental/core/firebase/firebase.dart';
+import 'package:house_rental/core/firebase/firebase_service.dart';
 import 'package:house_rental/core/network_info.dart/network_info.dart';
 import 'package:house_rental/src/authentication/data/data_source/local_ds.dart';
 import 'package:house_rental/src/authentication/data/data_source/remote_ds.dart';
@@ -121,10 +121,19 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
         return Right(response);
       } catch (e) {
-       return Left(e.toString());
+        return Left(e.toString());
       }
+    } else {
+      return Left(networkInfo.noNetowrkMessage);
     }
-     else {
+  }
+
+  @override
+  Future<Either<String, void>> updateUser(Map<String, dynamic> params) async {
+    if (await networkInfo.isConnected) {
+      final response = await remoteDatasource.updateUser(params);
+      return Right(response);
+    } else {
       return Left(networkInfo.noNetowrkMessage);
     }
   }

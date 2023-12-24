@@ -68,7 +68,7 @@ class _SigninPageState extends State<SigninPage> {
             if (!context.mounted) return;
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text(state.errorMessage)));
-            context.goNamed("phoneNUmber");
+            context.goNamed("phoneNumber");
           }
         },
         builder: (context, state) {

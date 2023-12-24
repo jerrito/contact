@@ -79,3 +79,12 @@ class GetCacheDataError extends AuthenticationState {
   final String errorMessage;
   const GetCacheDataError({required this.errorMessage});
 }
+
+class UpdateUserLoading extends AuthenticationState {}
+
+class UpdateUserLoaded extends AuthenticationState {}
+
+class UpdateUserError extends AuthenticationState {
+  final String errorMessage;
+  const UpdateUserError({required this.errorMessage});
+}

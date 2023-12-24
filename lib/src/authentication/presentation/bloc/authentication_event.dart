@@ -80,3 +80,8 @@ final class VerifyOTPEvent extends AuthenticationEvent {
 final class GetCacheDataEvent extends AuthenticationEvent {
   const GetCacheDataEvent();
 }
+
+final class UpdateUserEvent extends AuthenticationEvent {
+  final Map<String, dynamic> params;
+  const UpdateUserEvent({required this.params});
+}

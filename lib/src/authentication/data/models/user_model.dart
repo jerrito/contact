@@ -1,14 +1,15 @@
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
 
 class UserModel extends User {
-  const UserModel(
+   UserModel(
       {required super.firstName,
       required super.lastName,
       required super.email,
       required super.phoneNumber,
       required super.id,
       required super.uid,
-      required super.password});
+      required super.password,
+      required super.profileUrl});
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
       firstName: json["first_name"],
@@ -17,7 +18,8 @@ class UserModel extends User {
       phoneNumber: json["phone_number"],
       id: json["id"],
       uid: json["token"],
-      password: json["password"]);
+      password: json["password"],
+      profileUrl:json["profile_url"]);
 
   @override
   Map<String, dynamic> toMap() => {
@@ -27,6 +29,7 @@ class UserModel extends User {
         "phone_number": phoneNumber,
         "id": id,
         "uid": uid,
-        "password": password
+        "password": password,
+        "profile_url":profileUrl
       };
 }

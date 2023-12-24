@@ -5,7 +5,7 @@ import 'package:house_rental/src/authentication/data/models/user_model.dart';
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
 
 class FirebaseService {
-  final FirebaseAuth firebaseAuth;
+  final auth.FirebaseAuth firebaseAuth;
   final FirebaseFirestore firebaseFirestore;
 
   FirebaseService(
@@ -63,7 +63,7 @@ class FirebaseService {
     print(user.id);
 
     //
-    await usersRef.doc(user.id).update(user.toMap());
+   return await usersRef.doc(user.id).update(user.toMap());
    
     //return result;
   }

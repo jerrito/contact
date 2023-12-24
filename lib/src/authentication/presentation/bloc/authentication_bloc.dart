@@ -2,12 +2,13 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
-import 'package:house_rental/core/firebase/firebase.dart';
+import 'package:house_rental/core/firebase/firebase_service.dart';
 import 'package:house_rental/core/usecase/usecase.dart';
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
 import 'package:house_rental/src/authentication/domain/usecases/get_cache_data.dart';
 import 'package:house_rental/src/authentication/domain/usecases/signin.dart';
 import 'package:house_rental/src/authentication/domain/usecases/signup.dart';
+import 'package:house_rental/src/authentication/domain/usecases/update_user.dart';
 import 'package:house_rental/src/authentication/domain/usecases/verify_number.dart';
 import 'package:house_rental/src/authentication/domain/usecases/verify_otp.dart';
 
@@ -22,6 +23,7 @@ class AuthenticationBloc
   final VerifyOTP verifyOTP;
   final GetCacheData getCacheData;
   final Signin signin;
+  final UpdateUser updateUser;
   final FirebaseService firebaseService;
   AuthenticationBloc(
       {required this.signup,
@@ -30,7 +32,8 @@ class AuthenticationBloc
       required this.verifyOTP,
       required this.getCacheData,
       required this.signin,
-      required this.firebaseService})
+      required this.firebaseService,
+      required this.updateUser})
       : super(AuthenticationInitial()) {
     on<SignupEvent>((event, emit) async {
       emit(SignupLoading());
@@ -127,9 +130,22 @@ class AuthenticationBloc
         response.fold(
           (error) => SigninError(errorMessage: error),
           (response) {
-           firebaseService.updateUser(user:response.data());
+            firebaseService.updateUser(user: response.data());
             return SigninLoaded(user: response.data());
           },
+        ),
+      );
+    });
+
+    on<UpdateUserEvent>((event, emit) async {
+      emit(UpdateUserLoading());
+
+      final response = await updateUser.call(event.params);
+
+      emit(
+        response.fold(
+          (error) => UpdateUserError(errorMessage: error),
+          (response) => UpdateUserLoaded(),
         ),
       );
     });

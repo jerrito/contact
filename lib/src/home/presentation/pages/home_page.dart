@@ -26,7 +26,11 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const HomeDrawer(),
+      drawer: HomeDrawer(
+        fullName: " ${user?.firstName} ${user?.lastName}",
+         phoneNumber: user?.phoneNumber,
+         profileUrl: user?.profileUrl,
+      ),
         appBar: AppBar(title: const Text("Home Page")),
         body: BlocConsumer(
           bloc: authBloc,

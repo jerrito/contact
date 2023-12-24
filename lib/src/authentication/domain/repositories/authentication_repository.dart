@@ -21,4 +21,6 @@ abstract class AuthenticationRepository {
       auth.PhoneAuthCredential credential);
 
   Future<Either<String, User>> getCacheData();
+
+  Future<Either<String, void>> updateUser(Map<String, dynamic> params);
 }

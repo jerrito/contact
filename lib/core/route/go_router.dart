@@ -20,10 +20,12 @@ GoRouter goRouter(){
       uid: state.uri.queryParameters["uid"].toString(),),),
 
       GoRoute(path: "signin",name:"signin",
-      builder:(context, state) => const SigninPage(),),
+      builder:(context, state) => SigninPage(phoneNumber: state.uri.queryParameters["phone_number"].toString(),
+      uid: state.uri.queryParameters["uid"].toString(),),),
 
       GoRoute(path: "otp_page",name:"otp",builder:(context, state) => 
        OTPPage(otpRequest:OTPRequest(
+        isLogin:bool.parse(state.uri.queryParameters["isLogin"].toString()),
         verifyId:state.uri.queryParameters["verify_id"].toString() ,
         phoneNumber: state.uri.queryParameters["phone_number"].toString(),
         forceResendingToken:int.parse(state.uri.queryParameters["force_resending_token"].toString()) ,
@@ -31,7 +33,7 @@ GoRouter goRouter(){
        ) ,),),
 
       GoRoute(path: "phone_number",name:"phoneNumber",
-      builder:(context, state) => const PhoneNumberPage(),),
+      builder:(context, state) => PhoneNumberPage(isLogin:bool.parse(state.uri.queryParameters["isLogin"].toString())),),
        
        GoRoute(path: "home",name: "homePage",
     builder: (context, state) =>const HomePage(),
