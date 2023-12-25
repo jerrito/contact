@@ -52,7 +52,7 @@ class _SignupPageState extends State<SignupPage> {
               "phone_number": widget.phoneNumber,
               //"id": "",
               "password":password.toString(),
-              "token": widget.uid ,
+              "uid": widget.uid ,
             };
             debugPrint(auth.currentUser?.refreshToken);
             authBloc.add(

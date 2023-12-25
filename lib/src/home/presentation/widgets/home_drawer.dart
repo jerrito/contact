@@ -5,19 +5,29 @@ import 'package:house_rental/assets/images/image_constants.dart';
 import 'package:house_rental/assets/svgs/svg_constants.dart';
 
 import 'package:house_rental/core/spacing/whitspacing.dart';
+import 'package:house_rental/locator.dart';
+import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:house_rental/src/home/presentation/widgets/build_logout_bottomsheet.dart';
 import 'package:house_rental/src/home/presentation/widgets/drawer_list_tile.dart';
 
-class HomeDrawer extends StatelessWidget {
-  final String? fullName, phoneNumber, profileUrl;
+class HomeDrawer extends StatefulWidget {
+  final String? fullName, phoneNumber, profileUrl, id, uid;
 
   const HomeDrawer(
       {Key? key,
       required this.fullName,
       required this.phoneNumber,
-      required this.profileUrl})
+      required this.profileUrl,
+      required this.id,
+      required this.uid})
       : super(key: key);
 
+  @override
+  State<HomeDrawer> createState() => _HomeDrawerState();
+}
+
+class _HomeDrawerState extends State<HomeDrawer> {
+  final authBloc = locator<AuthenticationBloc>();
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -30,8 +40,8 @@ class HomeDrawer extends StatelessWidget {
                   color: Colors.grey,
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                      image: profileUrl != null
-                          ? Image.network(profileUrl!).image
+                      image: widget.profileUrl != null
+                          ? Image.network(widget.profileUrl!).image
                           : Image.asset(user1Image, width: 100, height: 100)
                               .image)),
               child: Align(
@@ -39,9 +49,9 @@ class HomeDrawer extends StatelessWidget {
                   child: SvgPicture.asset(editSVG))),
         ),
         Space().height(context, 0.02),
-        Text(fullName ?? ""),
+        Text(widget.fullName ?? ""),
         Space().height(context, 0.02),
-        Text(phoneNumber ?? ""),
+        Text(widget.phoneNumber ?? ""),
         Space().height(context, 0.04),
         DrawerListTile(
           itemNumber: 1,
@@ -53,12 +63,21 @@ class HomeDrawer extends StatelessWidget {
         ),
         DrawerListTile(
           itemNumber: 3,
-          onTap: () {},
+          onTap: () {
+            
+          },
         ),
         DrawerListTile(
           itemNumber: 4,
           onTap: () {
-            buildLogoutBottomSheet(context);
+            
+            buildLogoutBottomSheet(
+              context,
+              authBloc,
+              widget.id ?? "",
+              widget.uid ?? "",
+              widget.phoneNumber ?? "",
+            );
           },
         ),
       ]),

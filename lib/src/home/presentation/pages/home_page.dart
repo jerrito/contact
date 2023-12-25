@@ -21,40 +21,58 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     authBloc.add(const GetCacheDataEvent());
+
+    Future.delayed(const Duration(seconds: 3), () {
+      debugPrint(user?.id);
+      debugPrint(user?.uid);
+      if (user?.id == null) {
+        Map<String, dynamic> params = {
+          "phone_number": user?.phoneNumber,
+        };
+        authBloc.add(
+          AddIdEvent(params: params),
+        );
+      }
+      
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if(user?.id==null){
-      Map<String,dynamic> params={
-        "phone_number":user?.phoneNumber
-      };
-      authBloc.add(AddIdEvent(params:params));
-    }
+    debugPrint(user?.id);
+
     return Scaffold(
-      drawer: HomeDrawer(
-        fullName: " ${user?.firstName} ${user?.lastName}",
-         phoneNumber: user?.phoneNumber,
-         profileUrl: user?.profileUrl,
-      ),
+        drawer: HomeDrawer(
+          fullName: " ${user?.firstName} ${user?.lastName}",
+          phoneNumber: user?.phoneNumber,
+          profileUrl: user?.profileUrl,
+          id: user?.id,
+          uid: user?.uid,
+        ),
         appBar: AppBar(title: const Text("Home Page")),
         body: BlocConsumer(
           bloc: authBloc,
           listener: (context, state) {
             if (state is GetCacheDataLoaded) {
               user = state.user;
+              debugPrint(user?.toMap().toString());
               setState(() {});
             }
           },
           builder: (context, state) {
             return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-              Text(user?.firstName ?? "",),
-              Text(user?.lastName ?? ""),
-              Text(user?.email ?? "",),
-              Text(user?.firstName ?? ""),
-              ]);
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    user?.firstName ?? "",
+                  ),
+                  Text(
+                    user?.lastName ?? "",
+                  ),
+                  Text(
+                    user?.email ?? "",
+                  ),
+                ]);
           },
         ));
   }

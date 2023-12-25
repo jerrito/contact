@@ -95,6 +95,7 @@ Future<void> initDependencies() async {
   );
   //remoteds
 
+    
   locator.registerLazySingleton<NetworkInfo>(
     () => NetworkInfoImpl(
       dataConnectionChecker: locator(),
@@ -105,6 +106,11 @@ Future<void> initDependencies() async {
     () => AuhenticationLocalDataSourceImpl(
       sharedPreferences: locator(),
     ),
+  );
+
+  final sharedPreference = await SharedPreferences.getInstance();
+  locator.registerLazySingleton(
+    () => sharedPreference,
   );
 
   locator.registerLazySingleton<AuthenticationRemoteDatasource>(
@@ -124,13 +130,13 @@ Future<void> initDependencies() async {
       firebaseAuth: locator(),
     ),
   );
-  final sharedPreference = await SharedPreferences.getInstance();
-  locator.registerLazySingleton(
-    () => sharedPreference,
-  );
 
-  final firestore = FirebaseFirestore.instance;
-  locator.registerLazySingleton(
-    () => firestore,
+   locator.registerLazySingleton(
+    () => FirebaseFirestore.instance,
   );
+  
+  
+
+
+ 
 }

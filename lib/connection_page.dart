@@ -21,9 +21,11 @@ class _ConnectionPageState extends State<ConnectionPage> {
         body: BlocConsumer(
       bloc: authBloc,
       listener: (context, state) {
+        
         if (state is GetCacheDataLoaded) {
+          debugPrint(state.user.phoneNumber);
           if (state.user.phoneNumber != null) {
-            debugPrint("hei");
+            debugPrint("home");
             context.goNamed("homePage");
           }
           if (state.user.uid == null) {
@@ -33,9 +35,7 @@ class _ConnectionPageState extends State<ConnectionPage> {
             );
           }));
            // context.goNamed("signin");
-          } else {
-            context.goNamed("signup");
-          }
+          } 
         }
         if (state is GetCacheDataError) {
           debugPrint(state.errorMessage);

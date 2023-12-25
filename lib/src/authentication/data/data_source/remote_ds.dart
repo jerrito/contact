@@ -31,14 +31,17 @@ class AuthenticationRemoteDatasourceImpl
     //if (numberSignin == false) {
     final response = await usersRef
         .where("phone_number", isEqualTo: params["phone_number"])
-        //.get()
-        .snapshots()
-        .first;
+        .get();
+    //.snapshots()
+    //.first;
 
     // final data = response.docs.first.data();
 
-    //data.id=
-    return response.docs.first;
+    if (response.docs.isNotEmpty) {
+      return response.docs.first;
+    } else {
+      throw Exception("No user found");
+    }
   }
 
   @override
@@ -62,7 +65,7 @@ class AuthenticationRemoteDatasourceImpl
 
   @override
   Future<void> updateUser(Map<String, dynamic> params) async {
-    return await usersRef.doc(params["id"].id).update(params);
+    await usersRef.doc(params["id"]).update(params);
   }
 
   @override
@@ -71,15 +74,20 @@ class AuthenticationRemoteDatasourceImpl
         .where("phone_number", isEqualTo: params["phone_number"])
         .get()
         .then((value) {
-      var userData = value.docs;
+      var userData = value.docs.first;
 
       User? data;
-      if (userData.isNotEmpty) {
-        data = userData.first.data();
-        data.id = userData.first.id;
 
-        debugPrint(data.id);
-      }
+      data = userData.data();
+      data.id = userData.id;
+      debugPrint(data.toMap().toString());
+      debugPrint(data.toString());
+      localDatasource.cacheUserData(UserModel.fromJson(data.toMap()));
+
+      debugPrint(data.id);
+      debugPrint(data.uid);
+      debugPrint(data.toMap().toString());
+
       return value;
     });
   }

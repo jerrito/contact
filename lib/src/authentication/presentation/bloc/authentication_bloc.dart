@@ -133,7 +133,7 @@ class AuthenticationBloc
         response.fold(
           (error) => SigninError(errorMessage: error),
           (response) {
-            firebaseService.updateUser(user: response.data());
+           // firebaseService.updateUser(user: response.data());
             return SigninLoaded(user: response.data());
           },
         ),

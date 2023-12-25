@@ -15,15 +15,15 @@ import 'package:oktoast/oktoast.dart';
 import 'package:go_router/go_router.dart';
 
 class OTPRequest {
-  String? verifyId, phoneNumber, see, name;
+  String? verifyId, phoneNumber, id, uid;
   int? forceResendingToken;
   bool isLogin;
   //void Function()? onSuccessCallback;
 
   OTPRequest({
     this.verifyId,
-    this.name,
-    this.see,
+    this.uid,
+    this.id,
     this.phoneNumber,
     this.forceResendingToken,
     required this.isLogin,
@@ -137,7 +137,8 @@ class _OTPPageState extends State<OTPPage> {
                  Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return SigninPage(
                       phoneNumber: state.user.phoneNumber!,
-                      uid: state.user.uid);
+                      uid: widget.otpRequest.uid!,
+                      id:widget.otpRequest.id!);
                 }));
                context.goNamed("signin");
               }

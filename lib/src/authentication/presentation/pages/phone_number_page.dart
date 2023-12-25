@@ -10,7 +10,13 @@ import 'package:house_rental/src/authentication/presentation/widgets/default_tex
 
 class PhoneNumberPage extends StatefulWidget {
   final bool isLogin;
-  const PhoneNumberPage({super.key,required this.isLogin});
+  final String? id, uid;
+  const PhoneNumberPage({
+    super.key,
+    required this.isLogin,
+    this.id,
+    this.uid,
+  });
 
   @override
   State<PhoneNumberPage> createState() => _PhoneNumberPageState();
@@ -27,15 +33,20 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
           bloc: authBloc,
           listener: (context, state) async {
             if (state is CodeSent) {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return OTPPage(
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) {
+                  return OTPPage(
                     otpRequest: OTPRequest(
-                  isLogin: widget.isLogin,
-                  phoneNumber: "+233${phoneNumberController.text}",
-                  forceResendingToken: state.token,
-                  verifyId: state.verifyId,
-                ));
-              }));
+                        isLogin: widget.isLogin,
+                        phoneNumber: "+233${phoneNumberController.text}",
+                        forceResendingToken: state.token,
+                        verifyId: state.verifyId,
+                        uid: widget.uid,
+                        id: widget.id),
+                  );
+                }),
+              );
             }
             if (state is CodeCompleted) {
               // print("verification completed ${authCredential.smsCode}");
