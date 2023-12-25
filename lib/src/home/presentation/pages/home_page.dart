@@ -25,6 +25,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    if(user?.id==null){
+      Map<String,dynamic> params={
+        "phone_number":user?.phoneNumber
+      };
+      authBloc.add(AddIdEvent(params:params));
+    }
     return Scaffold(
       drawer: HomeDrawer(
         fullName: " ${user?.firstName} ${user?.lastName}",

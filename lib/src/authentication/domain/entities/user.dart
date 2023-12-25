@@ -9,7 +9,7 @@ class User extends Equatable {
       password,
       profileUrl;
   String? id;
-   User(
+  User(
       {required this.firstName,
       required this.lastName,
       required this.email,
@@ -20,7 +20,16 @@ class User extends Equatable {
       required this.profileUrl});
 
   @override
-  List<Object?> get props => [firstName, lastName, email, phoneNumber, id, uid];
+  List<Object?> get props => [
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        id,
+        uid,
+        profileUrl,
+        password,
+      ];
 
   toMap() {
     return {

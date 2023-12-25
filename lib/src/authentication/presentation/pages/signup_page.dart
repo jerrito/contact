@@ -50,7 +50,7 @@ class _SignupPageState extends State<SignupPage> {
               "last_name": lastNameController.text,
               "email": emailController.text,
               "phone_number": widget.phoneNumber,
-              "id": "",
+              //"id": "",
               "password":password.toString(),
               "token": widget.uid ,
             };
