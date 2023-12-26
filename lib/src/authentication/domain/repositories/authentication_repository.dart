@@ -6,7 +6,7 @@ import 'package:house_rental/src/authentication/data/models/user_model.dart';
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
 
 abstract class AuthenticationRepository {
-  Future<Either<String, QueryDocumentSnapshot<User>>> signIn(
+  Future<Either<String, User?>> signIn(
       Map<String, dynamic> params);
 
   Future<Either<String, DocumentReference<User>?>> signUp(
@@ -17,6 +17,12 @@ abstract class AuthenticationRepository {
       Function(String verificationId, int? resendToken) onCodeSent,
       Function(auth.PhoneAuthCredential phoneAuthCredential) onCompleted,
       Function(auth.FirebaseAuthException) onFailed);
+
+  Future<Either<String, void>> verifyPhoneNumberLogin(
+      String phoneNumber,
+      Function(String verificationId, int? resendToken) onCodeSent,
+      Function(auth.PhoneAuthCredential phoneAuthCredential) onCompleted,
+      Function(auth.FirebaseAuthException) onFailed);    
 
   Future<Either<String, auth.User>> verifyOTP(
       auth.PhoneAuthCredential credential);

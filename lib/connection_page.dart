@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:house_rental/locator.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:house_rental/src/authentication/presentation/pages/phone_number_page.dart';
+import 'package:house_rental/src/authentication/presentation/pages/signin_page.dart';
 
 class ConnectionPage extends StatefulWidget {
   const ConnectionPage({super.key});
@@ -21,32 +22,41 @@ class _ConnectionPageState extends State<ConnectionPage> {
         body: BlocConsumer(
       bloc: authBloc,
       listener: (context, state) {
-        
         if (state is GetCacheDataLoaded) {
           debugPrint(state.user.phoneNumber);
+          debugPrint(state.user.uid);
+          debugPrint(state.user.id);
+          debugPrint(state.user.firstName);
+          debugPrint(state.user.toString());
           if (state.user.phoneNumber != null) {
             debugPrint("home");
             context.goNamed("homePage");
           }
           if (state.user.uid == null) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return const PhoneNumberPage(
-              isLogin:true,
-            );
-          }));
-           // context.goNamed("signin");
-          } 
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) {
+            //     return SigninPage(
+            //       // isLogin: true,
+            //     );
+            //   }),
+            // );
+             context.goNamed("signin");
+          }
         }
         if (state is GetCacheDataError) {
           debugPrint(state.errorMessage);
 
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return const PhoneNumberPage(
-              isLogin:false,
-            );
-          }));
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              return const PhoneNumberPage(
+                isLogin: false,
+              );
+            }),
+          );
 
-         // context.goNamed("phoneNumber", );
+          // context.goNamed("phoneNumber", );
         }
       },
       builder: (context, state) {

@@ -11,16 +11,18 @@ import 'package:house_rental/src/home/presentation/widgets/build_logout_bottomsh
 import 'package:house_rental/src/home/presentation/widgets/drawer_list_tile.dart';
 
 class HomeDrawer extends StatefulWidget {
-  final String? fullName, phoneNumber, profileUrl, id, uid;
+  final String? phoneNumber, profileUrl, id, uid, firstName, lastName, email;
 
-  const HomeDrawer(
-      {Key? key,
-      required this.fullName,
-      required this.phoneNumber,
-      required this.profileUrl,
-      required this.id,
-      required this.uid})
-      : super(key: key);
+  const HomeDrawer({
+    Key? key,
+    required this.phoneNumber,
+    required this.profileUrl,
+    required this.id,
+    required this.uid,
+    this.firstName,
+    this.lastName,
+    this.email,
+  }) : super(key: key);
 
   @override
   State<HomeDrawer> createState() => _HomeDrawerState();
@@ -49,7 +51,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   child: SvgPicture.asset(editSVG))),
         ),
         Space().height(context, 0.02),
-        Text(widget.fullName ?? ""),
+        Text("${widget.firstName} ${widget.lastName}"),
         Space().height(context, 0.02),
         Text(widget.phoneNumber ?? ""),
         Space().height(context, 0.04),
@@ -63,20 +65,20 @@ class _HomeDrawerState extends State<HomeDrawer> {
         ),
         DrawerListTile(
           itemNumber: 3,
-          onTap: () {
-            
-          },
+          onTap: () {},
         ),
         DrawerListTile(
           itemNumber: 4,
           onTap: () {
-            
             buildLogoutBottomSheet(
               context,
               authBloc,
               widget.id ?? "",
               widget.uid ?? "",
               widget.phoneNumber ?? "",
+              widget.firstName ?? "",
+              widget.lastName ?? "",
+              widget.email ?? "",
             );
           },
         ),

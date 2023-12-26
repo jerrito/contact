@@ -23,7 +23,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     required this.localDatasource,
   });
   @override
-  Future<Either<String, QueryDocumentSnapshot<User>>> signIn(
+  Future<Either<String, User?>> signIn(
       Map<String, dynamic> params) async {
     if (await networkInfo.isConnected) {
       try {
@@ -69,30 +69,75 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       Function(auth.FirebaseAuthException) onFailed) async {
     if (await networkInfo.isConnected) {
       try {
-        return Right(await firebaseAuth.verifyPhoneNumber(
-          phoneNumber: phoneNumber,
-          timeout: const Duration(seconds: 120),
-          verificationCompleted: (auth.PhoneAuthCredential credential) async {
-            await onCompleted(credential);
-          },
-          verificationFailed: (auth.FirebaseAuthException e) async {
-            await onFailed(e);
-            // return Left(e.message);
-          },
-          codeSent: (String verificationId, int? resendToken) async {
-            await onCodeSent(verificationId, resendToken);
+        final user = await firebaseService.getUser(phoneNumber: phoneNumber);
+        if (user != null) {
+          // print("User already known");
+          return const Left("Number already registered");
+        } else {
+          return Right(await firebaseAuth.verifyPhoneNumber(
+            phoneNumber: phoneNumber,
+            timeout: const Duration(seconds: 120),
+            verificationCompleted: (auth.PhoneAuthCredential credential) async {
+              await onCompleted(credential);
+            },
+            verificationFailed: (auth.FirebaseAuthException e) async {
+              await onFailed(e);
+              // return Left(e.message);
+            },
+            codeSent: (String verificationId, int? resendToken) async {
+              await onCodeSent(verificationId, resendToken);
 
-            // onCodeSent(PhoneAuthCredential(
-            //   providerId: '',
-            //   signInMethod: '',
-            //   verificationId: verificationId,
-            //   smsCode: '',
-            // ));
-          },
-          codeAutoRetrievalTimeout: (String verificationId) {
-            // Auto retrieval timeout
-          },
-        ));
+              
+            },
+            codeAutoRetrievalTimeout: (String verificationId) {
+              // Auto retrieval timeout
+            },
+          ));
+        }
+      } catch (e) {
+        onFailed(
+            auth.FirebaseAuthException(message: e.toString(), code: 'UNKNOWN'));
+        return Left(e.toString());
+      }
+    } else {
+      return Left(networkInfo.noNetowrkMessage);
+    }
+  }
+
+  @override
+  Future<Either<String, void>> verifyPhoneNumberLogin(
+      String phoneNumber,
+      Function(String verificationId, int? resendToken) onCodeSent,
+      Function(auth.PhoneAuthCredential phoneAuthCredential) onCompleted,
+      Function(auth.FirebaseAuthException) onFailed) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final user = await firebaseService.getUser(phoneNumber: phoneNumber);
+        if (user == null) {
+          // print("User already known");
+          return const Left("Number not registered");
+        } else {
+          return Right(await firebaseAuth.verifyPhoneNumber(
+            phoneNumber: phoneNumber,
+            timeout: const Duration(seconds: 120),
+            verificationCompleted: (auth.PhoneAuthCredential credential) async {
+              await onCompleted(credential);
+            },
+            verificationFailed: (auth.FirebaseAuthException e) async {
+              await onFailed(e);
+              // return Left(e.message);
+            },
+            codeSent: (String verificationId, int? resendToken) async {
+              await onCodeSent(verificationId, resendToken);
+              final user =
+                  await firebaseService.getUser(phoneNumber: phoneNumber);
+              localDatasource.cacheUserData(UserModel.fromJson(user!.toMap()));
+            },
+            codeAutoRetrievalTimeout: (String verificationId) {
+              // Auto retrieval timeout
+            },
+          ));
+        }
       } catch (e) {
         onFailed(
             auth.FirebaseAuthException(message: e.toString(), code: 'UNKNOWN'));
@@ -140,8 +185,9 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   @override
-  Future<Either<String, QuerySnapshot<UserModel>>> addId(Map<String, dynamic> params) async{
-   if (await networkInfo.isConnected) {
+  Future<Either<String, QuerySnapshot<UserModel>>> addId(
+      Map<String, dynamic> params) async {
+    if (await networkInfo.isConnected) {
       final response = await remoteDatasource.addId(params);
       return Right(response);
     } else {

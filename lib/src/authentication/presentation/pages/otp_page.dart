@@ -8,6 +8,7 @@ import 'package:house_rental/locator.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:house_rental/src/authentication/presentation/pages/signin_page.dart';
 import 'package:house_rental/src/authentication/presentation/pages/signup_page.dart';
+import 'package:house_rental/src/home/presentation/pages/home_page.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:telephony/telephony.dart';
@@ -128,19 +129,28 @@ class _OTPPageState extends State<OTPPage> {
               //widget.otpRequest.onSuccessCallback?.call();
               //print(state.user);
               if (!widget.otpRequest.isLogin) {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return SignupPage(
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return SignupPage(
                       phoneNumber: state.user.phoneNumber!,
-                      uid: state.user.uid);
-                }));
+                      uid: state.user.uid,
+                    );
+                  }),
+                );
               } else {
-                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return SigninPage(
-                      phoneNumber: state.user.phoneNumber!,
-                      uid: widget.otpRequest.uid!,
-                      id:widget.otpRequest.id!);
-                }));
-               context.goNamed("signin");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return HomePage(
+                      isLogin:widget.otpRequest.isLogin,
+                      
+                      uid: state.user.uid,
+                      
+                    );
+                  }),
+                );
+                //context.goNamed("signin");
               }
             }
           },

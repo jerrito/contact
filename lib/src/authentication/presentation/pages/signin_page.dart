@@ -1,15 +1,19 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:house_rental/core/widgets/bottom_sheet.dart';
 
 import 'package:house_rental/locator.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
+import 'package:house_rental/src/authentication/presentation/pages/otp_page.dart';
 import 'package:house_rental/src/authentication/presentation/pages/phone_number_page.dart';
 import 'package:house_rental/src/authentication/presentation/widgets/default_textfield.dart';
+import 'package:house_rental/src/home/presentation/pages/home_page.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SigninPage extends StatefulWidget {
   final String phoneNumber, uid, id;
@@ -38,122 +42,172 @@ class _SigninPageState extends State<SigninPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Signin Page")),
-      bottomSheet: BlocConsumer(
-        bloc: authBloc,
-        listener: (context, state) {
-          // TODO: implement listener
-        },
-        builder: (context, state) {
-          return bottomSheetButton(
-            context: context,
-            label: "Signin",
-            onPressed: () {
-              if (type == UseNumber.emailPassword) {
-                var bites = utf8.encode(passwordController.text);
-                var password = sha512.convert(bites);
-                final users = {
-                  "email": emailController.text,
-                  "phone_number": widget.phoneNumber,
-                  //"id": "",
-                  "password": password.toString(),
-                  "uid": widget.uid,
-                };
+        appBar: AppBar(title: const Text("Signin Page")),
+        bottomSheet: bottomSheetButton(
+          context: context,
+          label: "Signin",
+          onPressed: () {
+            if (type == UseNumber.emailPassword) {
+              var bites = utf8.encode(passwordController.text);
+              var password = sha512.convert(bites);
+              final users = {
+                "email": emailController.text,
+                "password": password.toString(),
+                //"uid": widget.uid,
+              };
 
-                authBloc.add(
-                  SignupEvent(users: users),
-                );
-              } else {
-                Map<String, dynamic> number = {
-                  "phone_number": widget.phoneNumber,
-                };
-                authBloc.add(
-                  SigninEvent(users: number),
-                );
-              }
-            },
-          );
-        },
-      ),
-      body: BlocConsumer(
-        bloc: authBloc,
-        listener: (context, state) async {
-          if (state is SigninLoaded) {
-            Map<String, dynamic> params = {
-              "id": widget.id,
-              "uid": widget.uid,
-            };
-            authBloc.add(
-              UpdateUserEvent(params: params),
-            );
-          }
-
-          if (state is SigninError) {
-            debugPrint(state.errorMessage);
-            if (!context.mounted) return;
-
-            OKToast(child: Text(state.errorMessage));
-            Navigator.push(context, MaterialPageRoute(builder: ((context) {
-              return const PhoneNumberPage(isLogin: true);
-            })));
-            //context.goNamed("phoneNumber");
-          }
-        },
-        builder: (context, state) {
-          if (state is SigninLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                RadioListTile(
-                    value: UseNumber.phoneNumber,
-                    groupValue: type,
-                    title: const Text("Use Phone Number"),
-                    onChanged: (value) {
-                      type = value!;
-                      setState(() {});
-                    }),
-                RadioListTile(
-                    value: UseNumber.emailPassword,
-                    groupValue: type,
-                    title: const Text("Use Email and Password"),
-                    onChanged: (value) {
-                      //value = UseNumber.phoneNumber;
-                      type = value!;
-                      setState(() {});
-                    }),
-                Visibility(
-                  visible: type != UseNumber.phoneNumber,
-                  replacement: DefaultTextfield(
-                    controller: phoneNumberController,
-                    label: "Phone Number",
-                  ),
-                  child: Column(
-                    children: [
-                      //email
-                      DefaultTextfield(
-                        controller: emailController,
-                        label: "Email",
-                        hintText: "Enter your email",
-                      ),
-
-                      //password
-                      DefaultTextfield(
-                        controller: passwordController,
-                        label: "Password",
-                        hintText: "Enter your password",
-                      ),
-                    ],
-                  ),
+              authBloc.add(
+                SigninEvent(
+                  users: users,
                 ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
+              );
+            } else {
+              authBloc.add(
+                PhoneNumberLoginEvent(
+                  phoneNumber: "+233${phoneNumberController.text}",
+                ),
+              );
+            }
+          },
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              RadioListTile(
+                  value: UseNumber.phoneNumber,
+                  groupValue: type,
+                  title: const Text("Use Phone Number"),
+                  onChanged: (value) {
+                    type = value!;
+                    setState(() {});
+                  }),
+              RadioListTile(
+                  value: UseNumber.emailPassword,
+                  groupValue: type,
+                  title: const Text("Use Email and Password"),
+                  onChanged: (value) {
+                    //value = UseNumber.phoneNumber;
+                    type = value!;
+                    setState(() {});
+                  }),
+              Visibility(
+                visible: type != UseNumber.phoneNumber,
+                replacement: BlocConsumer(
+                  bloc: authBloc,
+                  listener: (BuildContext context, Object? state) async {
+                    if (state is CodeSent) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return OTPPage(
+                            otpRequest: OTPRequest(
+                                isLogin: true,
+                                phoneNumber:
+                                    "+233${phoneNumberController.text}",
+                                forceResendingToken: state.token,
+                                verifyId: state.verifyId,
+                                uid: widget.uid,
+                                id: widget.id),
+                          );
+                        }),
+                      );
+                    }
+                    if (state is CodeCompleted) {
+                      // print("verification completed ${authCredential.smsCode}");
+                      // print(" ${authCredential.verificationId}");
+                      User? user = FirebaseAuth.instance.currentUser;
+
+                      if (state.authCredential.smsCode != null) {
+                        try {
+                          UserCredential credential = await user!
+                              .linkWithCredential(state.authCredential);
+                        } on FirebaseAuthException catch (e) {
+                          if (e.code == 'provider-already-linked') {
+                            final credential = await FirebaseAuth.instance
+                                .signInWithCredential(state.authCredential);
+                          }
+                        }
+                      }
+                    }
+
+                    if (state is GenericError) {
+                      if (!context.mounted) return;
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(state.errorMessage)));
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is VerifyPhoneNumberLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+
+                    return DefaultTextfield(
+                      controller: phoneNumberController,
+                      label: "Phone Number",
+                    );
+                  },
+                ),
+
+                //email & password bloc
+                child: BlocConsumer(
+                    bloc: authBloc,
+                    listener: (context, state) async {
+                      final preference = await SharedPreferences.getInstance();
+                      var uid = preference.getString("UIDKey");
+                      if (state is SigninLoaded) {
+                        if (!context.mounted) return;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) {
+                            return HomePage(
+                              uid: uid,
+                              isLogin: true,
+                            );
+                          }),
+                        );
+                      }
+
+                      if (state is SigninError) {
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(state.errorMessage)));
+                      }
+                    },
+                    builder: (context, state) {
+                      if (state is SigninLoading) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      return Column(
+                        children: [
+                          //email
+                          DefaultTextfield(
+                            controller: emailController,
+                            label: "Email",
+                            hintText: "Enter your email",
+                          ),
+
+                          //password
+                          DefaultTextfield(
+                            controller: passwordController,
+                            label: "Password",
+                            hintText: "Enter your password",
+                          ),
+                        ],
+                      );
+                    }),
+              ),
+            ],
+          ),
+        )
+        //   },
+        // ),
+        );
   }
 
   UseNumber type = UseNumber.phoneNumber;

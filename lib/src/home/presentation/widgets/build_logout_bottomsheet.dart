@@ -5,8 +5,8 @@ import 'package:house_rental/core/size/sizes.dart';
 import 'package:house_rental/core/spacing/whitspacing.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:house_rental/src/authentication/presentation/pages/phone_number_page.dart';
-import 'package:house_rental/src/authentication/presentation/pages/signin_page.dart';
 import 'package:house_rental/src/authentication/presentation/widgets/default_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 buildLogoutBottomSheet(
   BuildContext context,
@@ -14,6 +14,9 @@ buildLogoutBottomSheet(
   String id,
   String uid,
   String phoneNumber,
+  String firstName,
+  String lastName,
+  String email,
 ) {
   return showModalBottomSheet(
       context: context,
@@ -29,7 +32,7 @@ buildLogoutBottomSheet(
                 Space().height(context, 0.04),
                 BlocConsumer(
                     bloc: authBloc,
-                    listener: (context, state) {
+                    listener: (context, state) async {
                       if (state is UpdateUserError) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text(state.errorMessage)));
@@ -38,15 +41,13 @@ buildLogoutBottomSheet(
                       if (state is UpdateUserLoaded) {
                         // context.pop();
                         // context.goNamed("signin");
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return PhoneNumberPage(
-                            isLogin: true,                          
-                            uid: uid,
-                            id:id
-                          );
-                        }));
-                       // GoRouter.of(context).goNamed("signin");
+                        const uidKey = "UIDKey";
+                        final preferences =
+                            await SharedPreferences.getInstance();
+                        preferences.setString(uidKey, uid);
+
+                        if (!context.mounted) return;
+                        GoRouter.of(context).goNamed("signin");
                       }
                     },
                     builder: (context, state) {
@@ -58,7 +59,11 @@ buildLogoutBottomSheet(
                           onPressed: () {
                             Map<String, dynamic> params = {
                               "id": id,
-                              "uid": null
+                              "uid": null,
+                              "first_name": firstName,
+                              "last_name": lastName,
+                              "email": email,
+                              "phone_number": phoneNumber,
                             };
                             authBloc.add(UpdateUserEvent(params: params));
                           });

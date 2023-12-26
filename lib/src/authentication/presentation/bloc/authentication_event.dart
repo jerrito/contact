@@ -90,3 +90,8 @@ final class AddIdEvent extends AuthenticationEvent {
   final Map<String, dynamic> params;
   const AddIdEvent({required this.params});
 }
+
+final class PhoneNumberLoginEvent extends AuthenticationEvent {
+  final String phoneNumber;
+  const PhoneNumberLoginEvent({required this.phoneNumber});
+}

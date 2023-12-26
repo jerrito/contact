@@ -5,10 +5,10 @@ class User extends Equatable {
       lastName,
       email,
       phoneNumber,
-      uid,
+      
       password,
       profileUrl;
-  String? id;
+  String? uid,id;
   User(
       {required this.firstName,
       required this.lastName,

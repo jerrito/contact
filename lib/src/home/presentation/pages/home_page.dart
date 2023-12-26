@@ -6,7 +6,9 @@ import 'package:house_rental/src/authentication/presentation/bloc/authentication
 import 'package:house_rental/src/home/presentation/widgets/home_drawer.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String? uid;
+  final bool? isLogin;
+  const HomePage({super.key, this.uid, this.isLogin});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -25,15 +27,29 @@ class _HomePageState extends State<HomePage> {
     Future.delayed(const Duration(seconds: 3), () {
       debugPrint(user?.id);
       debugPrint(user?.uid);
-      if (user?.id == null) {
+      if (user?.id == null || user?.uid == null) {
         Map<String, dynamic> params = {
           "phone_number": user?.phoneNumber,
+          "uid": widget.uid
         };
         authBloc.add(
           AddIdEvent(params: params),
         );
       }
-      
+
+      if (widget.isLogin == true) {
+        Map<String, dynamic> params = {
+          "id": user?.id,
+          "uid": widget.uid,
+          "first_name": user?.firstName,
+          "last_name": user?.lastName,
+          "email": user?.email,
+          "phone_number": user?.phoneNumber,
+        };
+        authBloc.add(
+          UpdateUserEvent(params: params),
+        );
+      }
     });
   }
 
@@ -43,11 +59,13 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
         drawer: HomeDrawer(
-          fullName: " ${user?.firstName} ${user?.lastName}",
+          firstName: " ${user?.firstName}",
+          lastName: "${user?.lastName}",
           phoneNumber: user?.phoneNumber,
           profileUrl: user?.profileUrl,
           id: user?.id,
           uid: user?.uid,
+          email: user?.email,
         ),
         appBar: AppBar(title: const Text("Home Page")),
         body: BlocConsumer(

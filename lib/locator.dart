@@ -10,6 +10,7 @@ import 'package:house_rental/src/authentication/data/repositories/authentication
 import 'package:house_rental/src/authentication/domain/repositories/authentication_repository.dart';
 import 'package:house_rental/src/authentication/domain/usecases/add_id.dart';
 import 'package:house_rental/src/authentication/domain/usecases/get_cache_data.dart';
+import 'package:house_rental/src/authentication/domain/usecases/phone_number_login.dart';
 import 'package:house_rental/src/authentication/domain/usecases/signin.dart';
 import 'package:house_rental/src/authentication/domain/usecases/signup.dart';
 import 'package:house_rental/src/authentication/domain/usecases/update_user.dart';
@@ -25,16 +26,16 @@ Future<void> initDependencies() async {
 
   locator.registerFactory(
     () => AuthenticationBloc(
-      firebaseAuth: locator(),
-      signup: locator(),
-      verifyNumber: locator(),
-      verifyOTP: locator(),
-      getCacheData: locator(),
-      signin: locator(),
-      firebaseService: locator(),
-      updateUser: locator(),
-      addId: locator()
-    ),
+        firebaseAuth: locator(),
+        signup: locator(),
+        verifyNumber: locator(),
+        verifyOTP: locator(),
+        getCacheData: locator(),
+        signin: locator(),
+        firebaseService: locator(),
+        updateUser: locator(),
+        addId: locator(),
+        verifyPhoneNumberLogin: locator()),
   );
 
   //usecases
@@ -68,6 +69,12 @@ Future<void> initDependencies() async {
   );
 
   locator.registerLazySingleton(
+    () => VerifyPhoneNumberLogin(
+      repository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton(
     () => VerifyOTP(
       repository: locator(),
     ),
@@ -79,10 +86,8 @@ Future<void> initDependencies() async {
     ),
   );
 
-  locator.registerLazySingleton(
-    ()=>UpdateUser(repository: locator())
-  );
-  
+  locator.registerLazySingleton(() => UpdateUser(repository: locator()));
+
   //repository
 
   locator.registerLazySingleton<AuthenticationRepository>(
@@ -95,7 +100,6 @@ Future<void> initDependencies() async {
   );
   //remoteds
 
-    
   locator.registerLazySingleton<NetworkInfo>(
     () => NetworkInfoImpl(
       dataConnectionChecker: locator(),
@@ -131,12 +135,7 @@ Future<void> initDependencies() async {
     ),
   );
 
-   locator.registerLazySingleton(
+  locator.registerLazySingleton(
     () => FirebaseFirestore.instance,
   );
-  
-  
-
-
- 
 }

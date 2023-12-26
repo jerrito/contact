@@ -7,6 +7,7 @@ import 'package:house_rental/core/usecase/usecase.dart';
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
 import 'package:house_rental/src/authentication/domain/usecases/add_id.dart';
 import 'package:house_rental/src/authentication/domain/usecases/get_cache_data.dart';
+import 'package:house_rental/src/authentication/domain/usecases/phone_number_login.dart';
 import 'package:house_rental/src/authentication/domain/usecases/signin.dart';
 import 'package:house_rental/src/authentication/domain/usecases/signup.dart';
 import 'package:house_rental/src/authentication/domain/usecases/update_user.dart';
@@ -21,6 +22,7 @@ class AuthenticationBloc
   final auth.FirebaseAuth firebaseAuth;
   final Signup signup;
   final VerifyPhoneNumber verifyNumber;
+  final VerifyPhoneNumberLogin verifyPhoneNumberLogin;
   final VerifyOTP verifyOTP;
   final GetCacheData getCacheData;
   final Signin signin;
@@ -28,7 +30,8 @@ class AuthenticationBloc
   final FirebaseService firebaseService;
   final AddId addId;
   AuthenticationBloc(
-      {required this.signup,
+      {required this.verifyPhoneNumberLogin,
+      required this.signup,
       required this.firebaseAuth,
       required this.verifyNumber,
       required this.verifyOTP,
@@ -90,6 +93,27 @@ class AuthenticationBloc
       );
     });
 
+    on<PhoneNumberLoginEvent>((event, emit) async {
+      emit(
+        VerifyPhoneNumberLoading(),
+      );
+
+      await verifyPhoneNumberLogin.verifyPhoneNumberLogin(
+        event.phoneNumber,
+        (verificationId, resendToken) => add(
+          CodeSentEvent(
+            forceResendingToken: resendToken!,
+            verificationId: verificationId,
+          ),
+        ),
+        (phoneAuthCredential) => add(
+          VerificationCompleteEvent(phoneAuthCredential: phoneAuthCredential),
+        ),
+        (p0) => add(
+          PhoneNumberErrorEvent(error: p0.message!),
+        ),
+      );
+    });
     on<VerifyOTPEvent>(
       (event, emit) async {
         emit(
@@ -133,8 +157,8 @@ class AuthenticationBloc
         response.fold(
           (error) => SigninError(errorMessage: error),
           (response) {
-           // firebaseService.updateUser(user: response.data());
-            return SigninLoaded(user: response.data());
+            // firebaseService.updateUser(user: response.data());
+            return SigninLoaded(user: response!);
           },
         ),
       );

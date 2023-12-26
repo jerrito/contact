@@ -6,7 +6,7 @@ import 'package:house_rental/src/authentication/data/models/user_model.dart';
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
 
 abstract class AuthenticationRemoteDatasource {
-  Future<QueryDocumentSnapshot<UserModel>> signin(Map<String, dynamic> params);
+  Future<UserModel?> signin(Map<String, dynamic> params);
   Future<DocumentReference<UserModel>?> signup(Map<String, dynamic> params);
   Future<auth.User> verifyOTP(auth.PhoneAuthCredential credential);
   Future<void> updateUser(Map<String, dynamic> params);
@@ -26,22 +26,39 @@ class AuthenticationRemoteDatasourceImpl
         toFirestore: (user, _) => user.toMap(),
       );
   @override
-  Future<QueryDocumentSnapshot<UserModel>> signin(
-      Map<String, dynamic> params) async {
-    //if (numberSignin == false) {
-    final response = await usersRef
-        .where("phone_number", isEqualTo: params["phone_number"])
-        .get();
-    //.snapshots()
-    //.first;
+  Future<UserModel> signin(Map<String, dynamic> params) async {
+    UserModel result;
 
-    // final data = response.docs.first.data();
+    return await usersRef
+        .where("email", isEqualTo: params["email"])
+        .where("password", isEqualTo: params["password"])
+        .get()
+        .then((snapshot) {
+      var userSnapShot = snapshot.docs;
 
-    if (response.docs.isNotEmpty) {
-      return response.docs.first;
-    } else {
-      throw Exception("No user found");
-    }
+      //UserModel data;
+      if (userSnapShot.isNotEmpty) {
+       // data = userSnapShot.first.data();
+
+        //data.id=
+        // print(data.id);
+      }
+
+      // var status = QueryStatus.successful;
+
+      //result = data;
+      return userSnapShot.first.data();
+
+    }).catchError((error) {
+      if (kDebugMode) {
+        print("Failed to get user: $error");
+      }
+
+      var errorMsg = error;
+      result = errorMsg;
+
+      return result;
+    });
   }
 
   @override
@@ -66,6 +83,7 @@ class AuthenticationRemoteDatasourceImpl
   @override
   Future<void> updateUser(Map<String, dynamic> params) async {
     await usersRef.doc(params["id"]).update(params);
+    await localDatasource.cacheUserData(UserModel.fromJson(params));
   }
 
   @override
@@ -80,6 +98,7 @@ class AuthenticationRemoteDatasourceImpl
 
       data = userData.data();
       data.id = userData.id;
+      data.uid ??= params["uid"];
       debugPrint(data.toMap().toString());
       debugPrint(data.toString());
       localDatasource.cacheUserData(UserModel.fromJson(data.toMap()));
