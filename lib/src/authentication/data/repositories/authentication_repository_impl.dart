@@ -31,7 +31,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
         return Right(response);
       } catch (e) {
-        return Left(e.toString());
+        return const Left("Wrong email or password");
       }
     } else {
       return Left(networkInfo.noNetowrkMessage);
@@ -185,7 +185,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   @override
-  Future<Either<String, QuerySnapshot<UserModel>>> addId(
+  Future<Either<String, void>> addId(
       Map<String, dynamic> params) async {
     if (await networkInfo.isConnected) {
       final response = await remoteDatasource.addId(params);

@@ -10,7 +10,7 @@ abstract class AuthenticationRemoteDatasource {
   Future<DocumentReference<UserModel>?> signup(Map<String, dynamic> params);
   Future<auth.User> verifyOTP(auth.PhoneAuthCredential credential);
   Future<void> updateUser(Map<String, dynamic> params);
-  Future<QuerySnapshot<UserModel>> addId(Map<String, dynamic> params);
+  Future<void> addId(Map<String, dynamic> params);
 }
 
 class AuthenticationRemoteDatasourceImpl
@@ -27,7 +27,7 @@ class AuthenticationRemoteDatasourceImpl
       );
   @override
   Future<UserModel> signin(Map<String, dynamic> params) async {
-    UserModel result;
+    // UserModel result;
 
     return await usersRef
         .where("email", isEqualTo: params["email"])
@@ -35,29 +35,7 @@ class AuthenticationRemoteDatasourceImpl
         .get()
         .then((snapshot) {
       var userSnapShot = snapshot.docs;
-
-      //UserModel data;
-      if (userSnapShot.isNotEmpty) {
-       // data = userSnapShot.first.data();
-
-        //data.id=
-        // print(data.id);
-      }
-
-      // var status = QueryStatus.successful;
-
-      //result = data;
       return userSnapShot.first.data();
-
-    }).catchError((error) {
-      if (kDebugMode) {
-        print("Failed to get user: $error");
-      }
-
-      var errorMsg = error;
-      result = errorMsg;
-
-      return result;
     });
   }
 
@@ -87,11 +65,11 @@ class AuthenticationRemoteDatasourceImpl
   }
 
   @override
-  Future<QuerySnapshot<UserModel>> addId(Map<String, dynamic> params) async {
-    return await usersRef
+  Future<void> addId(Map<String, dynamic> params) async {
+    await usersRef
         .where("phone_number", isEqualTo: params["phone_number"])
         .get()
-        .then((value) {
+        .then((value) async {
       var userData = value.docs.first;
 
       User? data;
@@ -100,14 +78,20 @@ class AuthenticationRemoteDatasourceImpl
       data.id = userData.id;
       data.uid ??= params["uid"];
       debugPrint(data.toMap().toString());
-      debugPrint(data.toString());
-      localDatasource.cacheUserData(UserModel.fromJson(data.toMap()));
+      debugPrint(userData.id);
+      debugPrint(data.uid);
+      //localDatasource.cacheUserData(UserModel.fromJson(data.toMap()));
 
+      await usersRef.doc(userData.id).update({"id": userData.id,"uid":data.uid ?? params["uid"]});
+      await localDatasource.cacheUserData(UserModel.fromJson(data.toMap()));
+      debugPrint("check");
       debugPrint(data.id);
       debugPrint(data.uid);
       debugPrint(data.toMap().toString());
 
-      return value;
+     
+      //return userData.data();
+      //return value;
     });
   }
 }

@@ -8,7 +8,13 @@ import 'package:house_rental/src/home/presentation/widgets/home_drawer.dart';
 class HomePage extends StatefulWidget {
   final String? uid;
   final bool? isLogin;
-  const HomePage({super.key, this.uid, this.isLogin});
+  final String? phoneNumber;
+  const HomePage({
+    super.key,
+    this.uid,
+    this.isLogin,
+    this.phoneNumber,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -24,30 +30,18 @@ class _HomePageState extends State<HomePage> {
 
     authBloc.add(const GetCacheDataEvent());
 
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 2), () {
       debugPrint(user?.id);
       debugPrint(user?.uid);
       if (user?.id == null || user?.uid == null) {
         Map<String, dynamic> params = {
           "phone_number": user?.phoneNumber,
-          "uid": widget.uid
-        };
-        authBloc.add(
-          AddIdEvent(params: params),
-        );
-      }
-
-      if (widget.isLogin == true) {
-        Map<String, dynamic> params = {
-          "id": user?.id,
           "uid": widget.uid,
-          "first_name": user?.firstName,
-          "last_name": user?.lastName,
-          "email": user?.email,
-          "phone_number": user?.phoneNumber,
         };
         authBloc.add(
-          UpdateUserEvent(params: params),
+          AddIdEvent(
+            params: params,
+          ),
         );
       }
     });
@@ -55,7 +49,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(user?.id);
+    //debugPrint(user?.id);
 
     return Scaffold(
         drawer: HomeDrawer(

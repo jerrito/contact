@@ -144,6 +144,7 @@ class _OTPPageState extends State<OTPPage> {
                   MaterialPageRoute(builder: (context) {
                     return HomePage(
                       isLogin:widget.otpRequest.isLogin,
+                      phoneNumber:widget.otpRequest.phoneNumber,
                       
                       uid: state.user.uid,
                       

@@ -33,7 +33,11 @@ buildLogoutBottomSheet(
                 BlocConsumer(
                     bloc: authBloc,
                     listener: (context, state) async {
+                      const uidKey = "UIDKey";
+                      const phoneNumber = "phoneNumber";
+                      final preferences = await SharedPreferences.getInstance();
                       if (state is UpdateUserError) {
+                        if (!context.mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text(state.errorMessage)));
                       }
@@ -41,10 +45,9 @@ buildLogoutBottomSheet(
                       if (state is UpdateUserLoaded) {
                         // context.pop();
                         // context.goNamed("signin");
-                        const uidKey = "UIDKey";
-                        final preferences =
-                            await SharedPreferences.getInstance();
+
                         preferences.setString(uidKey, uid);
+                        preferences.setString(phoneNumber, phoneNumber);
 
                         if (!context.mounted) return;
                         GoRouter.of(context).goNamed("signin");

@@ -32,7 +32,7 @@ class _ConnectionPageState extends State<ConnectionPage> {
             debugPrint("home");
             context.goNamed("homePage");
           }
-          if (state.user.uid == null) {
+         else if (state.user.uid == null) {
             // Navigator.push(
             //   context,
             //   MaterialPageRoute(builder: (context) {

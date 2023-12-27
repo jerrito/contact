@@ -12,6 +12,7 @@ import 'package:house_rental/locator.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:house_rental/src/authentication/presentation/widgets/default_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:house_rental/src/home/presentation/pages/home_page.dart';
 
 class SignupPage extends StatefulWidget {
   final String phoneNumber,uid;
@@ -54,7 +55,7 @@ class _SignupPageState extends State<SignupPage> {
               "password":password.toString(),
               "uid": widget.uid ,
             };
-            debugPrint(auth.currentUser?.refreshToken);
+           
             authBloc.add(
               SignupEvent(users: users),
             );
@@ -69,8 +70,17 @@ class _SignupPageState extends State<SignupPage> {
               }
               
               if (state is SignupLoaded) {
-                //GoRouter.of(context).go(location)
-                GoRouter.of(context).pushReplacementNamed("homePage");
+                Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) {
+                            return HomePage(
+                              uid: widget.uid,
+                              isLogin: false,
+                              phoneNumber: widget.phoneNumber,
+                            );
+                          }),
+                        );
+              //  GoRouter.of(context).pushReplacementNamed("homePage");
               
               }
             },

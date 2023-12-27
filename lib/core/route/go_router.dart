@@ -13,11 +13,7 @@ GoRouter goRouter() {
     GoRoute(
         path: "/",
         name: "connectionPage",
-        builder: (context, state) => SigninPage(
-              phoneNumber: state.uri.queryParameters["phone_number"].toString(),
-              uid: state.uri.queryParameters["uid"].toString(),
-              id: state.uri.queryParameters["id"].toString(),
-            ),
+        builder: (context, state) => const ConnectionPage(),
         routes: [
           GoRoute(
             path: "signup",

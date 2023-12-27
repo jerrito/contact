@@ -158,14 +158,19 @@ class _SigninPageState extends State<SigninPage> {
                     listener: (context, state) async {
                       final preference = await SharedPreferences.getInstance();
                       var uid = preference.getString("UIDKey");
+                      var phoneNumber = preference.getString("phoneNumber");
+
                       if (state is SigninLoaded) {
                         if (!context.mounted) return;
+                        debugPrint(uid);
+                        debugPrint(phoneNumber);
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) {
                             return HomePage(
                               uid: uid,
                               isLogin: true,
+                              phoneNumber: phoneNumber,
                             );
                           }),
                         );
