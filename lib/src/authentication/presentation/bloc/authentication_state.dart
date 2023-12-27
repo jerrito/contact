@@ -34,6 +34,18 @@ class SignupComplete extends AuthenticationState {
   const SignupComplete();
 }
 
+class SigninLoading extends AuthenticationState {}
+
+class SigninLoaded extends AuthenticationState {
+  final User user;
+  const SigninLoaded({required this.user});
+}
+
+class SigninError extends AuthenticationState {
+  final String errorMessage;
+  const SigninError({required this.errorMessage});
+}
+
 class CodeSent extends AuthenticationState {
   final String verifyId;
   final int? token;
@@ -55,4 +67,31 @@ class VerifyOTPLoaded extends AuthenticationState {
 class VerifyOTPFailed extends AuthenticationState {
   final String errorMessage;
   const VerifyOTPFailed({required this.errorMessage});
+}
+
+class GetCacheDataLoaded extends AuthenticationState {
+  final User user;
+
+  const GetCacheDataLoaded({required this.user});
+}
+
+class GetCacheDataError extends AuthenticationState {
+  final String errorMessage;
+  const GetCacheDataError({required this.errorMessage});
+}
+
+class UpdateUserLoading extends AuthenticationState {}
+
+class UpdateUserLoaded extends AuthenticationState {}
+
+class UpdateUserError extends AuthenticationState {
+  final String errorMessage;
+  const UpdateUserError({required this.errorMessage});
+}
+
+class AddIdLoaded extends AuthenticationState {}
+
+class AddIdError extends AuthenticationState {
+  final String errorMessage;
+  const AddIdError({required this.errorMessage});
 }

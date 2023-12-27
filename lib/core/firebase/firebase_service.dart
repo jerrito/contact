@@ -1,23 +1,25 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:house_rental/src/authentication/data/models/user_model.dart';
+import 'package:house_rental/src/authentication/domain/entities/user.dart';
 
 class FirebaseService {
-  final FirebaseAuth firebaseAuth;
+  final auth.FirebaseAuth firebaseAuth;
   final FirebaseFirestore firebaseFirestore;
 
-  FirebaseService({required this.firebaseFirestore, required this.firebaseAuth});
+  FirebaseService(
+      {required this.firebaseFirestore, required this.firebaseAuth});
   final usersRef = FirebaseFirestore.instance
       .collection('houseRentalAccount')
       .withConverter<UserModel>(
         fromFirestore: (snapshot, _) => UserModel.fromJson(snapshot.data()!),
         toFirestore: (user, _) => user.toMap(),
       );
-   String idGet="" ;
+  String idGet = "";
   Future<UserModel?> getUser({required String phoneNumber}) async {
     UserModel? result;
-    
+
     return await usersRef
         .where("phone_number", isEqualTo: phoneNumber)
         .get()
@@ -49,12 +51,21 @@ class FirebaseService {
     });
   }
 
-  Future<DocumentReference<UserModel>?> saveUser({required UserModel user}) async {
-   // UserModel? result;
+  Future<DocumentReference<UserModel>?> saveUser(
+      {required UserModel user}) async {
+    // UserModel? result;
 
     //
     return await usersRef.add(user);
-    
+  }
+
+  Future<void> updateUser({required User user}) async {
+    print(user.id);
+
+    //
+   return await usersRef.doc(user.id).update(user.toMap());
+   
+    //return result;
   }
 
   Future<void> phoneSignIn(Map<String, dynamic> params) async {
@@ -68,13 +79,13 @@ class FirebaseService {
     );
   }
 
-  _onVerificationCompleted(PhoneAuthCredential authCredential) async {}
+  _onVerificationCompleted(auth.PhoneAuthCredential authCredential) async {}
 
-  _onVerificationFailed(FirebaseAuthException exception) async{}
+  _onVerificationFailed(auth.FirebaseAuthException exception) async {}
 
-  _onCodeSent(String verificationId, int? forceResendingToken) async{}
+  _onCodeSent(String verificationId, int? forceResendingToken) async {}
 
-  _onCodeTimeout(String timeout) async{
+  _onCodeTimeout(String timeout) async {
     return null;
   }
 }

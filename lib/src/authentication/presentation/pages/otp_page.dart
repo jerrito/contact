@@ -4,26 +4,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:house_rental/core/size/sizes.dart';
 import 'package:house_rental/core/spacing/whitspacing.dart';
-import 'package:house_rental/core/widgets/bottom_sheet.dart';
 import 'package:house_rental/locator.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
+import 'package:house_rental/src/authentication/presentation/pages/signin_page.dart';
 import 'package:house_rental/src/authentication/presentation/pages/signup_page.dart';
+import 'package:house_rental/src/home/presentation/pages/home_page.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:telephony/telephony.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:go_router/go_router.dart';
 
 class OTPRequest {
-  String? verifyId, phoneNumber, see, name;
+  String? verifyId, phoneNumber, id, uid;
   int? forceResendingToken;
+  bool isLogin;
   //void Function()? onSuccessCallback;
 
   OTPRequest({
     this.verifyId,
-    this.name,
-    this.see,
+    this.uid,
+    this.id,
     this.phoneNumber,
     this.forceResendingToken,
+    required this.isLogin,
     //  this.onSuccessCallback,
   });
 }
@@ -112,7 +116,6 @@ class _OTPPageState extends State<OTPPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-     
       body: BlocConsumer(
           listener: (conteext, state) async {
             if (state is VerifyOTPFailed) {
@@ -120,18 +123,37 @@ class _OTPPageState extends State<OTPPage> {
               OKToast(child: Text(state.errorMessage));
               // PrimarySnackBar(context)
               //     .displaySnackBar(message: state.errorMessage);
-             
             }
-             if (state is VerifyOTPLoaded) {
-                debugPrint("calling call back function");
-                //widget.otpRequest.onSuccessCallback?.call();
-                //print(state.user);
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return  SignupPage(
-                    phoneNumber: state.user.phoneNumber!,
-                  );
-                }));
+            if (state is VerifyOTPLoaded) {
+              debugPrint("calling call back function");
+              //widget.otpRequest.onSuccessCallback?.call();
+              //print(state.user);
+              if (!widget.otpRequest.isLogin) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return SignupPage(
+                      phoneNumber: state.user.phoneNumber!,
+                      uid: state.user.uid,
+                    );
+                  }),
+                );
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return HomePage(
+                      isLogin:widget.otpRequest.isLogin,
+                      phoneNumber:widget.otpRequest.phoneNumber,
+                      
+                      uid: state.user.uid,
+                      
+                    );
+                  }),
+                );
+                //context.goNamed("signin");
               }
+            }
           },
           bloc: authBloc,
           builder: (context, state) {

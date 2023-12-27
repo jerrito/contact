@@ -1,20 +1,25 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:crypto/crypto.dart';
+import 'package:go_router/go_router.dart';
 import 'package:house_rental/core/size/sizes.dart';
 import 'package:house_rental/core/spacing/whitspacing.dart';
 import 'package:house_rental/core/widgets/bottom_sheet.dart';
 import 'package:house_rental/locator.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:house_rental/src/authentication/presentation/widgets/default_textfield.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:house_rental/src/home/presentation/pages/home_page.dart';
 
 class SignupPage extends StatefulWidget {
-  final String phoneNumber;
+  final String phoneNumber,uid;
   const SignupPage({
     Key? key,
     required this.phoneNumber,
+    required this.uid,
   }) : super(key: key);
 
   @override
@@ -23,10 +28,12 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   final authBloc = locator<AuthenticationBloc>();
+  final auth = FirebaseAuth.instance;
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
   final phoneNumberController = TextEditingController();
+  final passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,14 +44,21 @@ class _SignupPageState extends State<SignupPage> {
           context: context,
           label: "Signup",
           onPressed: () {
+            var bites=utf8.encode(passwordController.text);
+            var password=sha512.convert(bites);
             final users = {
               "first_name": firstNameController.text,
               "last_name": lastNameController.text,
               "email": emailController.text,
               "phone_number": widget.phoneNumber,
-              "id": ""
+              //"id": "",
+              "password":password.toString(),
+              "uid": widget.uid ,
             };
-            authBloc.add(SignupEvent(users: users));
+           
+            authBloc.add(
+              SignupEvent(users: users),
+            );
           },
         ),
         body: BlocConsumer<AuthenticationBloc, AuthenticationState>(
@@ -54,18 +68,20 @@ class _SignupPageState extends State<SignupPage> {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(state.errorMessage)));
               }
-              if (state is HomePageGet) {
-                Navigator.push(context, PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) {
-                  return const HomePage();
-                }));
-              }
+              
               if (state is SignupLoaded) {
-                //GoRouter.of(context).go(location)
-                Navigator.push(context, PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) {
-                  return const HomePage();
-                }));
+                Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) {
+                            return HomePage(
+                              uid: widget.uid,
+                              isLogin: false,
+                              phoneNumber: widget.phoneNumber,
+                            );
+                          }),
+                        );
+              //  GoRouter.of(context).pushReplacementNamed("homePage");
+              
               }
             },
             builder: (context, state) {
@@ -88,15 +104,25 @@ class _SignupPageState extends State<SignupPage> {
 
                       //last Name
                       DefaultTextfield(
-                          controller: lastNameController,
-                          label: "Last Name",
-                          hintText: "Enter your last name"),
+                        controller: lastNameController,
+                        label: "Last Name",
+                        hintText: "Enter your last name",
+                      ),
 
                       //email
                       DefaultTextfield(
-                          controller: emailController,
-                          label: "Email",
-                          hintText: "Enter your email"),
+                        controller: emailController,
+                        label: "Email",
+                        hintText: "Enter your email",
+                      ),
+
+                      //email
+                      DefaultTextfield(
+                        controller: passwordController,
+                        label: "Password",
+                        hintText: "Enter your password",
+                      ),
+
 
                       Space().height(context, 0.02),
                     ],

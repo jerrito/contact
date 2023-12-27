@@ -1,17 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:house_rental/core/usecase/usecase.dart';
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
 import 'package:house_rental/src/authentication/domain/repositories/authentication_repository.dart';
 
-class Signin extends UseCases<User?,Map<String,dynamic>> {
+class GetCacheData extends UseCases<User, NoParams> {
   final AuthenticationRepository repository;
 
-  Signin({required this.repository});
+  GetCacheData({required this.repository});
   
   @override
-  Future<Either<String, User?>> call(Map<String, dynamic> params) async{
-    return await repository.signIn(params);
+  Future<Either<String, User>> call(NoParams params) async{
+    return await repository.getCacheData();
   }
-  
-  }
+}

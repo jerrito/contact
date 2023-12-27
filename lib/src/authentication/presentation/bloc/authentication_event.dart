@@ -26,6 +26,25 @@ final class SignupErrorEvent extends AuthenticationEvent {
   const SignupErrorEvent({required this.error});
 }
 
+final class SigninEvent extends AuthenticationEvent {
+  final Map<String, dynamic> users;
+
+  const SigninEvent({required this.users});
+}
+
+final class SigninCompleteEvent extends AuthenticationEvent {
+  const SigninCompleteEvent();
+}
+
+final class SigninLoadingEvent extends AuthenticationEvent {
+  const SigninLoadingEvent();
+}
+
+final class SigninErrorEvent extends AuthenticationEvent {
+  final String error;
+  const SigninErrorEvent({required this.error});
+}
+
 final class PhoneNumberErrorEvent extends AuthenticationEvent {
   final String error;
   const PhoneNumberErrorEvent({required this.error});
@@ -52,9 +71,27 @@ final class VerificationCompleteEvent extends AuthenticationEvent {
   const VerificationCompleteEvent({required this.phoneAuthCredential});
 }
 
-final class VerifyOTPEvent extends AuthenticationEvent{
- final auth.PhoneAuthCredential params;
+final class VerifyOTPEvent extends AuthenticationEvent {
+  final auth.PhoneAuthCredential params;
 
- const VerifyOTPEvent({required this.params});
- 
+  const VerifyOTPEvent({required this.params});
+}
+
+final class GetCacheDataEvent extends AuthenticationEvent {
+  const GetCacheDataEvent();
+}
+
+final class UpdateUserEvent extends AuthenticationEvent {
+  final Map<String, dynamic> params;
+  const UpdateUserEvent({required this.params});
+}
+
+final class AddIdEvent extends AuthenticationEvent {
+  final Map<String, dynamic> params;
+  const AddIdEvent({required this.params});
+}
+
+final class PhoneNumberLoginEvent extends AuthenticationEvent {
+  final String phoneNumber;
+  const PhoneNumberLoginEvent({required this.phoneNumber});
 }

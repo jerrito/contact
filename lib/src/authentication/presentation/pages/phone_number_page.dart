@@ -6,11 +6,17 @@ import 'package:house_rental/core/widgets/bottom_sheet.dart';
 import 'package:house_rental/locator.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:house_rental/src/authentication/presentation/pages/otp_page.dart';
-import 'package:house_rental/src/authentication/presentation/pages/signup_page.dart';
 import 'package:house_rental/src/authentication/presentation/widgets/default_textfield.dart';
 
 class PhoneNumberPage extends StatefulWidget {
-  const PhoneNumberPage({super.key});
+  final bool isLogin;
+  final String? id, uid;
+  const PhoneNumberPage({
+    super.key,
+    required this.isLogin,
+    this.id,
+    this.uid,
+  });
 
   @override
   State<PhoneNumberPage> createState() => _PhoneNumberPageState();
@@ -27,15 +33,20 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
           bloc: authBloc,
           listener: (context, state) async {
             if (state is CodeSent) {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return OTPPage(
-                  otpRequest: OTPRequest( phoneNumber: "+233${phoneNumberController.text}",
-                  forceResendingToken: state.token,
-                  verifyId: state.verifyId,
-                  
-                )
-                );
-              }));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) {
+                  return OTPPage(
+                    otpRequest: OTPRequest(
+                        isLogin: widget.isLogin,
+                        phoneNumber: "+233${phoneNumberController.text}",
+                        forceResendingToken: state.token,
+                        verifyId: state.verifyId,
+                        uid: widget.uid,
+                        id: widget.id),
+                  );
+                }),
+              );
             }
             if (state is CodeCompleted) {
               // print("verification completed ${authCredential.smsCode}");
@@ -46,10 +57,14 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
                 try {
                   UserCredential credential =
                       await user!.linkWithCredential(state.authCredential);
+                  print(credential.user);
+                  print(credential.credential);
                 } on FirebaseAuthException catch (e) {
                   if (e.code == 'provider-already-linked') {
-                    await FirebaseAuth.instance
+                    final credential = await FirebaseAuth.instance
                         .signInWithCredential(state.authCredential);
+                    print(credential.credential!);
+                    print(credential.user);
                   }
                 }
               }
