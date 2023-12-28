@@ -8,6 +8,7 @@ const editSVG = "lib/assets/svgs/edit-2.svg";
 const icLocationSVG = "lib/assets/svgs/IC_Location.svg";
 const callSVG = "lib/assets/svgs/call.svg";
 const bedSVG = "lib/assets/svgs/IC_Bed.svg";
+const bathSVG = "lib/assets/svgs/IC_Bath.svg";
 const menuSVG = "lib/assets/svgs/IC_Menu.svg";
 const notificationSVG = "lib/assets/svgs/IC_Notification.svg";
 const searchSVG = "lib/assets/svgs/IC_Search.svg";

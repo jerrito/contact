@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:house_rental/assets/svgs/svg_constants.dart';
+import 'package:house_rental/core/size/sizes.dart';
 import 'package:house_rental/core/spacing/whitspacing.dart';
 import 'package:house_rental/locator.dart';
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:house_rental/src/home/presentation/widgets/home_drawer.dart';
 import 'package:house_rental/src/home/presentation/widgets/house_container.dart';
+import 'package:house_rental/src/home/presentation/widgets/house_row_details.dart';
 import 'package:house_rental/src/home/presentation/widgets/list_view_buttons.dart';
 import 'package:house_rental/src/home/presentation/widgets/search_textfield.dart';
 
@@ -80,60 +82,76 @@ class _HomePageState extends State<HomePage> {
           },
           builder: (context, state) {
             return SingleChildScrollView(
-              child: Column(
-                  mainAxisSize : MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Space().height(context, 0.04),
-                      // SingleChildScrollView(
-                      //   child: ExpansionTile(
-                      //     controlAffinity: ListTileControlAffinity.leading,
-                      //     onExpansionChanged: (value){
-            
-                      //     },
-            
-                      //    expandedCrossAxisAlignment: CrossAxisAlignment.end,
-                      //    expandedAlignment: Alignment.bottomCenter,
-                      //     title:  const Text("Ja"),
-                      //     children: [
-                      //       const Text("La"),
-                      //       const Text("UK"),
-                      //       const Text("GE"),
-                      //     ],
-                      //   ),
-                      // ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children:[
-                     
-                        SvgPicture.asset(notificationSVG)
-                      ]
-                    ),
-                    Space().height(context, 0.02),
-                   const ListViewRowButtons(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        SearchTextField(
-                          label: "Search address or near you",
-                          onChanged: null,
-                          controller: searchController,
-                          onTap: null,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Scaffold.of(context).openDrawer();
-                          },
-                          child: SvgPicture.asset(
-                            menuSVG,
-                            height: 35,
+              child: Padding(
+                padding:  EdgeInsets.symmetric(horizontal:Sizes().width(context,0.04,),),
+                child: Column(
+                  //  mainAxisSize : MainAxisSize.min,
+                 // mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Space().height(context, 0.04),
+                        // SingleChildScrollView(
+                        //   child: ExpansionTile(
+                        //     controlAffinity: ListTileControlAffinity.leading,
+                        //     onExpansionChanged: (value){
+                          
+                        //     },
+                          
+                        //    expandedCrossAxisAlignment: CrossAxisAlignment.end,
+                        //    expandedAlignment: Alignment.bottomCenter,
+                        //     title:  const Text("Ja"),
+                        //     children: [
+                        //       const Text("La"),
+                        //       const Text("UK"),
+                        //       const Text("GE"),
+                        //     ],
+                        //   ),
+                        // ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children:[
+                       
+                          SvgPicture.asset(notificationSVG)
+                        ]
+                      ),
+                      Space().height(context, 0.02),
+                    
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          SearchTextField(
+                            label: "Search address or near you",
+                            onChanged: null,
+                            controller: searchController,
+                            onTap: null,
                           ),
-                        ),
-                      ],
-                    ),
-                    Space().height(context, 0.05),
-                    const Center(child: HouseContainer())
-                  ]),
+                          GestureDetector(
+                            onTap: () {
+                              Scaffold.of(context).openDrawer();
+                            },
+                            child: SvgPicture.asset(
+                              menuSVG,
+                              height: 35,
+                            ),
+                          ),
+                        ],
+                      ),
+                       const ListViewRowButtons(),
+                      Space().height(context, 0.05),
+                      const Center(child: HouseContainer()),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children:[
+                          Text("Best for you"),
+              
+                          Text("See more")
+                        ]
+                      ),
+
+                      Space().height(context, 0.02),
+
+                      const HouseRowDetails()
+                    ]),
+              ),
             );
           },
         ));
