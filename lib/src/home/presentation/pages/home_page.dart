@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:house_rental/assets/svgs/svg_constants.dart';
 import 'package:house_rental/core/size/sizes.dart';
 import 'package:house_rental/core/spacing/whitspacing.dart';
@@ -42,6 +43,7 @@ class _HomePageState extends State<HomePage> {
     Future.delayed(const Duration(seconds: 2), () {
       debugPrint(user?.id);
       debugPrint(user?.uid);
+      //if(widget)
       if (user?.id == null || user?.uid == null) {
         Map<String, dynamic> params = {
           "phone_number": user?.phoneNumber,
@@ -137,7 +139,14 @@ class _HomePageState extends State<HomePage> {
                       ),
                        const ListViewRowButtons(),
                       Space().height(context, 0.05),
-                      const Center(child: HouseContainer()),
+                       Center(child: HouseContainer(
+                        onTap: (){
+                          context.goNamed("houseDetail");
+                        },
+                      )),
+
+                       Space().height(context, 0.02),
+
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children:[
@@ -149,7 +158,11 @@ class _HomePageState extends State<HomePage> {
 
                       Space().height(context, 0.02),
 
-                      const HouseRowDetails()
+                      //TODO: use listview to build
+                      const HouseRowDetails(),
+                      const HouseRowDetails(),
+                      const HouseRowDetails(),
+                      const HouseRowDetails(),
                     ]),
               ),
             );

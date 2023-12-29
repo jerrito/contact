@@ -13,62 +13,66 @@ class HouseRowDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        //mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Container(
-            height: 80,
-            width: 100,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              image: DecorationImage(
+    return Column(
+      children: [
+        Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            //mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              ClipRRect(
                 
-                image:Image.asset(
-              houseImage, 
-              ).image)
-            ),
-            
-          ),
-          Space().width(
-            context,
-            0.03,
-          ),
-          Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Orchad House",
-                    style: appTheme.textTheme.displayLarge!.copyWith(
-                        fontWeight: FontWeight.w500, color: houseBlack100)),
-                Space().height(
-                  context,
-                  0.008,
-                ),
-                Text("RSP 250,000.00 / Year",
-                    style: appTheme.textTheme.displaySmall!.copyWith(
-                        fontWeight: FontWeight.w400,
-                        color: housePrimaryColor,
-                        fontSize: 12)),
-                Space().height(
-                  context,
-                  0.01,
-                ),
-                Row(
-                  children: [
-                    SvgPicture.asset(
-                      bedSVG,
-                    ),
-                    const Text(
-                      "6 BedRoom",
-                    ),
-                    SvgPicture.asset(bathSVG),
-                    const Text(
-                      "4 BathRoom",
+                borderRadius: BorderRadius.circular(10),
+                child:Image.asset(
+                      house1Image,
+                      fit: BoxFit.cover,
+                      height: 80,
+                      width: 100,
                     )
-                  ],
-                )
-              ]),
-        ]);
+                
+              ),
+              Space().width(
+                context,
+                0.03,
+              ),
+              Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Orchad House",
+                        style: appTheme.textTheme.displayLarge!.copyWith(
+                            fontWeight: FontWeight.w500, color: houseBlack100)),
+                    Space().height(
+                      context,
+                      0.008,
+                    ),
+                    Text("RSP 250,000.00 / Year",
+                        style: appTheme.textTheme.displaySmall!.copyWith(
+                            fontWeight: FontWeight.w400,
+                            color: housePrimaryColor,
+                            fontSize: 12)),
+                    Space().height(
+                      context,
+                      0.01,
+                    ),
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          bedSVG,
+                        ),
+                        const Text(
+                          "6 BedRoom",
+                        ),
+                        SvgPicture.asset(bathSVG),
+                        const Text(
+                          "4 BathRoom",
+                        )
+                      ],
+                    )
+                  ]),
+            ]),
+
+            Space().height(context, 0.025),
+      ],
+    );
   }
 }
