@@ -1,7 +1,9 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+
 import 'package:house_rental/assets/images/image_constants.dart';
 import 'package:house_rental/assets/svgs/svg_constants.dart';
 import 'package:house_rental/core/size/sizes.dart';
@@ -10,9 +12,12 @@ import 'package:house_rental/core/theme/app_theme.dart';
 import 'package:house_rental/core/theme/colors.dart';
 
 class HouseDetailContainer extends StatelessWidget {
+  final void Function()? favouriteOnTap, arrowBackOnTap;
   const HouseDetailContainer({
-    super.key,
-  });
+    Key? key,
+    required this.arrowBackOnTap,
+    required this.favouriteOnTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,17 +29,21 @@ class HouseDetailContainer extends StatelessWidget {
           Align(
             alignment: Alignment.center,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(22.0),
-             
-              child:Image.asset(
-                  house1Image,
+                borderRadius: BorderRadius.circular(22.0),
+                child: Container(
                   height: 304,
                   width: double.infinity,
-                  fit: BoxFit.cover,
-                  //opacity: const AlwaysStoppedAnimation(.8),
+                  decoration: BoxDecoration(gradient: houseContainerGradient),
+                  child: Image.asset(
+                    house1Image,
+                    height: 304,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    //opacity: const AlwaysStoppedAnimation(.8),
+                  ),
                 )
-              //child: ,
-            ),
+                //child: ,
+                ),
           ),
           Align(
               alignment: Alignment.topRight,
@@ -43,14 +52,15 @@ class HouseDetailContainer extends StatelessWidget {
                   top: 20.0,
                   right: 20,
                 ),
-                child:CircleAvatar(
-                  radius: 16,
-                  backgroundColor: houseContainerRowColor,
-                  
-                  child: SvgPicture.asset(
-                    bookMarkSVG, color: houseWhiteColor
+                child: GestureDetector(
+                  onTap: favouriteOnTap,
+                  child: CircleAvatar(
+                    radius: 16,
+                    backgroundColor: houseContainerRowColor,
+                    child:
+                        SvgPicture.asset(bookMarkSVG, color: houseWhiteColor),
                   ),
-                ), 
+                ),
               )),
           Align(
               alignment: Alignment.topLeft,
@@ -59,12 +69,14 @@ class HouseDetailContainer extends StatelessWidget {
                   top: 20.0,
                   left: 10,
                 ),
-                child: CircleAvatar(
-                  radius: 16,
-                  backgroundColor: houseContainerRowColor,
-                  
-                  child: SvgPicture.asset(
-                    arrowBackSVG,
+                child: GestureDetector(
+                  onTap: arrowBackOnTap,
+                  child: CircleAvatar(
+                    radius: 16,
+                    backgroundColor: houseContainerRowColor,
+                    child: SvgPicture.asset(
+                      arrowBackSVG,
+                    ),
                   ),
                 ),
               )),
@@ -79,41 +91,41 @@ class HouseDetailContainer extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                       Text(
+                      Text(
                         "DreamsVille House",
                         style: appTheme.textTheme.displayLarge!.copyWith(
-                          color: houseWhiteColor,fontSize: 20,fontWeight:FontWeight.w600
-                        ),
+                            color: houseWhiteColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600),
                       ),
-                       Text(
+                      Text(
                         "Jl. Sultan Iskandar Muda",
                         style: appTheme.textTheme.displaySmall!.copyWith(
-                          color:searchTextColor3,fontSize: 12,fontWeight:FontWeight.w400
-                        ),
+                            color: searchTextColor3,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400),
                       ),
                       Row(
                         children: [
                           Container(
-                            decoration: BoxDecoration(
-                              color: houseContainerRowColor,
-                              borderRadius: BorderRadius.circular(5)
-                            ),
-                            child: SvgPicture.asset(bedSVG, color: houseWhiteColor)),
+                              decoration: BoxDecoration(
+                                  color: houseContainerRowColor,
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: SvgPicture.asset(bedSVG,
+                                  color: houseWhiteColor)),
                           const Text(
                             "6 BedRoom",
                             style: TextStyle(
                               color: houseWhiteColor,
                             ),
                           ),
-
                           Space().width(context, 0.03),
-
                           Container(
-                            decoration: BoxDecoration(
-                              color: houseContainerRowColor,
-                              borderRadius: BorderRadius.circular(5)
-                            ),
-                            child: SvgPicture.asset(bathSVG, color: houseWhiteColor)),
+                              decoration: BoxDecoration(
+                                  color: houseContainerRowColor,
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: SvgPicture.asset(bathSVG,
+                                  color: houseWhiteColor)),
                           const Text(
                             "4 BathRoom",
                             style: TextStyle(

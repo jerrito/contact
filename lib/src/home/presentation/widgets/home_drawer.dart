@@ -5,6 +5,8 @@ import 'package:house_rental/assets/images/image_constants.dart';
 import 'package:house_rental/assets/svgs/svg_constants.dart';
 
 import 'package:house_rental/core/spacing/whitspacing.dart';
+import 'package:house_rental/core/theme/app_theme.dart';
+import 'package:house_rental/core/theme/colors.dart';
 import 'package:house_rental/locator.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:house_rental/src/home/presentation/widgets/build_logout_bottomsheet.dart';
@@ -32,28 +34,47 @@ class _HomeDrawerState extends State<HomeDrawer> {
   final authBloc = locator<AuthenticationBloc>();
   @override
   Widget build(BuildContext context) {
-    return Drawer(
+    return Container(
+      width: 300,
+      decoration: BoxDecoration(
+          gradient: primaryGradient,
+          color: blueOceanColor1,
+          borderRadius: BorderRadius.circular(20)),
       child: Column(children: [
+        Space().height(context, 0.05),
         SizedBox(
-          height: 100,
-          width: 100,
-          child: DrawerHeader(
-              decoration: BoxDecoration(
-                  color: Colors.grey,
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                      image: widget.profileUrl != null
-                          ? Image.network(widget.profileUrl!).image
-                          : Image.asset(user1Image, width: 100, height: 100)
-                              .image)),
-              child: Align(
+          height: 70,
+          width: 70,
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: CircleAvatar(
+                  radius: 40,
+                  backgroundColor: searchTextColor3,
+                  backgroundImage: widget.profileUrl != null
+                      ? Image.network(widget.profileUrl!).image
+                      : Image.asset(user1Image, width: 100, height: 100).image,
+                ),
+              ),
+              Align(
                   alignment: Alignment.bottomRight,
-                  child: SvgPicture.asset(editSVG))),
+                  child: SvgPicture.asset(editSVG))
+            ],
+          ),
         ),
         Space().height(context, 0.02),
-        Text("${widget.firstName} ${widget.lastName}"),
+        Text(
+          "${widget.firstName} ${widget.lastName}",
+          style: appTheme.textTheme.displayLarge!
+              .copyWith(color: houseWhiteColor, fontWeight: FontWeight.w400),
+        ),
         Space().height(context, 0.02),
-        Text(widget.phoneNumber ?? ""),
+        Text(
+          widget.phoneNumber ?? "",
+          style: appTheme.textTheme.displayLarge!
+              .copyWith(color: houseWhiteColor, fontWeight: FontWeight.w400),
+        ),
         Space().height(context, 0.04),
         DrawerListTile(
           itemNumber: 1,
@@ -69,6 +90,22 @@ class _HomeDrawerState extends State<HomeDrawer> {
         ),
         DrawerListTile(
           itemNumber: 4,
+          onTap: () {},
+        ),
+        DrawerListTile(
+          itemNumber: 5,
+          onTap: () {},
+        ),
+        DrawerListTile(
+          itemNumber: 6,
+          onTap: () {},
+        ),
+        DrawerListTile(
+          itemNumber: 7,
+          onTap: () {},
+        ),
+        DrawerListTile(
+          itemNumber: 8,
           onTap: () {
             buildLogoutBottomSheet(
               context,

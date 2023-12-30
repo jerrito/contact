@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,6 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:house_rental/assets/svgs/svg_constants.dart';
 import 'package:house_rental/core/size/sizes.dart';
 import 'package:house_rental/core/spacing/whitspacing.dart';
+import 'package:house_rental/core/theme/app_theme.dart';
+import 'package:house_rental/core/theme/colors.dart';
 import 'package:house_rental/locator.dart';
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
@@ -12,6 +15,7 @@ import 'package:house_rental/src/home/presentation/widgets/home_drawer.dart';
 import 'package:house_rental/src/home/presentation/widgets/house_container.dart';
 import 'package:house_rental/src/home/presentation/widgets/house_row_details.dart';
 import 'package:house_rental/src/home/presentation/widgets/list_view_buttons.dart';
+import 'package:house_rental/src/home/presentation/widgets/row_buttons.dart';
 import 'package:house_rental/src/home/presentation/widgets/search_textfield.dart';
 
 class HomePage extends StatefulWidget {
@@ -39,23 +43,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     authBloc.add(const GetCacheDataEvent());
-
-    Future.delayed(const Duration(seconds: 2), () {
-      debugPrint(user?.id);
-      debugPrint(user?.uid);
-      //if(widget)
-      if (user?.id == null || user?.uid == null) {
-        Map<String, dynamic> params = {
-          "phone_number": user?.phoneNumber,
-          "uid": widget.uid,
-        };
-        authBloc.add(
-          AddIdEvent(
-            params: params,
-          ),
-        );
-      }
-    });
   }
 
   @override
@@ -72,7 +59,7 @@ class _HomePageState extends State<HomePage> {
           uid: user?.uid,
           email: user?.email,
         ),
-       // appBar: AppBar(title: const Text("Home Page")),
+        // appBar: AppBar(title: const Text("Home Page")),
         body: BlocConsumer(
           bloc: authBloc,
           listener: (context, state) {
@@ -84,40 +71,35 @@ class _HomePageState extends State<HomePage> {
           },
           builder: (context, state) {
             return SingleChildScrollView(
-              child: Padding(
-                padding:  EdgeInsets.symmetric(horizontal:Sizes().width(context,0.04,),),
-                child: Column(
+              child: Column(
                   //  mainAxisSize : MainAxisSize.min,
-                 // mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Space().height(context, 0.04),
-                        // SingleChildScrollView(
-                        //   child: ExpansionTile(
-                        //     controlAffinity: ListTileControlAffinity.leading,
-                        //     onExpansionChanged: (value){
-                          
-                        //     },
-                          
-                        //    expandedCrossAxisAlignment: CrossAxisAlignment.end,
-                        //    expandedAlignment: Alignment.bottomCenter,
-                        //     title:  const Text("Ja"),
-                        //     children: [
-                        //       const Text("La"),
-                        //       const Text("UK"),
-                        //       const Text("GE"),
-                        //     ],
-                        //   ),
-                        // ),
-                      Row(
+                  // mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Space().height(context, 0.04),
+                    // SingleChildScrollView(
+                    //   child: ExpansionTile(
+                    //     controlAffinity: ListTileControlAffinity.leading,
+                    //     onExpansionChanged: (value){
+
+                    //     },
+
+                    //    expandedCrossAxisAlignment: CrossAxisAlignment.end,
+                    //    expandedAlignment: Alignment.bottomCenter,
+                    //     title:  const Text("Ja"),
+                    //     children: [
+                    //       const Text("La"),
+                    //       const Text("UK"),
+                    //       const Text("GE"),
+                    //     ],
+                    //   ),
+                    // ),
+                    Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children:[
-                       
-                          SvgPicture.asset(notificationSVG)
-                        ]
-                      ),
-                      Space().height(context, 0.02),
-                    
-                      Row(
+                        children: [SvgPicture.asset(notificationSVG)]),
+                    Space().height(context, 0.02),
+
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal:Sizes().width(context,0.04)),                        child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           SearchTextField(
@@ -129,6 +111,22 @@ class _HomePageState extends State<HomePage> {
                           GestureDetector(
                             onTap: () {
                               Scaffold.of(context).openDrawer();
+                              Future.delayed(const Duration(seconds: 1), () {
+                                // debugPrint(user?.id);
+                                //debugPrint(user?.uid);
+                                //if(widget)
+                                if (user?.id == null || user?.uid == null) {
+                                  Map<String, dynamic> params = {
+                                    "phone_number": user?.phoneNumber,
+                                    "uid": widget.uid,
+                                  };
+                                  authBloc.add(
+                                    AddIdEvent(
+                                      params: params,
+                                    ),
+                                  );
+                                } else {}
+                              });
                             },
                             child: SvgPicture.asset(
                               menuSVG,
@@ -137,34 +135,45 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ],
                       ),
-                       const ListViewRowButtons(),
-                      Space().height(context, 0.05),
-                       Center(child: HouseContainer(
-                        onTap: (){
-                          context.goNamed("houseDetail");
-                        },
-                      )),
+                    ),
+                    Space().height(context, 0.02),
+                   
+                 const  HouseCategories(),
 
-                       Space().height(context, 0.02),
+                    Space().height(context, 0.05),
+                    Center(child: HouseContainer(
+                      onTap: () {
+                        context.goNamed("houseDetail");
+                      },
+                    )),
 
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children:[
-                          Text("Best for you"),
-              
-                          Text("See more")
-                        ]
-                      ),
+                    Space().height(context, 0.032),
 
-                      Space().height(context, 0.02),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal:Sizes().width(context,0.04)),
+                      child:  Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [Text("Best for you",style:appTheme.textTheme.displayLarge!.copyWith(
+                            fontWeight: FontWeight.w500
+                          )), Text("See more",style:appTheme.textTheme.displaySmall!.copyWith(
+                            fontWeight: FontWeight.w400,color:searchTextColor2,fontSize: 12
+                          ))]),
+                    ),
 
-                      //TODO: use listview to build
-                      const HouseRowDetails(),
-                      const HouseRowDetails(),
-                      const HouseRowDetails(),
-                      const HouseRowDetails(),
-                    ]),
-              ),
+                    //Space().height(context, 0.02),
+
+                    ListView.builder(
+                        reverse: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: 6,
+                        itemBuilder: (context, index) {
+                          return const HouseRowDetails();
+                        }),
+                    // const HouseRowDetails(),
+                    // const HouseRowDetails(),
+                    // const HouseRowDetails(),
+                  ]),
             );
           },
         ));

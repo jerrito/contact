@@ -77,17 +77,12 @@ class AuthenticationRemoteDatasourceImpl
       data = userData.data();
       data.id = userData.id;
       data.uid ??= params["uid"];
-      debugPrint(data.toMap().toString());
-      debugPrint(userData.id);
-      debugPrint(data.uid);
+     
       //localDatasource.cacheUserData(UserModel.fromJson(data.toMap()));
 
       await usersRef.doc(userData.id).update({"id": userData.id,"uid":data.uid ?? params["uid"]});
       await localDatasource.cacheUserData(UserModel.fromJson(data.toMap()));
-      debugPrint("check");
-      debugPrint(data.id);
-      debugPrint(data.uid);
-      debugPrint(data.toMap().toString());
+     
 
      
       //return userData.data();

@@ -1,23 +1,32 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:house_rental/src/home/presentation/widgets/row_buttons.dart';
 
-class ListViewRowButtons extends StatelessWidget {
-  const ListViewRowButtons({super.key});
+class HouseCategories extends StatelessWidget {
+  const HouseCategories({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-       children: [
-    
-        RowButtons(isSelected: true,label: "House",),
-        RowButtons(isSelected: true,label: "Apartment",),
-        RowButtons(isSelected: false,label: "Hotel",),
-        RowButtons(isSelected: false,label: "Villa",),
-       ],
-        //return const RowButtons(isSelected: true,label: "Home",);
-      ),
-    );
+    return   CarouselSlider.builder(
+                          itemCount: 5,
+                          options: CarouselOptions(
+                            
+                            viewportFraction: 0.3,
+                            height: 50,
+                            reverse: true,
+                          ),
+                          itemBuilder: (context, index, value) {
+                            List<bool> isSelected = [
+                              true,
+                              false,
+                              false,
+                              true,
+                              false
+                            ];
+                            return  RowButtons(
+                              isSelected: isSelected[index],
+                              label: "House",
+                            );
+                          });
   }
 }

@@ -12,7 +12,7 @@ GoRouter goRouter() {
     GoRoute(
       path: "/",
       name: "connectionPage",
-      builder: (context, state) => const HomePage(),
+      builder: (context, state) => const ConnectionPage(),
       routes: [
         GoRoute(
           path: "signup",

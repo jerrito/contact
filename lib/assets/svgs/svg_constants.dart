@@ -15,3 +15,5 @@ const menuSVG = "lib/assets/svgs/IC_Menu.svg";
 const notificationSVG = "lib/assets/svgs/IC_Notification.svg";
 const searchSVG = "lib/assets/svgs/IC_Search.svg";
 const messageSVG = "lib/assets/svgs/message.svg";
+const pocketSVG = "lib/assets/svgs/pocket.svg";
+const icMessageSVG = "lib/assets/svgs/IC_Message.svg";
