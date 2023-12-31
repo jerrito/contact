@@ -4,6 +4,7 @@ import 'package:house_rental/src/authentication/presentation/pages/otp_page.dart
 import 'package:house_rental/src/authentication/presentation/pages/phone_number_page.dart';
 import 'package:house_rental/src/authentication/presentation/pages/signin_page.dart';
 import 'package:house_rental/src/authentication/presentation/pages/signup_page.dart';
+import 'package:house_rental/src/errors/presentation/pages/no_internet_page.dart';
 import 'package:house_rental/src/home/presentation/pages/home_page.dart';
 import 'package:house_rental/src/home/presentation/pages/house_detail_page.dart';
 
@@ -30,6 +31,11 @@ GoRouter goRouter() {
             uid: state.uri.queryParameters["uid"].toString(),
             id: state.uri.queryParameters["id"].toString(),
           ),
+        ),
+        GoRoute(
+          path: "noInternet",
+          name: "noInternet",
+          builder: (context, state) => const NoInternetPage(),
         ),
         GoRoute(
           path: "otp_page",

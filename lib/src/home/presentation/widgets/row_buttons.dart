@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:house_rental/core/size/sizes.dart';
 import 'package:house_rental/core/theme/app_theme.dart';
 import 'package:house_rental/core/theme/colors.dart';
 

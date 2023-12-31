@@ -161,7 +161,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
   @override
   Future<Either<String, User>> getCacheData() async {
-    if (await networkInfo.isConnected) {
+    
       try {
         final response = await localDatasource.getUserCachedData();
 
@@ -169,9 +169,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       } catch (e) {
         return Left(e.toString());
       }
-    } else {
-      return Left(networkInfo.noNetowrkMessage);
-    }
+    
   }
 
   @override

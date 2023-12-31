@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,7 +14,6 @@ import 'package:house_rental/src/home/presentation/widgets/home_drawer.dart';
 import 'package:house_rental/src/home/presentation/widgets/house_container.dart';
 import 'package:house_rental/src/home/presentation/widgets/house_row_details.dart';
 import 'package:house_rental/src/home/presentation/widgets/list_view_buttons.dart';
-import 'package:house_rental/src/home/presentation/widgets/row_buttons.dart';
 import 'package:house_rental/src/home/presentation/widgets/search_textfield.dart';
 
 class HomePage extends StatefulWidget {

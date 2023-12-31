@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
@@ -9,10 +11,8 @@ import 'package:house_rental/core/widgets/bottom_sheet.dart';
 import 'package:house_rental/locator.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:house_rental/src/authentication/presentation/pages/otp_page.dart';
-import 'package:house_rental/src/authentication/presentation/pages/phone_number_page.dart';
 import 'package:house_rental/src/authentication/presentation/widgets/default_textfield.dart';
 import 'package:house_rental/src/home/presentation/pages/home_page.dart';
-import 'package:oktoast/oktoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SigninPage extends StatefulWidget {

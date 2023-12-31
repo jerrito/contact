@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
 
 class UserModel extends User {

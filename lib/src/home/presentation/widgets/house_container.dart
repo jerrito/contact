@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:house_rental/assets/images/image_constants.dart';
 import 'package:house_rental/assets/svgs/svg_constants.dart';
-import 'package:house_rental/core/size/sizes.dart';
 import 'package:house_rental/core/theme/app_theme.dart';
 import 'package:house_rental/core/theme/colors.dart';
 
@@ -78,7 +77,7 @@ class HouseContainer extends StatelessWidget {
                     Align(
                         alignment: Alignment.bottomLeft,
                         child: Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                             left: 20.0,
                             bottom: 16,
                           ),

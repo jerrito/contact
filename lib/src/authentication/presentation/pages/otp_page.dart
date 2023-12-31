@@ -6,14 +6,12 @@ import 'package:house_rental/core/size/sizes.dart';
 import 'package:house_rental/core/spacing/whitspacing.dart';
 import 'package:house_rental/locator.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
-import 'package:house_rental/src/authentication/presentation/pages/signin_page.dart';
 import 'package:house_rental/src/authentication/presentation/pages/signup_page.dart';
 import 'package:house_rental/src/home/presentation/pages/home_page.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:telephony/telephony.dart';
 import 'package:oktoast/oktoast.dart';
-import 'package:go_router/go_router.dart';
 
 class OTPRequest {
   String? verifyId, phoneNumber, id, uid;

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:house_rental/assets/images/image_constants.dart';
 import 'package:house_rental/core/size/sizes.dart';
 import 'package:house_rental/core/spacing/whitspacing.dart';
 import 'package:house_rental/core/theme/app_theme.dart';
@@ -12,7 +11,6 @@ import 'package:house_rental/src/home/presentation/widgets/gallery_row.dart';
 import 'package:house_rental/src/home/presentation/widgets/house_detail_container.dart';
 import 'package:house_rental/src/home/presentation/widgets/owner_row_detail.dart';
 import 'package:go_router/go_router.dart';
-import 'package:geolocator/geolocator.dart';
 
 class HouseDetailPage extends StatefulWidget {
   const HouseDetailPage({super.key});

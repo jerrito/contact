@@ -6,7 +6,6 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:house_rental/assets/images/image_constants.dart';
 import 'package:house_rental/assets/svgs/svg_constants.dart';
-import 'package:house_rental/core/size/sizes.dart';
 import 'package:house_rental/core/spacing/whitspacing.dart';
 import 'package:house_rental/core/theme/app_theme.dart';
 import 'package:house_rental/core/theme/colors.dart';

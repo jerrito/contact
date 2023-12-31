@@ -60,7 +60,7 @@ class FirebaseService {
   }
 
   Future<void> updateUser({required User user}) async {
-    print(user.id);
+   // print(user.id);
 
     //
    return await usersRef.doc(user.id).update(user.toMap());

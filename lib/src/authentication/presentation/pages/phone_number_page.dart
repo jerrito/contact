@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,21 +59,19 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
                 try {
                   UserCredential credential =
                       await user!.linkWithCredential(state.authCredential);
-                  print(credential.user);
-                  print(credential.credential);
+                  
                 } on FirebaseAuthException catch (e) {
                   if (e.code == 'provider-already-linked') {
                     final credential = await FirebaseAuth.instance
                         .signInWithCredential(state.authCredential);
-                    print(credential.credential!);
-                    print(credential.user);
+                   
                   }
                 }
               }
             }
 
             if (state is GenericError) {
-              print(state.errorMessage);
+              
               if (!context.mounted) return;
 
               ScaffoldMessenger.of(context)
