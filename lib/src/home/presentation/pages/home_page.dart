@@ -41,21 +41,25 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     authBloc.add(const GetCacheDataEvent());
+   
   }
 
   @override
   Widget build(BuildContext context) {
     //debugPrint(user?.id);
 
+     debugPrint(user?.uid);
     return Scaffold(
         drawer: HomeDrawer(
-          firstName: " ${user?.firstName}",
-          lastName: "${user?.lastName}",
-          phoneNumber: user?.phoneNumber,
-          profileUrl: user?.profileUrl,
-          id: user?.id,
-          uid: user?.uid,
-          email: user?.email,
+          user: user ?? User(
+            firstName: "",
+           lastName: "",
+            email: "", 
+            phoneNumber: "", 
+            id: "",
+            uid: "",
+             password: "",
+             profileUrl: ""),
         ),
         // appBar: AppBar(title: const Text("Home Page")),
         body: BlocConsumer(
@@ -111,13 +115,15 @@ class _HomePageState extends State<HomePage> {
                               Scaffold.of(context).openDrawer();
                               Future.delayed(const Duration(seconds: 1), () {
                                 // debugPrint(user?.id);
-                                //debugPrint(user?.uid);
+                               
                                 //if(widget)
                                 if (user?.id == null || user?.uid == null) {
                                   Map<String, dynamic> params = {
                                     "phone_number": user?.phoneNumber,
                                     "uid": widget.uid,
                                   };
+                                   debugPrint(user?.uid);
+                                   debugPrint(user?.phoneNumber);
                                   authBloc.add(
                                     AddIdEvent(
                                       params: params,

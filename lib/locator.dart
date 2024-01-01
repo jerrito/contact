@@ -17,6 +17,13 @@ import 'package:house_rental/src/authentication/domain/usecases/update_user.dart
 import 'package:house_rental/src/authentication/domain/usecases/verify_number.dart';
 import 'package:house_rental/src/authentication/domain/usecases/verify_otp.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
+import 'package:house_rental/src/home/data/data_source/localds.dart';
+import 'package:house_rental/src/home/data/repository/home_repository_implementation.dart';
+import 'package:house_rental/src/home/domain/repository/home_repository.dart';
+import 'package:house_rental/src/home/domain/usecases/get_profile_camera.dart';
+import 'package:house_rental/src/home/domain/usecases/get_profile_gallery.dart';
+import 'package:house_rental/src/home/domain/usecases/up_load_image.dart';
+import 'package:house_rental/src/home/presentation/bloc/home_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final locator = GetIt.instance;
@@ -36,6 +43,14 @@ Future<void> initDependencies() async {
         updateUser: locator(),
         addId: locator(),
         verifyPhoneNumberLogin: locator()),
+  );
+
+  locator.registerFactory(
+    () => HomeBloc(
+      getProfileCamera: locator(),
+      getProfileGallery: locator(),
+      upLoadImage: locator(),
+    ),
   );
 
   //usecases
@@ -86,7 +101,29 @@ Future<void> initDependencies() async {
     ),
   );
 
-  locator.registerLazySingleton(() => UpdateUser(repository: locator()));
+  locator.registerLazySingleton(
+    () => UpdateUser(
+      repository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton(
+    () => GetProfileCamera(
+      repository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton(
+    () => GetProfileGallery(
+      repository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton(
+    () => UpLoadImage(
+      repository: locator(),
+    ),
+  );
 
   //repository
 
@@ -96,6 +133,13 @@ Future<void> initDependencies() async {
       networkInfo: locator(),
       remoteDatasource: locator(),
       localDatasource: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<HomeRepository>(
+    () => HomeRepositoryImplementation(
+      networkInfo: locator(),
+      homeLocalDatasource: locator(),
     ),
   );
   //remoteds
@@ -110,6 +154,10 @@ Future<void> initDependencies() async {
     () => AuhenticationLocalDataSourceImpl(
       sharedPreferences: locator(),
     ),
+  );
+
+  locator.registerLazySingleton<HomeLocalDatasource>(
+    () => HomeLocalDatasourceImpl(),
   );
 
   final sharedPreference = await SharedPreferences.getInstance();

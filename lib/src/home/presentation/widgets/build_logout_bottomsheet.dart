@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:house_rental/core/size/sizes.dart';
 import 'package:house_rental/core/spacing/whitspacing.dart';
+import 'package:house_rental/src/authentication/domain/entities/user.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:house_rental/src/authentication/presentation/widgets/default_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,12 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 buildLogoutBottomSheet(
   BuildContext context,
   AuthenticationBloc authBloc,
-  String id,
-  String uid,
-  String phoneNumber,
-  String firstName,
-  String lastName,
-  String email,
+  User? user
 ) {
   return showModalBottomSheet(
       context: context,
@@ -45,7 +41,7 @@ buildLogoutBottomSheet(
                         // context.pop();
                         // context.goNamed("signin");
 
-                        preferences.setString(uidKey, uid);
+                        preferences.setString(uidKey, user!.uid!);
                         preferences.setString(phoneNumber, phoneNumber);
 
                         if (!context.mounted) return;
@@ -60,12 +56,12 @@ buildLogoutBottomSheet(
                           label: "Log out",
                           onPressed: () {
                             Map<String, dynamic> params = {
-                              "id": id,
+                              "id": user!.id!,
                               "uid": null,
-                              "first_name": firstName,
-                              "last_name": lastName,
-                              "email": email,
-                              "phone_number": phoneNumber,
+                              "first_name": user.firstName,
+                              "last_name": user.lastName,
+                              "email": user.email,
+                              "phone_number": user.phoneNumber,
                             };
                             authBloc.add(UpdateUserEvent(params: params));
                           });

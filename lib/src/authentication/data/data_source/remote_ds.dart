@@ -43,7 +43,7 @@ class AuthenticationRemoteDatasourceImpl
   Future<DocumentReference<UserModel>?> signup(
       Map<String, dynamic> params) async {
     final response = usersRef.add(UserModel.fromJson(params));
-    localDatasource.cacheUserData(UserModel.fromJson(params));
+    
     return response;
   }
 

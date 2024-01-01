@@ -18,3 +18,5 @@ const messageSVG = "lib/assets/svgs/message.svg";
 const pocketSVG = "lib/assets/svgs/pocket.svg";
 const icMessageSVG = "lib/assets/svgs/IC_Message.svg";
 const noWIFISVG = "lib/assets/svgs/wifi-off.svg";
+const cancelSVG = "lib/assets/svgs/x.svg";
+const cameraSVG = "lib/assets/svgs/camera.svg";

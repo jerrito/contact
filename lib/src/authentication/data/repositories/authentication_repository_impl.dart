@@ -23,11 +23,22 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     required this.localDatasource,
   });
   @override
-  Future<Either<String, User?>> signIn(
-      Map<String, dynamic> params) async {
+  Future<Either<String, User?>> signIn(Map<String, dynamic> params) async {
     if (await networkInfo.isConnected) {
       try {
         final response = await remoteDatasource.signin(params);
+
+        final user = User(
+          firstName: response?.firstName,
+          lastName: response?.lastName,
+          email: response?.email,
+          phoneNumber: response?.phoneNumber,
+          id: response?.id,
+          uid: response?.uid,
+          password: response?.password,
+          profileUrl: response?.profileUrl,
+        );
+        localDatasource.cacheUserData(user);
 
         return Right(response);
       } catch (e) {
@@ -50,6 +61,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       } else {
         try {
           final response = await remoteDatasource.signup(params);
+          localDatasource.cacheUserData(UserModel.fromJson(params));
 
           return Right(response);
         } catch (e) {
@@ -86,8 +98,6 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
             },
             codeSent: (String verificationId, int? resendToken) async {
               await onCodeSent(verificationId, resendToken);
-
-              
             },
             codeAutoRetrievalTimeout: (String verificationId) {
               // Auto retrieval timeout
@@ -161,15 +171,13 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
   @override
   Future<Either<String, User>> getCacheData() async {
-    
-      try {
-        final response = await localDatasource.getUserCachedData();
+    try {
+      final response = await localDatasource.getUserCachedData();
 
-        return Right(response);
-      } catch (e) {
-        return Left(e.toString());
-      }
-    
+      return Right(response);
+    } catch (e) {
+      return Left(e.toString());
+    }
   }
 
   @override
@@ -183,8 +191,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   @override
-  Future<Either<String, void>> addId(
-      Map<String, dynamic> params) async {
+  Future<Either<String, void>> addId(Map<String, dynamic> params) async {
     if (await networkInfo.isConnected) {
       final response = await remoteDatasource.addId(params);
       return Right(response);
