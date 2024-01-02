@@ -9,10 +9,7 @@ import 'package:house_rental/src/authentication/presentation/widgets/default_but
 import 'package:shared_preferences/shared_preferences.dart';
 
 buildLogoutBottomSheet(
-  BuildContext context,
-  AuthenticationBloc authBloc,
-  User? user
-) {
+    BuildContext context, AuthenticationBloc authBloc, User? user) {
   return showModalBottomSheet(
       context: context,
       builder: ((context) {
@@ -54,7 +51,7 @@ buildLogoutBottomSheet(
                       }
                       return DefaultButton(
                           label: "Log out",
-                          onPressed: () {
+                          onTap: () {
                             Map<String, dynamic> params = {
                               "id": user!.id!,
                               "uid": null,
@@ -69,7 +66,7 @@ buildLogoutBottomSheet(
                 Space().height(context, 0.02),
                 DefaultButton(
                     label: "Cancel",
-                    onPressed: () {
+                    onTap: () {
                       context.pop();
                     })
               ],

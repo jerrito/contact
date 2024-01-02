@@ -6,18 +6,16 @@ Widget bottomSheetButton({
   required String label,
   required BuildContext context,
   required void Function()? onPressed,
-
-}){
-    return Container(
-      color: Colors.white,
-      padding: EdgeInsets.symmetric(
-        horizontal: Sizes().width(context, 0.04),
-        vertical: Sizes().width(context, 0.04),
-      ),
-      child: DefaultButton(
-        onPressed: onPressed,
-        label: label,
-      ),
-    );
-  }
-
+}) {
+  return Container(
+    color: Colors.white,
+    padding: EdgeInsets.symmetric(
+      horizontal: Sizes().width(context, 0.04),
+      vertical: Sizes().width(context, 0.04),
+    ),
+    child: DefaultButton(
+      onTap: onPressed,
+      label: label,
+    ),
+  );
+}

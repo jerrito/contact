@@ -45,8 +45,8 @@ buildProfileChangeBottomSheet(
                     builder: (context, state) {
                       return DefaultButton(
                           label: "Camera",
-                          onPressed: () {
-                             Navigator.pop(context);
+                          onTap: () {
+                            Navigator.pop(context);
                             homeBloc
                                 .add(GetProfileCameraEvent(params: NoParams()));
                           });
@@ -71,10 +71,12 @@ buildProfileChangeBottomSheet(
                     builder: (context, state) {
                       return DefaultButton(
                           label: "Gallery",
-                          onPressed: () {
-                            Navigator.pop(context);
+                          onTap: () {
+                            //context.pop();
                             homeBloc.add(
                                 GetProfileGalleryEvent(params: NoParams()));
+                            
+                            // Navigator.pop(context);
                           });
                     }),
               ],

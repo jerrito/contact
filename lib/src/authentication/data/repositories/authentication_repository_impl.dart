@@ -45,7 +45,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
         return const Left("Wrong email or password");
       }
     } else {
-      return Left(networkInfo.noNetowrkMessage);
+      return Left(networkInfo.noNetworkMessage);
     }
   }
 
@@ -69,7 +69,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
         }
       }
     } else {
-      return Left(networkInfo.noNetowrkMessage);
+      return Left(networkInfo.noNetworkMessage);
     }
   }
 
@@ -110,7 +110,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
         return Left(e.toString());
       }
     } else {
-      return Left(networkInfo.noNetowrkMessage);
+      return Left(networkInfo.noNetworkMessage);
     }
   }
 
@@ -154,7 +154,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
         return Left(e.toString());
       }
     } else {
-      return Left(networkInfo.noNetowrkMessage);
+      return Left(networkInfo.noNetworkMessage);
     }
   }
 
@@ -165,7 +165,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       final response = await remoteDatasource.verifyOTP(credential);
       return Right(response);
     } else {
-      return Left(networkInfo.noNetowrkMessage);
+      return Left(networkInfo.noNetworkMessage);
     }
   }
 
@@ -186,7 +186,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       final response = await remoteDatasource.updateUser(params);
       return Right(response);
     } else {
-      return Left(networkInfo.noNetowrkMessage);
+      return Left(networkInfo.noNetworkMessage);
     }
   }
 
@@ -196,7 +196,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       final response = await remoteDatasource.addId(params);
       return Right(response);
     } else {
-      return Left(networkInfo.noNetowrkMessage);
+      return Left(networkInfo.noNetworkMessage);
     }
   }
 }

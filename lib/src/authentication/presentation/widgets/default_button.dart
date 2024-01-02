@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:house_rental/core/size/sizes.dart';
 
 class DefaultButton extends StatelessWidget {
-  final void Function()? onPressed;
+  final void Function()? onTap;
   final String? label;
-  const DefaultButton({super.key, this.onPressed, this.label});
+  const DefaultButton({super.key, this.onTap, this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +12,7 @@ class DefaultButton extends StatelessWidget {
       width: double.infinity,
       height: Sizes().height(context, 0.05),
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: onTap,
         child: Text(label!),
       ),
     );

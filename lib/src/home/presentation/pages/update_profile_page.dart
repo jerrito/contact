@@ -63,10 +63,12 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
             }
 
             if (state is UpdateUserLoaded) {
+              debugPrint("cache");
               authBloc.add(const GetCacheDataEvent());
             }
 
             if (state is GetCacheDataLoaded) {
+              debugPrint("user");
               widget.user = state.user;
               debugPrint(widget.user?.toMap().toString());
               setState(() {});

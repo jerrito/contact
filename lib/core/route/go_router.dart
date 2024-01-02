@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:house_rental/connection_page.dart';
+import 'package:house_rental/src/authentication/presentation/pages/landing_page.dart';
 import 'package:house_rental/src/authentication/presentation/pages/otp_page.dart';
 import 'package:house_rental/src/authentication/presentation/pages/phone_number_page.dart';
 import 'package:house_rental/src/authentication/presentation/pages/signin_page.dart';
@@ -15,6 +16,11 @@ GoRouter goRouter() {
       name: "connectionPage",
       builder: (context, state) => const ConnectionPage(),
       routes: [
+        GoRoute(
+          path: "landing",
+          name: "landing",
+          builder: (context, state) => const LandingPage(),
+        ),
         GoRoute(
           path: "signup",
           name: "signup",

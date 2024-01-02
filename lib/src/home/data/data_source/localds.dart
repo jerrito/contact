@@ -45,15 +45,19 @@ class HomeLocalDatasourceImpl implements HomeLocalDatasource {
 
   @override
   Future<String> upLoadImage(Map<String, dynamic> params) async {
-   
-
     //Upload file
-    final upLoad = await FirebaseStorage.instance
+    final upLoadPath = FirebaseStorage.instance
         .ref()
         .child(params["phone_number"])
-        .child(params["path"])
-        .putFile(File(params["path"]));
+        .child(params["path"]);
 
-    return await upLoad.ref.getDownloadURL();
+    final upLoadTask = upLoadPath.putFile(File(params["path"]));
+
+    String? returnURL;
+    await upLoadTask.whenComplete(
+      () => upLoadPath.getDownloadURL().then((value) => returnURL = value),
+    );
+    print(returnURL);
+    return returnURL!;
   }
 }

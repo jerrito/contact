@@ -2,7 +2,7 @@ import 'package:data_connection_checker_nulls/data_connection_checker_nulls.dart
 
 abstract class NetworkInfo {
   Future<bool> get isConnected;
-  String get noNetowrkMessage;
+  String get noNetworkMessage;
 }
 
 class NetworkInfoImpl extends NetworkInfo {
@@ -16,5 +16,5 @@ class NetworkInfoImpl extends NetworkInfo {
   Future<bool> get isConnected => dataConnectionChecker.hasConnection;
 
   @override
-  String get noNetowrkMessage => 'No internet connection';
+  String get noNetworkMessage => 'No internet connection';
 }

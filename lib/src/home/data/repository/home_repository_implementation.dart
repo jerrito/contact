@@ -48,7 +48,7 @@ class HomeRepositoryImplementation implements HomeRepository {
         return Left(e.toString());
       }
     } else {
-      return Left(networkInfo.noNetowrkMessage);
+      return Left(networkInfo.noNetworkMessage);
     }
   }
 }

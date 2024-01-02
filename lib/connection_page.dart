@@ -22,9 +22,7 @@ class _ConnectionPageState extends State<ConnectionPage> {
       bloc: authBloc,
       listener: (context, state) {
         if (state is GetCacheDataLoaded) {
-         
-
-          if (state.user.uid == null) {
+           if (state.user.uid == null) {
             // Navigator.push(
             //   context,
             //   MaterialPageRoute(builder: (context) {
@@ -47,29 +45,21 @@ class _ConnectionPageState extends State<ConnectionPage> {
           }
         }
 
-        if(state is AddIdError){
-          if(state.errorMessage== "No internet connection"){
-             context.goNamed("noInternet");
-          }
-          else{
-             context.goNamed("signin");
+        if (state is AddIdError) {
+          if (state.errorMessage == "No internet connection") {
+            context.goNamed("noInternet");
+          } else {
+            context.goNamed("signin");
           }
         }
 
-        if(state is AddIdLoaded){
+        if (state is AddIdLoaded) {
           context.goNamed("homePage");
         }
         if (state is GetCacheDataError) {
           debugPrint(state.errorMessage);
 
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) {
-              return const PhoneNumberPage(
-                isLogin: false,
-              );
-            }),
-          );
+          context.goNamed("landing");
 
           // context.goNamed("phoneNumber", );
         }
