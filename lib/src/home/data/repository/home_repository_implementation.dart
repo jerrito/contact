@@ -42,7 +42,7 @@ class HomeRepositoryImplementation implements HomeRepository {
     if (await networkInfo.isConnected) {
       try {
         final response = await homeLocalDatasource.upLoadImage(params);
-
+        print(response);
         return Right(response);
       } catch (e) {
         return Left(e.toString());

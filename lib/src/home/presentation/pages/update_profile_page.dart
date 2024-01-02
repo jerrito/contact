@@ -52,7 +52,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
             if (state is UpLoadImageLoaded) {
               Map<String, dynamic> params = {
                 "id": widget.user!.id,
-                "profile_url": widget.imagePath,
+                "profile_url": state.imageURL,
                 "uid": widget.user!.uid,
                 "first_name": widget.user!.firstName,
                 "last_name": widget.user!.lastName,
