@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:house_rental/core/size/sizes.dart';
 import 'package:house_rental/core/spacing/whitspacing.dart';
 import 'package:house_rental/src/authentication/presentation/pages/phone_number_page.dart';
-import 'package:house_rental/src/authentication/presentation/pages/signup_page.dart';
 import 'package:house_rental/src/authentication/presentation/widgets/default_button.dart';
 
 class LandingPage extends StatelessWidget {

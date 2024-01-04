@@ -1,12 +1,9 @@
-import 'dart:async';
 import 'dart:io';
 
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:house_rental/assets/svgs/svg_constants.dart';
 import 'package:house_rental/core/size/sizes.dart';
 import 'package:house_rental/core/spacing/whitspacing.dart';
@@ -15,6 +12,7 @@ import 'package:house_rental/locator.dart';
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:house_rental/src/home/presentation/bloc/home_bloc.dart';
+import 'package:house_rental/src/home/presentation/pages/home_page.dart';
 
 // ignore: must_be_immutable
 class UpdateProfilePage extends StatefulWidget {
@@ -60,20 +58,19 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                 "phone_number": widget.user!.phoneNumber,
               };
               authBloc.add(UpdateUserEvent(params: params));
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (BuildContext context) => const HomePage(),
+                ),
+              );
             }
 
             if (state is UpdateUserLoaded) {
               debugPrint("cache");
-              authBloc.add(const GetCacheDataEvent());
             }
 
-            if (state is GetCacheDataLoaded) {
-              debugPrint("user");
-              widget.user = state.user;
-              debugPrint(widget.user?.toMap().toString());
-              setState(() {});
-              Navigator.pop(context);
-            }
+            
 
             if (state is UpdateUserError) {
               debugPrint(state.errorMessage);
@@ -81,6 +78,11 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           },
           builder: (context, state) {
             if (state is UpLoadImageLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (state is UpdateUserLoading) {
               return const Center(
                 child: CircularProgressIndicator(),
               );

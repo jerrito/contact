@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -46,10 +45,9 @@ class HomeLocalDatasourceImpl implements HomeLocalDatasource {
   @override
   Future<String> upLoadImage(Map<String, dynamic> params) async {
     //Upload file
-    final upLoadPath = FirebaseStorage.instance
-        .ref()
-        .child(params["phone_number"])
-        .child(params["path"]);
+    final upLoadPath = FirebaseStorage.instance.ref().child(
+          params["phone_number"],
+        );
 
     final upLoadTask = upLoadPath.putFile(File(params["path"]));
 
@@ -57,7 +55,7 @@ class HomeLocalDatasourceImpl implements HomeLocalDatasource {
     await upLoadTask.whenComplete(
       () => upLoadPath.getDownloadURL().then((value) => returnURL = value),
     );
-    print(returnURL);
+    
     return returnURL!;
   }
 }
