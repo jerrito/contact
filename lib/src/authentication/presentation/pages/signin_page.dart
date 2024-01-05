@@ -6,6 +6,8 @@ import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:house_rental/core/strings/app_strings.dart';
 import 'package:house_rental/core/widgets/bottom_sheet.dart';
 
 import 'package:house_rental/locator.dart';
@@ -14,6 +16,7 @@ import 'package:house_rental/src/authentication/presentation/pages/otp_page.dart
 import 'package:house_rental/src/authentication/presentation/widgets/default_textfield.dart';
 import 'package:house_rental/src/home/presentation/pages/home_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:string_validator/string_validator.dart';
 
 class SigninPage extends StatefulWidget {
   final String phoneNumber, uid, id;
@@ -145,10 +148,34 @@ class _SigninPageState extends State<SigninPage> {
                       );
                     }
 
-                    return DefaultTextfield(
-                      controller: phoneNumberController,
-                      label: "Phone Number",
-                    );
+                    return FormBuilderField<String>(
+                        name: "phoneNumber",
+                        validator: (value) {
+                          if (value?.isEmpty ?? true) {
+                            return fieldRequired;
+                          }
+                          if (!isNumeric(value!)) {
+                            return "Only numbers required";
+                          }
+                          if (!isLength(value, 9)) {
+                            return 'must be at least 8 characters';
+                          }
+
+                          return null;
+                        },
+                        onChanged: (value) {
+                          if (value!.startsWith("0", 0)) {
+                            value = value.substring(1);
+                          }
+                        },
+                        builder: (context) {
+                          return DefaultTextfield(
+                            controller: phoneNumberController,
+                            label: "Phone Number",
+                            errorText: context.errorText,
+                            onChanged: (p0) => context.didChange(p0),
+                          );
+                        });
                   },
                 ),
 
@@ -191,18 +218,52 @@ class _SigninPageState extends State<SigninPage> {
                       return Column(
                         children: [
                           //email
-                          DefaultTextfield(
-                            controller: emailController,
-                            label: "Email",
-                            hintText: "Enter your email",
-                          ),
+                          FormBuilderField<String>(
+                              name: "Email",
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (value) {
+                                if (value?.isEmpty ?? true) {
+                                  return fieldRequired;
+                                }
+                                if (!isEmail(value!)) {
+                                  return "Must be an email";
+                                }
+                                return null;
+                              },
+                              builder: (context) {
+                                return DefaultTextfield(
+                                  controller: emailController,
+                                  label: "Email",
+                                  hintText: "Enter your email",
+                                  errorText: context.errorText,
+                                  onChanged: (p0) => context.didChange(p0),
+                                );
+                              }),
 
                           //password
-                          DefaultTextfield(
-                            controller: passwordController,
-                            label: "Password",
-                            hintText: "Enter your password",
-                          ),
+                          FormBuilderField<String>(
+                              name: "password",
+                              validator: (value) {
+                                if (value?.isEmpty ?? true) {
+                                  return fieldRequired;
+                                }
+
+                                if (!isLength(value!, 8)) {
+                                  return mustBeCharacters;
+                                }
+
+                                return null;
+                              },
+                              builder: (context) {
+                                return DefaultTextfield(
+                                  controller: passwordController,
+                                  label: "Password",
+                                  hintText: "Enter your password",
+                                  errorText: context.errorText,
+                                  onChanged: (p0) => context.didChange(p0),
+                                );
+                              }),
                         ],
                       );
                     }),

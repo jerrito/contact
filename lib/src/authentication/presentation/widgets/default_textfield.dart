@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:house_rental/core/size/sizes.dart';
 import 'package:house_rental/core/spacing/whitspacing.dart';
 
+
 class DefaultTextfield extends StatelessWidget {
   final void Function(String)? onChanged;
   final TextEditingController controller;
   final String? hintText;
+  final String? errorText;
   final String? label;
   final TextInputType? textInputType;
   const DefaultTextfield(
@@ -14,6 +16,7 @@ class DefaultTextfield extends StatelessWidget {
       required this.controller,
       this.hintText,
       this.textInputType,
+      this.errorText,
       required this.label});
 
   @override
@@ -28,11 +31,12 @@ class DefaultTextfield extends StatelessWidget {
           Space().height(context, 0.004),
           SizedBox(
             height: Sizes().height(context, 0.06),
-            child: TextFormField(
+            child: TextField(
               keyboardType: textInputType,
               controller: controller,
               onChanged: onChanged,
               decoration: InputDecoration(
+                errorText: errorText,
                 contentPadding: const EdgeInsets.all(10),
                 hintText: hintText,
                 hintStyle: const TextStyle(color:Colors.grey),

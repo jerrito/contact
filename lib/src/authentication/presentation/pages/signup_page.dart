@@ -12,9 +12,12 @@ import 'package:house_rental/src/authentication/presentation/bloc/authentication
 import 'package:house_rental/src/authentication/presentation/widgets/default_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:house_rental/src/home/presentation/pages/home_page.dart';
+import 'package:string_validator/string_validator.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:house_rental/core/strings/app_strings.dart';
 
 class SignupPage extends StatefulWidget {
-  final String phoneNumber,uid;
+  final String phoneNumber, uid;
   const SignupPage({
     Key? key,
     required this.phoneNumber,
@@ -28,6 +31,7 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   final authBloc = locator<AuthenticationBloc>();
   final auth = FirebaseAuth.instance;
+  final formKey = GlobalKey<FormBuilderState>();
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
@@ -43,21 +47,23 @@ class _SignupPageState extends State<SignupPage> {
           context: context,
           label: "Signup",
           onPressed: () {
-            var bites=utf8.encode(passwordController.text);
-            var password=sha512.convert(bites);
-            final users = {
-              "first_name": firstNameController.text,
-              "last_name": lastNameController.text,
-              "email": emailController.text,
-              "phone_number": widget.phoneNumber,
-              //"id": "",
-              "password":password.toString(),
-              "uid": widget.uid ,
-            };
-           
-            authBloc.add(
-              SignupEvent(users: users),
-            );
+            if (formKey.currentState!.saveAndValidate() == true) {
+              var bites = utf8.encode(passwordController.text);
+              var password = sha512.convert(bites);
+              final users = {
+                "first_name": firstNameController.text,
+                "last_name": lastNameController.text,
+                "email": emailController.text,
+                "phone_number": widget.phoneNumber,
+                //"id": "",
+                "password": password.toString(),
+                "uid": widget.uid,
+              };
+
+              authBloc.add(
+                SignupEvent(users: users),
+              );
+            }
           },
         ),
         body: BlocConsumer<AuthenticationBloc, AuthenticationState>(
@@ -67,20 +73,19 @@ class _SignupPageState extends State<SignupPage> {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(state.errorMessage)));
               }
-              
+
               if (state is SignupLoaded) {
                 Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) {
-                            return HomePage(
-                              uid: widget.uid,
-                              isLogin: false,
-                              phoneNumber: widget.phoneNumber,
-                            );
-                          }),
-                        );
-              //  GoRouter.of(context).pushReplacementNamed("homePage");
-              
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return HomePage(
+                      uid: widget.uid,
+                      isLogin: false,
+                      phoneNumber: widget.phoneNumber,
+                    );
+                  }),
+                );
+                //  GoRouter.of(context).pushReplacementNamed("homePage");
               }
             },
             builder: (context, state) {
@@ -88,43 +93,113 @@ class _SignupPageState extends State<SignupPage> {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              return SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: Sizes().height(context, 0.02)),
-                  child: Column(
-                    children: [
-                      //firstName
-                      DefaultTextfield(
-                        controller: firstNameController,
-                        label: "First Name",
-                        hintText: "Enter your first name",
-                      ),
+              return FormBuilder(
+                key: formKey,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: Sizes().height(context, 0.02)),
+                    child: Column(
+                      children: [
+                        //firstName
+                        FormBuilderField<String>(
+                            name: "First Name",
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (value) {
+                              if (value?.isEmpty ?? true) {
+                                return "Field is required";
+                              }
+                              if (value!.length <= 1) {
+                                return 'must be atleast two characters or more ';
+                              }
+                              return null;
+                            },
+                            builder: (context) {
+                              return DefaultTextfield(
+                                controller: firstNameController,
+                                label: "First Name",
+                                hintText: "Enter your first name",
+                                errorText: context.errorText,
+                                onChanged: (p0) => context.didChange(p0),
+                              );
+                            }),
 
-                      //last Name
-                      DefaultTextfield(
-                        controller: lastNameController,
-                        label: "Last Name",
-                        hintText: "Enter your last name",
-                      ),
+                        //last Name
+                        FormBuilderField<String>(
+                            name: "Last Name",
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (value) {
+                              if (value?.isEmpty ?? true) {
+                                return fieldRequired;
+                              }
+                              if (value!.length <= 1) {
+                                return mustBeCharacters;
+                              }
+                              return null;
+                            },
+                            builder: (context) {
+                              return DefaultTextfield(
+                                controller: lastNameController,
+                                label: "Last Name",
+                                hintText: "Enter your last name",
+                                errorText: context.errorText,
+                                onChanged: (p0) => context.didChange(p0),
+                              );
+                            }),
 
-                      //email
-                      DefaultTextfield(
-                        controller: emailController,
-                        label: "Email",
-                        hintText: "Enter your email",
-                      ),
+                        //email
+                        FormBuilderField<String>(
+                            name: "Email",
+                            validator: (value) {
+                              if (value?.isEmpty ?? true) {
+                                return fieldRequired;
+                              }
+                              if (!isEmail(value!)) {
+                                return "Must be an email";
+                              }
+                              return null;
+                            },
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            builder: (context) {
+                              return DefaultTextfield(
+                                controller: emailController,
+                                label: "Email",
+                                hintText: "Enter your email",
+                                errorText: context.errorText,
+                                onChanged: (p0) => context.didChange(p0),
+                              );
+                            }),
 
-                      //email
-                      DefaultTextfield(
-                        controller: passwordController,
-                        label: "Password",
-                        hintText: "Enter your password",
-                      ),
+                        //email
+                        FormBuilderField<String>(
+                            name: "password",
+                            validator: (value) {
+                              if (value?.isEmpty ?? true) {
+                                return fieldRequired;
+                              }
 
+                              if (!isLength(value!, 8)) {
+                                return mustBeCharacters;
+                              }
 
-                      Space().height(context, 0.02),
-                    ],
+                              return null;
+                            },
+                            builder: (context) {
+                              return DefaultTextfield(
+                                controller: passwordController,
+                                label: "Password",
+                                hintText: "Enter your password",
+                                errorText: context.errorText,
+                                onChanged: (p0) => context.didChange(p0),
+                              );
+                            }),
+
+                        Space().height(context, 0.02),
+                      ],
+                    ),
                   ),
                 ),
               );
