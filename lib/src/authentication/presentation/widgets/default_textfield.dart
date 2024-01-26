@@ -29,30 +29,28 @@ class DefaultTextfield extends StatelessWidget {
         children: [
           Text(label!),
           Space().height(context, 0.004),
-          SizedBox(
-            height: Sizes().height(context, 0.06),
-            child: TextField(
-              keyboardType: textInputType,
-              controller: controller,
-              onChanged: onChanged,
-              decoration: InputDecoration(
-                errorText: errorText,
-                contentPadding: const EdgeInsets.all(10),
-                hintText: hintText,
-                hintStyle: const TextStyle(color:Colors.grey),
-                //label: Text(label!),
-                border:  OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(Sizes().height(context,0.04)),
-                  borderSide:const BorderSide(color: Colors.black26),
-                ),
-                enabledBorder: OutlineInputBorder(
-                   borderRadius: BorderRadius.circular(Sizes().height(context,0.04)),
-                  borderSide: const BorderSide(color: Colors.black26),
-                ),
-                errorBorder: OutlineInputBorder(
-                   borderRadius: BorderRadius.circular(Sizes().height(context,0.04)),
-                  borderSide: const BorderSide(color: Colors.red),
-                ),
+          TextField(
+            keyboardType: textInputType,
+            controller: controller,
+            onChanged: onChanged,
+            decoration: InputDecoration(
+              isDense:true,
+              errorText: errorText,
+              contentPadding: const EdgeInsets.all(10),
+              hintText: hintText,
+              hintStyle: const TextStyle(color:Colors.grey),
+              //label: Text(label!),
+              border:  OutlineInputBorder(
+                borderRadius: BorderRadius.circular(Sizes().height(context,0.04)),
+                borderSide:const BorderSide(color: Colors.black26),
+              ),
+              enabledBorder: OutlineInputBorder(
+                 borderRadius: BorderRadius.circular(Sizes().height(context,0.04)),
+                borderSide: const BorderSide(color: Colors.black26),
+              ),
+              errorBorder: OutlineInputBorder(
+                 borderRadius: BorderRadius.circular(Sizes().height(context,0.04)),
+                borderSide: const BorderSide(color: Colors.red),
               ),
             ),
           ),

@@ -26,3 +26,15 @@ class UpLoadImageLoaded extends HomeState {
   final String imageURL;
   UpLoadImageLoaded({required this.imageURL});
 }
+
+class GetALLHousesLoading extends HomeState {}
+
+class GetAllHousesError extends HomeState {
+  final String errorMessage;
+  GetAllHousesError({required this.errorMessage});
+}
+
+class GetAllHousesLoaded extends HomeState {
+  final List<QueryDocumentSnapshot<HouseDetail>> houseDetail;
+  GetAllHousesLoaded({required this.houseDetail});
+}

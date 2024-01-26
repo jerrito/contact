@@ -10,6 +10,7 @@ import 'package:house_rental/core/theme/colors.dart';
 import 'package:house_rental/locator.dart';
 import 'package:house_rental/src/authentication/domain/entities/user.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
+import 'package:house_rental/src/home/presentation/bloc/home_bloc.dart';
 import 'package:house_rental/src/home/presentation/widgets/home_drawer.dart';
 import 'package:house_rental/src/home/presentation/widgets/house_container.dart';
 import 'package:house_rental/src/home/presentation/widgets/house_row_details.dart';
@@ -33,6 +34,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final authBloc = locator<AuthenticationBloc>();
+  final homeBloc = locator<HomeBloc>();
   final searchController = TextEditingController();
 
   User? user;
@@ -166,14 +168,22 @@ class _HomePageState extends State<HomePage> {
 
                     //Space().height(context, 0.02),
 
-                    ListView.builder(
-                        reverse: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: 6,
-                        itemBuilder: (context, index) {
-                          return const HouseRowDetails();
-                        }),
+                    BlocConsumer(
+                      bloc:homeBloc,
+                      listener: (context,state){
+                        
+                      },
+                      builder: (context,state) {
+                        return ListView.builder(
+                            reverse: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: 6,
+                            itemBuilder: (context, index) {
+                              return const HouseRowDetails();
+                            });
+                      }
+                    ),
                     // const HouseRowDetails(),
                     // const HouseRowDetails(),
                     // const HouseRowDetails(),

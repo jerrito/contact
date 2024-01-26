@@ -14,16 +14,6 @@ class HomeLocalDatasourceImpl implements HomeLocalDatasource {
   Future<XFile> getProfileImageCamera() async {
     final result = await ImagePicker().pickImage(source: ImageSource.camera);
     if (result != null) {
-      // Uint8List? fileBytes = result.files.first.bytes;
-      // String fileName = result.files.first.name;
-
-      // Upload file
-      //   final upLoad = await FirebaseStorage.instance
-      //       .ref(params["phone_number"])
-      //       .child(fileName)
-      //       .putData(fileBytes!);
-
-      //  final url=await upLoad.ref.getDownloadURL();
       XFile file = XFile(result.path);
       return file;
     } else {
