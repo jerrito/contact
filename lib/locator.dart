@@ -18,8 +18,10 @@ import 'package:house_rental/src/authentication/domain/usecases/verify_number.da
 import 'package:house_rental/src/authentication/domain/usecases/verify_otp.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:house_rental/src/home/data/data_source/localds.dart';
+import 'package:house_rental/src/home/data/data_source/remote_ds.dart';
 import 'package:house_rental/src/home/data/repository/home_repository_implementation.dart';
 import 'package:house_rental/src/home/domain/repository/home_repository.dart';
+import 'package:house_rental/src/home/domain/usecases/get_all_houses.dart';
 import 'package:house_rental/src/home/domain/usecases/get_profile_camera.dart';
 import 'package:house_rental/src/home/domain/usecases/get_profile_gallery.dart';
 import 'package:house_rental/src/home/domain/usecases/up_load_image.dart';
@@ -50,6 +52,7 @@ Future<void> initDependencies() async {
       getProfileCamera: locator(),
       getProfileGallery: locator(),
       upLoadImage: locator(),
+      getAllHouses: locator()
     ),
   );
 
@@ -57,6 +60,12 @@ Future<void> initDependencies() async {
 
   locator.registerLazySingleton(
     () => Signup(
+      repository: locator(),
+    ),
+  );
+
+ locator.registerLazySingleton(
+    () => GetAllHouses(
       repository: locator(),
     ),
   );
@@ -140,6 +149,7 @@ Future<void> initDependencies() async {
     () => HomeRepositoryImplementation(
       networkInfo: locator(),
       homeLocalDatasource: locator(),
+      homeRemoteDatasource: locator()
     ),
   );
   //remoteds
@@ -158,6 +168,10 @@ Future<void> initDependencies() async {
 
   locator.registerLazySingleton<HomeLocalDatasource>(
     () => HomeLocalDatasourceImpl(),
+  );
+
+   locator.registerLazySingleton<HomeRemoteDatasource>(
+    () => HomeRemoteDatatsourceImpl(),
   );
 
   final sharedPreference = await SharedPreferences.getInstance();
