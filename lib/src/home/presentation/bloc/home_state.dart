@@ -38,3 +38,16 @@ class GetAllHousesLoaded extends HomeState {
   final List<QueryDocumentSnapshot<HouseDetail>> houseDetail;
   GetAllHousesLoaded({required this.houseDetail});
 }
+
+
+class GetHouseLoading extends HomeState {}
+
+class GetHouseError extends HomeState {
+  final String errorMessage;
+  GetHouseError({required this.errorMessage});
+}
+
+class GetHouseLoaded extends HomeState {
+  final DocumentSnapshot<HouseDetail> houseDetail;
+  GetHouseLoaded({required this.houseDetail});
+}

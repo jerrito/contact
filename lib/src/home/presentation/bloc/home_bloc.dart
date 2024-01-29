@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:house_rental/core/usecase/usecase.dart';
 import 'package:house_rental/src/home/domain/entities/house.dart';
 import 'package:house_rental/src/home/domain/usecases/get_all_houses.dart';
+import 'package:house_rental/src/home/domain/usecases/get_house.dart';
 import 'package:house_rental/src/home/domain/usecases/get_profile_camera.dart';
 import 'package:house_rental/src/home/domain/usecases/get_profile_gallery.dart';
 import 'package:house_rental/src/home/domain/usecases/up_load_image.dart';
@@ -15,11 +16,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetProfileGallery getProfileGallery;
   final UpLoadImage upLoadImage;
   final GetAllHouses getAllHouses;
+  final GetHouse getHouse;
   HomeBloc({
     required this.getProfileCamera,
     required this.getProfileGallery,
     required this.upLoadImage,
     required this.getAllHouses,
+    required this.getHouse
   }) : super(HomeInitState()) {
     //!GET PROFILE Camera
     on<GetProfileCameraEvent>((event, emit) async {
@@ -58,5 +61,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         ),
       );
     }));
-  }
+
+    on<GetHouseEvent>(((event, emit) async {
+      emit(GetHouseLoading());
+
+      final response = await getHouse.call(event.params);
+
+      emit(
+        response.fold(
+          (error) => GetHouseError(errorMessage: error),
+          (response) => GetHouseLoaded(houseDetail: response),
+        ),
+      );
+    }));
+  }is.ge
 }

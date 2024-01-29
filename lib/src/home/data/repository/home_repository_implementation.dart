@@ -72,4 +72,23 @@ class HomeRepositoryImplementation implements HomeRepository {
       return Left(networkInfo.noNetworkMessage);
     }
   }
+
+  @override
+  Future<Either<String, DocumentSnapshot<HouseDetail>>> editHouse(
+      Map<String, dynamic> params) async {
+    if (await networkInfo.isConnected) {
+
+      try {
+        final response = await homeRemoteDatasource.getHouse(params);
+
+        return Right(response);
+      } catch (e) {
+        return Left(
+          e.toString(),
+        );
+      }
+    } else {
+      return Left(networkInfo.noNetworkMessage);
+    }
+  }
 }

@@ -52,7 +52,8 @@ Future<void> initDependencies() async {
       getProfileCamera: locator(),
       getProfileGallery: locator(),
       upLoadImage: locator(),
-      getAllHouses: locator()
+      getAllHouses: locator(),
+      getHouse: locator()
     ),
   );
 

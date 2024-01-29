@@ -4,6 +4,8 @@ import 'package:house_rental/src/home/data/models/house_model.dart';
 abstract class HomeRemoteDatasource {
   Future<QuerySnapshot<HouseDetailModel>> getAllHouses(
       Map<String, dynamic> params);
+  Future<DocumentSnapshot<HouseDetailModel>> getHouse(
+      Map<String, dynamic> params);    
 }
 
 class HomeRemoteDatatsourceImpl extends HomeRemoteDatasource {
@@ -11,7 +13,7 @@ class HomeRemoteDatatsourceImpl extends HomeRemoteDatasource {
   Future<QuerySnapshot<HouseDetailModel>> getAllHouses(
       Map<String, dynamic> params) async {
     final houseReference = await FirebaseFirestore.instance
-        .collection("houseRentalAdminAccount")
+        .collection("houses")
         // .snapshots()
         // .forEach((element) {
         //   element.docChanges.docs.where((element) => false);
@@ -22,6 +24,20 @@ class HomeRemoteDatatsourceImpl extends HomeRemoteDatasource {
               HouseDetailModel.fromJson(snapshot.data()!),
           toFirestore: (house, _) => house.toMap(),
         )
+        .get();
+
+    return houseReference;
+  }
+  
+  @override
+  Future<DocumentSnapshot<HouseDetailModel>> getHouse(Map<String, dynamic> params) async{
+   final houseReference = await FirebaseFirestore.instance
+        .collection("houses")
+        .withConverter<HouseDetailModel>(
+          fromFirestore: (snapshot, _) =>
+              HouseDetailModel.fromJson(snapshot.data()!),
+          toFirestore: (house, _) => house.toMap(),
+        ).doc()
         .get();
 
     return houseReference;
