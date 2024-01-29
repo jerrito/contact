@@ -43,25 +43,25 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     authBloc.add(const GetCacheDataEvent());
-   
   }
 
   @override
   Widget build(BuildContext context) {
     //debugPrint(user?.id);
 
-     debugPrint(user?.uid);
+    debugPrint(user?.uid);
     return Scaffold(
         drawer: HomeDrawer(
-          user: user ?? User(
-            firstName: "",
-           lastName: "",
-            email: "", 
-            phoneNumber: "", 
-            id: "",
-            uid: "",
-             password: "",
-             profileUrl: ""),
+          user: user ??
+              User(
+                  firstName: "",
+                  lastName: "",
+                  email: "",
+                  phoneNumber: "",
+                  id: "",
+                  uid: "",
+                  password: "",
+                  profileUrl: ""),
         ),
         // appBar: AppBar(title: const Text("Home Page")),
         body: BlocConsumer(
@@ -71,6 +71,8 @@ class _HomePageState extends State<HomePage> {
               user = state.user;
               debugPrint(user?.toMap().toString());
               setState(() {});
+              Map<String,dynamic> params = {};
+              homeBloc.add(GetAllHousesEvent(params: params));
             }
           },
           builder: (context, state) {
@@ -103,7 +105,9 @@ class _HomePageState extends State<HomePage> {
                     Space().height(context, 0.02),
 
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal:Sizes().width(context,0.04)),                        child: Row(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: Sizes().width(context, 0.04)),
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           SearchTextField(
@@ -117,15 +121,15 @@ class _HomePageState extends State<HomePage> {
                               Scaffold.of(context).openDrawer();
                               Future.delayed(const Duration(seconds: 1), () {
                                 // debugPrint(user?.id);
-                               
+
                                 //if(widget)
                                 if (user?.id == null || user?.uid == null) {
                                   Map<String, dynamic> params = {
                                     "phone_number": user?.phoneNumber,
                                     "uid": widget.uid,
                                   };
-                                   debugPrint(user?.uid);
-                                   debugPrint(user?.phoneNumber);
+                                  debugPrint(user?.uid);
+                                  debugPrint(user?.phoneNumber);
                                   authBloc.add(
                                     AddIdEvent(
                                       params: params,
@@ -143,10 +147,11 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Space().height(context, 0.02),
-                   
-                 const  HouseCategories(),
+
+                    const HouseCategories(),
 
                     Space().height(context, 0.05),
+
                     Center(child: HouseContainer(
                       onTap: () {
                         context.goNamed("houseDetail");
@@ -156,34 +161,51 @@ class _HomePageState extends State<HomePage> {
                     Space().height(context, 0.032),
 
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal:Sizes().width(context,0.04)),
-                      child:  Row(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: Sizes().width(context, 0.04),
+                      ),
+                      child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [Text("Best for you",style:appTheme.textTheme.displayLarge!.copyWith(
-                            fontWeight: FontWeight.w500
-                          )), Text("See more",style:appTheme.textTheme.displaySmall!.copyWith(
-                            fontWeight: FontWeight.w400,color:searchTextColor2,fontSize: 12
-                          ))]),
+                          children: [
+                            Text("Best for you",
+                                style: appTheme.textTheme.displayLarge!
+                                    .copyWith(fontWeight: FontWeight.w500)),
+                            Text(
+                              "See more",
+                              style: appTheme.textTheme.displaySmall!.copyWith(
+                                  fontWeight: FontWeight.w400,
+                                  color: searchTextColor2,
+                                  fontSize: 12),
+                            )
+                          ]),
                     ),
 
                     //Space().height(context, 0.02),
 
                     BlocConsumer(
-                      bloc:homeBloc,
-                      listener: (context,state){
-                        
-                      },
-                      builder: (context,state) {
-                        return ListView.builder(
-                            reverse: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: 6,
-                            itemBuilder: (context, index) {
-                              return const HouseRowDetails();
-                            });
-                      }
-                    ),
+                        bloc: homeBloc,
+                        listener: (context, state) {
+                          if (state is GetAllHousesError) {
+                            print(state.errorMessage);
+                          }
+                        },
+                        builder: (context, state) {
+                          if (state is GetALLHousesLoading) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                          if (state is GetAllHousesLoaded) {
+                            print(state.houseDetail.length);
+                          }
+                          return ListView.builder(
+                              reverse: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: 6,
+                              itemBuilder: (context, index) {
+                                return const HouseRowDetails();
+                              });
+                        }),
                     // const HouseRowDetails(),
                     // const HouseRowDetails(),
                     // const HouseRowDetails(),
@@ -191,5 +213,42 @@ class _HomePageState extends State<HomePage> {
             );
           },
         ));
+  }
+}
+
+class Jerrito extends StatefulWidget {
+  const Jerrito({super.key});
+  @override
+  State<Jerrito> createState() => _Jerrito();
+}
+
+class _Jerrito extends State<Jerrito> {
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold();
+  }
+}
+
+class Kerrito extends StatefulWidget {
+  const Kerrito({super.key});
+
+  @override
+  State<Kerrito> createState() => _KerritoState();
+}
+
+class _KerritoState extends State<Kerrito> {
+  @override
+  Widget build(BuildContext context) {
+    return Placeholder(
+
+        // child: List.filled(elements),
+        );
+  }
+}
+
+class Test {
+  int i = 1;
+  int sum() {
+    return i++;
   }
 }

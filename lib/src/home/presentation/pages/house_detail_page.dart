@@ -13,7 +13,8 @@ import 'package:house_rental/src/home/presentation/widgets/owner_row_detail.dart
 import 'package:go_router/go_router.dart';
 
 class HouseDetailPage extends StatefulWidget {
-  const HouseDetailPage({super.key});
+  final HouseDetailPage? houseDetailPage;
+  const HouseDetailPage({super.key,this.houseDetailPage,});
 
   @override
   State<HouseDetailPage> createState() => _HouseDetailPageState();
