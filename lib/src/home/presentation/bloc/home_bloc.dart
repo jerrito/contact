@@ -74,5 +74,5 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         ),
       );
     }));
-  }is.ge
+  }
 }
