@@ -7,13 +7,22 @@ import 'package:house_rental/core/theme/app_theme.dart';
 import 'package:house_rental/core/theme/colors.dart';
 
 class HouseContainer extends StatelessWidget {
+  final int? houseLength;
+  final String? houseName, houseImage, houseSubName;
   final void Function()? onTap;
-  const HouseContainer({super.key, required this.onTap});
+  const HouseContainer({
+    super.key,
+    required this.onTap,
+    this.houseImage,
+    this.houseLength,
+    this.houseName,
+    this.houseSubName,
+  });
 
   @override
   Widget build(BuildContext context) {
     return CarouselSlider.builder(
-        itemCount: 5,
+        itemCount: houseLength ?? 5,
         options: CarouselOptions(height: 272, viewportFraction: 0.6),
         itemBuilder: (context, index, value) {
           return GestureDetector(
@@ -34,7 +43,7 @@ class HouseContainer extends StatelessWidget {
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(22.0),
                           child: Image.asset(
-                            house1Image,
+                           houseImage ?? house1Image,
                             height: 272,
                             width: double.infinity,
                             fit: BoxFit.cover,
@@ -85,7 +94,7 @@ class HouseContainer extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Text(
-                                  "DreamsVille House",
+                                houseName ??  "DreamsVille House",
                                   style:
                                       appTheme.textTheme.displayLarge!.copyWith(
                                     color: houseWhiteColor,
@@ -94,7 +103,7 @@ class HouseContainer extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  "Jl. Sultan Iskandar Muda",
+                                 houseSubName ?? "Jl. Sultan Iskandar Muda",
                                   style: appTheme.textTheme.displaySmall!
                                       .copyWith(
                                           color: searchTextColor3,

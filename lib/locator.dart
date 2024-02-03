@@ -22,6 +22,7 @@ import 'package:house_rental/src/home/data/data_source/remote_ds.dart';
 import 'package:house_rental/src/home/data/repository/home_repository_implementation.dart';
 import 'package:house_rental/src/home/domain/repository/home_repository.dart';
 import 'package:house_rental/src/home/domain/usecases/get_all_houses.dart';
+import 'package:house_rental/src/home/domain/usecases/get_house.dart';
 import 'package:house_rental/src/home/domain/usecases/get_profile_camera.dart';
 import 'package:house_rental/src/home/domain/usecases/get_profile_gallery.dart';
 import 'package:house_rental/src/home/domain/usecases/up_load_image.dart';
@@ -49,12 +50,11 @@ Future<void> initDependencies() async {
 
   locator.registerFactory(
     () => HomeBloc(
-      getProfileCamera: locator(),
-      getProfileGallery: locator(),
-      upLoadImage: locator(),
-      getAllHouses: locator(),
-      getHouse: locator()
-    ),
+        getProfileCamera: locator(),
+        getProfileGallery: locator(),
+        upLoadImage: locator(),
+        getAllHouses: locator(),
+        getHouse: locator()),
   );
 
   //usecases
@@ -65,7 +65,7 @@ Future<void> initDependencies() async {
     ),
   );
 
- locator.registerLazySingleton(
+  locator.registerLazySingleton(
     () => GetAllHouses(
       repository: locator(),
     ),
@@ -135,6 +135,12 @@ Future<void> initDependencies() async {
     ),
   );
 
+  locator.registerLazySingleton(
+    () => GetHouse(
+      repository: locator(),
+    ),
+  );
+
   //repository
 
   locator.registerLazySingleton<AuthenticationRepository>(
@@ -148,10 +154,9 @@ Future<void> initDependencies() async {
 
   locator.registerLazySingleton<HomeRepository>(
     () => HomeRepositoryImplementation(
-      networkInfo: locator(),
-      homeLocalDatasource: locator(),
-      homeRemoteDatasource: locator()
-    ),
+        networkInfo: locator(),
+        homeLocalDatasource: locator(),
+        homeRemoteDatasource: locator()),
   );
   //remoteds
 
@@ -171,7 +176,7 @@ Future<void> initDependencies() async {
     () => HomeLocalDatasourceImpl(),
   );
 
-   locator.registerLazySingleton<HomeRemoteDatasource>(
+  locator.registerLazySingleton<HomeRemoteDatasource>(
     () => HomeRemoteDatatsourceImpl(),
   );
 

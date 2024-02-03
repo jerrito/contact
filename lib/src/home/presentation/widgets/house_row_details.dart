@@ -8,9 +8,9 @@ import 'package:house_rental/core/theme/app_theme.dart';
 import 'package:house_rental/core/theme/colors.dart';
 
 class HouseRowDetails extends StatelessWidget {
-  //final num bedRoomCount, bathhRoomCount, amount;
-  //final String houseIMageURL;
-  const HouseRowDetails({super.key});
+  final num? bedRoomCount, bathhRoomCount, amount;
+  final String? houseIMageURL;
+  const HouseRowDetails({super.key, this.bedRoomCount, this.bathhRoomCount, this.amount, this.houseIMageURL});
 
   @override
   Widget build(BuildContext context) {

@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
               user = state.user;
               debugPrint(user?.toMap().toString());
               setState(() {});
-              Map<String,dynamic> params = {};
+              Map<String, dynamic> params = {};
               homeBloc.add(GetAllHousesEvent(params: params));
             }
           },
@@ -152,11 +152,25 @@ class _HomePageState extends State<HomePage> {
 
                     Space().height(context, 0.05),
 
-                    Center(child: HouseContainer(
-                      onTap: () {
-                        context.goNamed("houseDetail");
-                      },
-                    )),
+                    BlocConsumer(
+                        listener: (context, state) {
+
+                          if(state is GetAllHousesError){
+
+                          }
+                        },
+                        bloc: homeBloc,
+                        builder: (context, state) {
+                          if (state is GetAllHousesLoaded) {
+                            return const Center(
+                                child: CircularProgressIndicator(),);
+                          }
+                          return Center(child: HouseContainer(
+                            onTap: () {
+                              context.goNamed("houseDetail");
+                            },
+                          ));
+                        }),
 
                     Space().height(context, 0.032),
 
@@ -192,10 +206,19 @@ class _HomePageState extends State<HomePage> {
                         builder: (context, state) {
                           if (state is GetALLHousesLoading) {
                             return const Center(
-                                child: CircularProgressIndicator());
+                                child: CircularProgressIndicator(),);
                           }
                           if (state is GetAllHousesLoaded) {
                             print(state.houseDetail.length);
+
+                            return ListView.builder(
+                                reverse: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: state.houseDetail.length,
+                                itemBuilder: (context, index) {
+                                  return const HouseRowDetails();
+                                });
                           }
                           return ListView.builder(
                               reverse: true,
@@ -216,35 +239,6 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class Jerrito extends StatefulWidget {
-  const Jerrito({super.key});
-  @override
-  State<Jerrito> createState() => _Jerrito();
-}
-
-class _Jerrito extends State<Jerrito> {
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold();
-  }
-}
-
-class Kerrito extends StatefulWidget {
-  const Kerrito({super.key});
-
-  @override
-  State<Kerrito> createState() => _KerritoState();
-}
-
-class _KerritoState extends State<Kerrito> {
-  @override
-  Widget build(BuildContext context) {
-    return Placeholder(
-
-        // child: List.filled(elements),
-        );
-  }
-}
 
 class Test {
   int i = 1;
