@@ -76,7 +76,10 @@ GoRouter goRouter() {
             GoRoute(
               path: "houseDetail",
               name: "houseDetail",
-              builder: (context, state) => const HouseDetailPage(),
+              builder: (context, state) =>  HouseDetailPage(
+                id: state.uri.queryParameters["id"].toString(),
+              
+              ),
             )
           ],
         ),

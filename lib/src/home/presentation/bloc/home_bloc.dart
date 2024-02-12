@@ -70,7 +70,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(
         response.fold(
           (error) => GetHouseError(errorMessage: error),
-          (response) => GetHouseLoaded(houseDetail: response),
+          (response) => GetHouseLoaded(houseDetail: response.data()),
         ),
       );
     }));

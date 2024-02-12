@@ -37,7 +37,7 @@ class HomeRemoteDatatsourceImpl extends HomeRemoteDatasource {
           fromFirestore: (snapshot, _) =>
               HouseDetailModel.fromJson(snapshot.data()!),
           toFirestore: (house, _) => house.toMap(),
-        ).doc()
+        ).doc(params["id"])
         .get();
 
     return houseReference;

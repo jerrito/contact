@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -64,181 +65,302 @@ class _HomePageState extends State<HomePage> {
                   profileUrl: ""),
         ),
         // appBar: AppBar(title: const Text("Home Page")),
-        body: BlocConsumer(
-          bloc: authBloc,
-          listener: (context, state) {
-            if (state is GetCacheDataLoaded) {
-              user = state.user;
-              debugPrint(user?.toMap().toString());
-              setState(() {});
-              Map<String, dynamic> params = {};
-              homeBloc.add(GetAllHousesEvent(params: params));
-            }
-          },
-          builder: (context, state) {
-            return SingleChildScrollView(
-              child: Column(
-                  //  mainAxisSize : MainAxisSize.min,
-                  // mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Space().height(context, 0.04),
-                    // SingleChildScrollView(
-                    //   child: ExpansionTile(
-                    //     controlAffinity: ListTileControlAffinity.leading,
-                    //     onExpansionChanged: (value){
+        body: BlocListener(
+            bloc: authBloc,
+            listener: (context, state) {
+              if (state is GetCacheDataLoaded) {
+                user = state.user;
+                debugPrint(user?.toMap().toString());
+                setState(() {});
+                Map<String, dynamic> params = {};
+                homeBloc.add(GetAllHousesEvent(params: params));
+              }
+            },
+            child: BlocConsumer(
+                bloc: homeBloc,
+                listener: (context, state) {},
+                builder: (context, state) {
+                  if (state is GetALLHousesLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (state is GetAllHousesLoaded) {
+                    return SingleChildScrollView(
+                      child: Column(
+                          //  mainAxisSize : MainAxisSize.min,
+                          // mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Space().height(context, 0.04),
+                            // SingleChildScrollView(
+                            //   child: ExpansionTile(
+                            //     controlAffinity: ListTileControlAffinity.leading,
+                            //     onExpansionChanged: (value){
 
-                    //     },
+                            //     },
 
-                    //    expandedCrossAxisAlignment: CrossAxisAlignment.end,
-                    //    expandedAlignment: Alignment.bottomCenter,
-                    //     title:  const Text("Ja"),
-                    //     children: [
-                    //       const Text("La"),
-                    //       const Text("UK"),
-                    //       const Text("GE"),
-                    //     ],
-                    //   ),
-                    // ),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [SvgPicture.asset(notificationSVG)]),
-                    Space().height(context, 0.02),
+                            //    expandedCrossAxisAlignment: CrossAxisAlignment.end,
+                            //    expandedAlignment: Alignment.bottomCenter,
+                            //     title:  const Text("Ja"),
+                            //     children: [
+                            //       const Text("La"),
+                            //       const Text("UK"),
+                            //       const Text("GE"),
+                            //     ],
+                            //   ),
+                            // ),
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [SvgPicture.asset(notificationSVG)]),
+                            Space().height(context, 0.02),
 
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: Sizes().width(context, 0.04)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          SearchTextField(
-                            label: "Search address or near you",
-                            onChanged: null,
-                            controller: searchController,
-                            onTap: null,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Scaffold.of(context).openDrawer();
-                              Future.delayed(const Duration(seconds: 1), () {
-                                // debugPrint(user?.id);
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: Sizes().width(context, 0.04)),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  SearchTextField(
+                                    label: "Search address or near you",
+                                    onChanged: null,
+                                    controller: searchController,
+                                    onTap: null,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Scaffold.of(context).openDrawer();
+                                      Future.delayed(const Duration(seconds: 1),
+                                          () {
+                                        // debugPrint(user?.id);
 
-                                //if(widget)
-                                if (user?.id == null || user?.uid == null) {
-                                  Map<String, dynamic> params = {
-                                    "phone_number": user?.phoneNumber,
-                                    "uid": widget.uid,
-                                  };
-                                  debugPrint(user?.uid);
-                                  debugPrint(user?.phoneNumber);
-                                  authBloc.add(
-                                    AddIdEvent(
-                                      params: params,
+                                        //if(widget)
+                                        if (user?.id == null ||
+                                            user?.uid == null) {
+                                          Map<String, dynamic> params = {
+                                            "phone_number": user?.phoneNumber,
+                                            "uid": widget.uid,
+                                          };
+                                          debugPrint(user?.uid);
+                                          debugPrint(user?.phoneNumber);
+                                          authBloc.add(
+                                            AddIdEvent(
+                                              params: params,
+                                            ),
+                                          );
+                                        } else {}
+                                      });
+                                    },
+                                    child: SvgPicture.asset(
+                                      menuSVG,
+                                      height: 35,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Space().height(context, 0.02),
+
+                            const HouseCategories(),
+
+                            Space().height(context, 0.05),
+
+                            CarouselSlider.builder(
+                                itemCount: state.houseDetail.length,
+                                options: CarouselOptions(
+                                    height: 272, viewportFraction: 0.6),
+                                itemBuilder: (context, index, value) {
+                                  final houseData =
+                                      state.houseDetail[index].data();
+                                  return GestureDetector(
+                                    onTap: () {},
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child: Center(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            gradient: houseContainerGradient,
+                                            borderRadius:
+                                                BorderRadius.circular(22.0),
+                                          ),
+                                          height: 272,
+                                          width: 222,
+                                          child: Stack(
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.center,
+                                                child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            22.0),
+                                                    child: Image.network(
+                                                      houseData.images?[0] ??
+                                                          "",
+                                                      errorBuilder:
+                                                          (_, __, ___) {
+                                                        return SizedBox(
+                                                          height: 272,
+                                                        );
+                                                      },
+                                                      height: 272,
+                                                      width: double.infinity,
+                                                      fit: BoxFit.cover,
+                                                      //opacity: const AlwaysStoppedAnimation(.3),
+                                                    )
+
+                                                    //child: ,
+                                                    ),
+                                              ),
+                                              Align(
+                                                  alignment: Alignment.topRight,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                      top: 25.0,
+                                                      right: 12,
+                                                    ),
+                                                    child: Container(
+                                                      width: 70,
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            houseContainerRowColor,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                          20.0,
+                                                        ),
+                                                      ),
+                                                      child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            SvgPicture.asset(
+                                                              locationSVG,
+                                                            ),
+                                                            const Text(
+                                                              "1.8 km",
+                                                              style: TextStyle(
+                                                                color:
+                                                                    houseWhiteColor,
+                                                              ),
+                                                            )
+                                                          ]),
+                                                    ),
+                                                  )),
+                                              Align(
+                                                  alignment:
+                                                      Alignment.bottomLeft,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                      left: 20.0,
+                                                      bottom: 16,
+                                                    ),
+                                                    child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          Text(
+                                                            houseData
+                                                                    .houseName ??
+                                                                "DreamsVille House",
+                                                            style: appTheme
+                                                                .textTheme
+                                                                .displayLarge!
+                                                                .copyWith(
+                                                              color:
+                                                                  houseWhiteColor,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            houseData
+                                                                    .description ??
+                                                                "Jl. Sultan Iskandar Muda",
+                                                            style: appTheme
+                                                                .textTheme
+                                                                .displaySmall!
+                                                                .copyWith(
+                                                                    color:
+                                                                        searchTextColor3,
+                                                                    fontSize:
+                                                                        12,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400),
+                                                          ),
+                                                        ]),
+                                                  ))
+                                            ],
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   );
-                                } else {}
-                              });
-                            },
-                            child: SvgPicture.asset(
-                              menuSVG,
-                              height: 35,
+                                }),
+
+                            Space().height(context, 0.032),
+
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: Sizes().width(context, 0.04),
+                              ),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("Best for you",
+                                        style: appTheme.textTheme.displayLarge!
+                                            .copyWith(
+                                                fontWeight: FontWeight.w500)),
+                                    Text(
+                                      "See more",
+                                      style: appTheme.textTheme.displaySmall!
+                                          .copyWith(
+                                              fontWeight: FontWeight.w400,
+                                              color: searchTextColor2,
+                                              fontSize: 12),
+                                    )
+                                  ]),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Space().height(context, 0.02),
 
-                    const HouseCategories(),
+                            //Space().height(context, 0.02),
 
-                    Space().height(context, 0.05),
-
-                    BlocConsumer(
-                        listener: (context, state) {
-
-                          if(state is GetAllHousesError){
-
-                          }
-                        },
-                        bloc: homeBloc,
-                        builder: (context, state) {
-                          if (state is GetAllHousesLoaded) {
-                            return const Center(
-                                child: CircularProgressIndicator(),);
-                          }
-                          return Center(child: HouseContainer(
-                            onTap: () {
-                              context.goNamed("houseDetail");
-                            },
-                          ));
-                        }),
-
-                    Space().height(context, 0.032),
-
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: Sizes().width(context, 0.04),
-                      ),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Best for you",
-                                style: appTheme.textTheme.displayLarge!
-                                    .copyWith(fontWeight: FontWeight.w500)),
-                            Text(
-                              "See more",
-                              style: appTheme.textTheme.displaySmall!.copyWith(
-                                  fontWeight: FontWeight.w400,
-                                  color: searchTextColor2,
-                                  fontSize: 12),
-                            )
-                          ]),
-                    ),
-
-                    //Space().height(context, 0.02),
-
-                    BlocConsumer(
-                        bloc: homeBloc,
-                        listener: (context, state) {
-                          if (state is GetAllHousesError) {
-                            print(state.errorMessage);
-                          }
-                        },
-                        builder: (context, state) {
-                          if (state is GetALLHousesLoading) {
-                            return const Center(
-                                child: CircularProgressIndicator(),);
-                          }
-                          if (state is GetAllHousesLoaded) {
-                            print(state.houseDetail.length);
-
-                            return ListView.builder(
+                            ListView.builder(
                                 reverse: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemCount: state.houseDetail.length,
                                 itemBuilder: (context, index) {
-                                  return const HouseRowDetails();
-                                });
-                          }
-                          return ListView.builder(
-                              reverse: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: 6,
-                              itemBuilder: (context, index) {
-                                return const HouseRowDetails();
-                              });
-                        }),
-                    // const HouseRowDetails(),
-                    // const HouseRowDetails(),
-                    // const HouseRowDetails(),
-                  ]),
-            );
-          },
-        ));
+                                  final houseData =
+                                      state.houseDetail[index].data();
+                                  final id = state.houseDetail[index].id;
+
+                                  return HouseRowDetails(
+                                    onTap: () {
+                                      context.pushNamed("houseDetail",
+                                          queryParameters: {"id": id});
+                                    },
+                                  );
+                                })
+
+                            // const HouseRowDetails(),
+                            // const HouseRowDetails(),
+                            // const HouseRowDetails(),
+                          ]),
+                    );
+                  }
+                  return const SizedBox();
+                })));
   }
 }
-
 
 class Test {
   int i = 1;

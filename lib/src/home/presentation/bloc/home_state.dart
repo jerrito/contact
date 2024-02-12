@@ -48,6 +48,6 @@ class GetHouseError extends HomeState {
 }
 
 class GetHouseLoaded extends HomeState {
-  final DocumentSnapshot<HouseDetail> houseDetail;
+  final HouseDetail? houseDetail;
   GetHouseLoaded({required this.houseDetail});
 }

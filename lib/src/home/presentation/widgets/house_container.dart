@@ -22,7 +22,7 @@ class HouseContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CarouselSlider.builder(
-        itemCount: houseLength ?? 5,
+        itemCount: houseLength ?? 1,
         options: CarouselOptions(height: 272, viewportFraction: 0.6),
         itemBuilder: (context, index, value) {
           return GestureDetector(
