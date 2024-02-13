@@ -82,7 +82,7 @@ class _HouseDetailPageState extends State<HouseDetailPage> {
                       ),
                       Space().height(context, 0.024),
                       OwnerRowDetails(
-                        ownerName: data?.houseName,
+                        ownerName: data?.owner?.firstName,
                         ownerPhotoURL: data?.images?[0],
                         role: data?.description,
                         callOnTap: () {},
