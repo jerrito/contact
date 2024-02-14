@@ -173,8 +173,12 @@ class _HomePageState extends State<HomePage> {
                                 itemBuilder: (context, index, value) {
                                   final houseData =
                                       state.houseDetail[index].data();
+                                     final id= state.houseDetail[index].id;
                                   return GestureDetector(
-                                    onTap: () {},
+                                    onTap: () {
+                                      context.pushNamed("houseDetail",
+                                          queryParameters: {"id": id});
+                                    },
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 8.0),
@@ -200,7 +204,7 @@ class _HomePageState extends State<HomePage> {
                                                           "",
                                                       errorBuilder:
                                                           (_, __, ___) {
-                                                        return SizedBox(
+                                                        return const SizedBox(
                                                           height: 272,
                                                         );
                                                       },
@@ -339,8 +343,8 @@ class _HomePageState extends State<HomePage> {
                                 shrinkWrap: true,
                                 itemCount: state.houseDetail.length,
                                 itemBuilder: (context, index) {
-                                  final houseData =
-                                      state.houseDetail[index].data();
+                                  // final houseData =
+                                  //     state.houseDetail[index].data();
                                   final id = state.houseDetail[index].id;
 
                                   return HouseRowDetails(

@@ -134,7 +134,7 @@ class _HouseDetailPageState extends State<HouseDetailPage> {
                     ],
                   )),
             );}
-            return SizedBox();
+            return const SizedBox();
           }),
     );
   }
