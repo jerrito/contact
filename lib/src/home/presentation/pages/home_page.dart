@@ -13,7 +13,6 @@ import 'package:house_rental/src/authentication/domain/entities/user.dart';
 import 'package:house_rental/src/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:house_rental/src/home/presentation/bloc/home_bloc.dart';
 import 'package:house_rental/src/home/presentation/widgets/home_drawer.dart';
-import 'package:house_rental/src/home/presentation/widgets/house_container.dart';
 import 'package:house_rental/src/home/presentation/widgets/house_row_details.dart';
 import 'package:house_rental/src/home/presentation/widgets/list_view_buttons.dart';
 import 'package:house_rental/src/home/presentation/widgets/search_textfield.dart';
@@ -267,6 +266,7 @@ class _HomePageState extends State<HomePage> {
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
                                                                 .end,
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           Text(
                                                             houseData
@@ -338,13 +338,13 @@ class _HomePageState extends State<HomePage> {
                             //Space().height(context, 0.02),
 
                             ListView.builder(
-                                reverse: true,
+                                //reverse: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemCount: state.houseDetail.length,
                                 itemBuilder: (context, index) {
-                                  // final houseData =
-                                  //     state.houseDetail[index].data();
+                                  final houseData =
+                                      state.houseDetail[index].data();
                                   final id = state.houseDetail[index].id;
 
                                   return HouseRowDetails(
@@ -352,6 +352,11 @@ class _HomePageState extends State<HomePage> {
                                       context.pushNamed("houseDetail",
                                           queryParameters: {"id": id});
                                     },
+                                    bedRoomCount: houseData.bedRoomCount,
+                                    bathhRoomCount: houseData.bathRoomCount,
+                                    amount: houseData.amount,
+                                    houseIMageURL: houseData.images?[0],
+                                    houseName: houseData.houseName,
                                   );
                                 })
 

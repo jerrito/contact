@@ -3,26 +3,32 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
-import 'package:house_rental/assets/images/image_constants.dart';
 import 'package:house_rental/assets/svgs/svg_constants.dart';
+import 'package:house_rental/core/size/sizes.dart';
 import 'package:house_rental/core/spacing/whitspacing.dart';
 import 'package:house_rental/core/theme/app_theme.dart';
 import 'package:house_rental/core/theme/colors.dart';
 
 class HouseDetailContainer extends StatelessWidget {
   final void Function()? favouriteOnTap, arrowBackOnTap;
+  final num? bedRoomCount, bathhRoomCount;
+  final String? houseIMageURL, description, houseName;
   const HouseDetailContainer({
     Key? key,
     required this.arrowBackOnTap,
     required this.favouriteOnTap,
+    this.bedRoomCount,
+    this.bathhRoomCount,
+    this.houseIMageURL,
+    this.description,
+    this.houseName,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 304,
-      width: 335,
+      height:Sizes().height(context, 0.34),
+      width: double.infinity,
       child: Stack(
         children: [
           Align(
@@ -30,12 +36,12 @@ class HouseDetailContainer extends StatelessWidget {
             child: ClipRRect(
                 borderRadius: BorderRadius.circular(22.0),
                 child: Container(
-                  height: 304,
+                  height: Sizes().height(context, 0.34),
                   width: double.infinity,
                   decoration: BoxDecoration(gradient: houseContainerGradient),
-                  child: Image.asset(
-                    house1Image,
-                    height: 304,
+                  child: Image.network(
+                    houseIMageURL ?? "",
+                    height: Sizes().height(context, 0.34),
                     width: double.infinity,
                     fit: BoxFit.cover,
                     //opacity: const AlwaysStoppedAnimation(.8),
@@ -91,14 +97,14 @@ class HouseDetailContainer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "DreamsVille House",
+                       houseName ?? "House",
                         style: appTheme.textTheme.displayLarge!.copyWith(
                             color: houseWhiteColor,
                             fontSize: 20,
                             fontWeight: FontWeight.w600),
                       ),
                       Text(
-                        "Jl. Sultan Iskandar Muda",
+                       description ?? "",
                         style: appTheme.textTheme.displaySmall!.copyWith(
                             color: searchTextColor3,
                             fontSize: 12,
@@ -112,9 +118,10 @@ class HouseDetailContainer extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(5)),
                               child: SvgPicture.asset(bedSVG,
                                   color: houseWhiteColor)),
-                          const Text(
-                            "6 BedRoom",
-                            style: TextStyle(
+                           Space().width(context, 0.02),
+                           Text(
+                            "$bedRoomCount BedRoom",
+                            style:const TextStyle(
                               color: houseWhiteColor,
                             ),
                           ),
@@ -125,9 +132,10 @@ class HouseDetailContainer extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(5)),
                               child: SvgPicture.asset(bathSVG,
                                   color: houseWhiteColor)),
-                          const Text(
-                            "4 BathRoom",
-                            style: TextStyle(
+                           Space().width(context, 0.02),        
+                           Text(
+                            "$bathhRoomCount BathRoom",
+                            style:const TextStyle(
                               color: houseWhiteColor,
                             ),
                           )
