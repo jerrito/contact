@@ -80,11 +80,12 @@ class _HouseDetailPageState extends State<HouseDetailPage> {
                             fontWeight: FontWeight.w500, color: houseBlack100),
                       ),
                     ),
-                    Space().height(context, 0.020),
+                    Space().height(context, 0.015),
                     Padding(
                       padding: EdgeInsets.symmetric(
-                      horizontal: Sizes().width(context, 0.04),
-                    ),   child: Text(
+                        horizontal: Sizes().width(context, 0.04),
+                      ),
+                      child: Text(
                         data?.description ?? "",
                         style: appTheme.textTheme.displayLarge!.copyWith(
                             fontWeight: FontWeight.w400,
@@ -102,8 +103,14 @@ class _HouseDetailPageState extends State<HouseDetailPage> {
                             "${data?.owner?.firstName} ${data?.owner?.lastName}",
                         ownerPhotoURL: data?.owner?.profileURL,
                         role: data?.owner?.role,
-                        callOnTap: () {},
-                        messageOnTap: () {},
+                        callOnTap: () {
+                          homeBloc.launchUrl(
+                              "tel", data?.owner?.phoneNumber ?? "",);
+                        },
+                        messageOnTap: () {
+                          homeBloc.launchUrl(
+                              "sms", data?.owner?.phoneNumber ?? "",);
+                        },
                       ),
                     ),
                     Space().height(context, 0.022),
@@ -125,14 +132,13 @@ class _HouseDetailPageState extends State<HouseDetailPage> {
                     Space().height(context, 0.022),
                     Container(
                         width: double.infinity,
-                        height: Sizes().height(context, 0.1),
+                        height: Sizes().height(context, 0.14),
                         decoration: BoxDecoration(
                             color: searchTextColor1,
                             borderRadius: BorderRadius.circular(10)),
                         child: GoogleMap(
                           initialCameraPosition: CameraPosition(
-                            target: LatLng(
-                                data.houseLocation!.lat!.toDouble(),
+                            target: LatLng(data.houseLocation!.lat!.toDouble(),
                                 data.houseLocation!.lng!.toDouble()),
                             zoom: 12.4746,
                           ),
@@ -140,7 +146,7 @@ class _HouseDetailPageState extends State<HouseDetailPage> {
                             _controller.complete(controller);
                           },
                         )),
-                    Space().height(context, 0.004),
+                    Space().height(context, 0.02),
                     Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: Sizes().width(context, 0.04),
@@ -153,14 +159,12 @@ class _HouseDetailPageState extends State<HouseDetailPage> {
                                 fontWeight: FontWeight.w500,
                                 color: houseBlack100,
                               )),
-                           SizedBox(
-                            width: Sizes().height(context, 0.12),
+                          SizedBox(
+                            width: Sizes().height(context, 0.16),
                             height: Sizes().height(context, 0.05),
                             child: DefaultButton(
                               label: "Rent Now",
-                              onTap: (){
-
-                              },
+                              onTap: () {},
                             ),
                           )
                         ],
@@ -175,9 +179,7 @@ class _HouseDetailPageState extends State<HouseDetailPage> {
     );
   }
 
-  Set<Marker> mar = {
-   const Marker(markerId:MarkerId( "markerId"))
-  };
+  Set<Marker> mar = {const Marker(markerId: MarkerId("markerId"))};
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 }

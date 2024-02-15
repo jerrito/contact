@@ -12,16 +12,23 @@ class GalleryRow extends StatelessWidget {
     return CarouselSlider.builder(
         itemCount: itemCount,
         options:
-            CarouselOptions(height:Sizes().height(context, 0.07), reverse: true, viewportFraction: 0.3),
+            CarouselOptions(
+              enableInfiniteScroll:itemCount <=4? false:true,
+              height:Sizes().height(context, 0.11),
+              viewportFraction: 0.3),
         itemBuilder: (context, index, value) {
-          return ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-               image[index],
-                width: Sizes().width(context, 0.16),
-                height: Sizes().height(context, 0.07),
-                fit: BoxFit.cover,
-              ));
+          return Padding(
+            padding:  EdgeInsets.symmetric(
+             horizontal: Sizes().width(context, 0.01 )),
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                 image[index],
+                  width: Sizes().width(context, 0.32),
+                  height: Sizes().height(context, 0.11),
+                  fit: BoxFit.cover,
+                )),
+          );
         });
   }
 }

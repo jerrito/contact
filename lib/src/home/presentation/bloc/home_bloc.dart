@@ -8,6 +8,7 @@ import 'package:house_rental/src/home/domain/usecases/get_profile_camera.dart';
 import 'package:house_rental/src/home/domain/usecases/get_profile_gallery.dart';
 import 'package:house_rental/src/home/domain/usecases/up_load_image.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart' as launcher;
 part 'home_event.dart';
 part 'home_state.dart';
 
@@ -17,13 +18,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final UpLoadImage upLoadImage;
   final GetAllHouses getAllHouses;
   final GetHouse getHouse;
-  HomeBloc({
-    required this.getProfileCamera,
-    required this.getProfileGallery,
-    required this.upLoadImage,
-    required this.getAllHouses,
-    required this.getHouse
-  }) : super(HomeInitState()) {
+  HomeBloc(
+      {required this.getProfileCamera,
+      required this.getProfileGallery,
+      required this.upLoadImage,
+      required this.getAllHouses,
+      required this.getHouse})
+      : super(HomeInitState()) {
     //!GET PROFILE Camera
     on<GetProfileCameraEvent>((event, emit) async {
       final response = await getProfileCamera.call(event.params);
@@ -74,5 +75,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         ),
       );
     }));
+  }
+
+  Future<bool> launchUrl(String type, String number) async {
+    return await launcher.launchUrl(Uri(
+      scheme: type,
+      path: number,
+    ));
   }
 }
